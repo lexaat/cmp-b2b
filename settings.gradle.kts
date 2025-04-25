@@ -1,4 +1,4 @@
-rootProject.name = "CMP-Ktor"
+rootProject.name = "b2b"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {

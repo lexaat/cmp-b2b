@@ -12,7 +12,6 @@ plugins {
 
 kotlin {
     androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
@@ -39,6 +38,9 @@ kotlin {
             implementation(libs.androidx.activity.compose)
 
             implementation(libs.ktor.client.okhttp)
+
+            implementation(libs.koin.android)
+            implementation(libs.koin.androidx.compose)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -49,6 +51,17 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
 
             implementation(libs.bundles.ktor)
+
+            api(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+
+            implementation(libs.voyager.navigator) // или последнюю версию
+            implementation(libs.voyager.bottom.sheet.navigator)
+            implementation(libs.voyager.tab.navigator)
+            implementation(libs.voyager.transitions)
+
+            implementation(libs.lifecycle.viewmodel)
         }
         nativeMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -62,7 +75,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.plcoding.cmp_ktor"
+    namespace = "uz.hb.b2b"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
@@ -70,7 +83,7 @@ android {
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
     defaultConfig {
-        applicationId = "com.plcoding.cmp_ktor"
+        applicationId = "uz.hb.b2b"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
@@ -97,6 +110,9 @@ android {
         debugImplementation(compose.uiTooling)
     }
 }
+dependencies {
+    implementation(libs.androidx.material3.android)
+}
 
 compose.desktop {
     application {
@@ -104,7 +120,7 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.plcoding.cmp_ktor"
+            packageName = "uz.hb.b2b"
             packageVersion = "1.0.0"
         }
     }
