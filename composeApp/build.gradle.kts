@@ -1,5 +1,4 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -55,8 +54,9 @@ kotlin {
             api(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
+            implementation(libs.koin.compose.viewmodel.navigation)
 
-            implementation(libs.voyager.navigator) // или последнюю версию
+            implementation(libs.voyager.navigator)
             implementation(libs.voyager.bottom.sheet.navigator)
             implementation(libs.voyager.tab.navigator)
             implementation(libs.voyager.transitions)

@@ -1,5 +1,6 @@
 package features.auth.presentation
 
+import androidx.lifecycle.ViewModel
 import features.auth.domain.AuthRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -13,7 +14,7 @@ import utils.TokenManager
 class AuthViewModel(
     private val authRepository: AuthRepository,
     private val tokenManager: TokenManager
-) {
+) : ViewModel() {
     private val _state = MutableStateFlow<AuthState>(AuthState.EnterCredentials)
     val state: StateFlow<AuthState> = _state
 
