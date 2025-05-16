@@ -60,6 +60,7 @@ kotlin {
             implementation(libs.voyager.bottom.sheet.navigator)
             implementation(libs.voyager.tab.navigator)
             implementation(libs.voyager.transitions)
+            implementation(libs.voyager.koin)
 
             implementation(libs.lifecycle.viewmodel)
         }
@@ -98,6 +99,12 @@ android {
         getByName("release") {
             isMinifyEnabled = false
         }
+        debug {
+            buildConfigField("String", "ENVIRONMENT", "\"dev\"")
+        }
+        release {
+            buildConfigField("String", "ENVIRONMENT", "\"prod\"")
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -105,9 +112,26 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     dependencies {
         debugImplementation(compose.uiTooling)
+    }
+
+    flavorDimensions += "env"
+    productFlavors {
+        create("dev") {
+            dimension = "env"
+            buildConfigField("String", "ENVIRONMENT", "\"dev\"")
+        }
+        create("staging") {
+            dimension = "env"
+            buildConfigField("String", "ENVIRONMENT", "\"staging\"")
+        }
+        create("prod") {
+            dimension = "env"
+            buildConfigField("String", "ENVIRONMENT", "\"prod\"")
+        }
     }
 }
 dependencies {
@@ -125,3 +149,4 @@ compose.desktop {
         }
     }
 }
+

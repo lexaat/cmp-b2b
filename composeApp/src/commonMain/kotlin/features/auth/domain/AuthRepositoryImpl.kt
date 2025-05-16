@@ -1,5 +1,6 @@
 package features.auth.domain
 
+import config.AppConfig
 import features.auth.model.AuthResponse
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -12,13 +13,16 @@ import io.ktor.util.encodeBase64
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-class AuthRepositoryImpl(private val client: HttpClient) : AuthRepository {
+class AuthRepositoryImpl(
+    private val httpClient: HttpClient,
+    private val config: AppConfig
+) : AuthRepository {
     override suspend fun login(username: String, password: String): AuthResponse {
         val credentials = "$username:$password"
         val encoded = credentials.encodeToByteArray().encodeBase64()
 
         return try {
-            val response = client.post("https://b2b-test.hayotbank.uz/Mobile.svc/login") {
+            val response = httpClient.post("${config.baseUrl}/login") {
                 contentType(ContentType.Application.Json)
                 header(HttpHeaders.Authorization, "Basic $encoded")
                 setBody(LoginRequest(otp = ""))
@@ -47,7 +51,7 @@ class AuthRepositoryImpl(private val client: HttpClient) : AuthRepository {
         val credentials = "$username:$password"
         val encoded = credentials.encodeToByteArray().encodeBase64()
 
-        return client.post("https://b2b-test.hayotbank.uz/Mobile.svc/login") {
+        return httpClient.post("https://b2b-test.hayotbank.uz/Mobile.svc/login") {
             contentType(ContentType.Application.Json)
             header("Authorization", "Basic $encoded")
             setBody(LoginRequest(otp = otp))
@@ -55,7 +59,7 @@ class AuthRepositoryImpl(private val client: HttpClient) : AuthRepository {
     }
 
     override suspend fun changePassword(newPassword: String, otp: String): AuthResponse {
-        return client.post("https://b2b-test.hayotbank.uz/Mobile.svc/ChangePassword") {
+        return httpClient.post("https://b2b-test.hayotbank.uz/Mobile.svc/ChangePassword") {
             contentType(ContentType.Application.Json)
             header("Authorization", "••••••")
             setBody(ChangePasswordRequest(newPassword, otp))

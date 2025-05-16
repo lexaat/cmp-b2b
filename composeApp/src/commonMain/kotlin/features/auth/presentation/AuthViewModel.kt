@@ -46,7 +46,7 @@ class AuthViewModel(
                     60150 -> _state.value = AuthState.RequirePasswordChange
                     null -> result.result?.let {
                         tokenManager.saveTokens(it.accessToken, it.refreshToken)
-                        _state.value = AuthState.Authorized
+                        _sideEffect.emit(AuthSideEffect.NavigateToHome)
                     } ?: run {
                         _sideEffect.emit(AuthSideEffect.ShowSnackbar("Empty result"))
                     }
@@ -66,7 +66,7 @@ class AuthViewModel(
             val result = authRepository.verifyOtp(username, password, otp)
             if (result.error == null && result.result != null) {
                 tokenManager.saveTokens(result.result.accessToken, result.result.refreshToken)
-                _state.value = AuthState.Authorized
+                _sideEffect.emit(AuthSideEffect.NavigateToHome)
             } else {
                 _sideEffect.emit(AuthSideEffect.ShowSnackbar(result.error?.message ?: "Неизвестная ошибка"))
             }

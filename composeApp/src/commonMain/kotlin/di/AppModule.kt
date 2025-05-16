@@ -10,7 +10,7 @@ import utils.TokenManager
 
 val appModule = module {
     single { HttpClientFactory.create() }
-    single<AuthRepository> { AuthRepositoryImpl(get()) }
+    single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
     single<TokenManager> { InMemoryTokenManager() }
     single { AuthViewModel(get(), get()) }
 }

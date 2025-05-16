@@ -15,76 +15,82 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import core.ui.collectInLaunchedEffect
+import features.main.presentation.MainScreen
+import org.koin.compose.koinInject
+
+object LoginScreen : Screen {
+    @Composable
+    override fun Content() {
+        val viewModel = koinInject<AuthViewModel>()
+        LoginScreenContent(viewModel = viewModel)
+
+    }
+}
 
 @Composable
-fun LoginScreen(viewModel: AuthViewModel) {
+fun LoginScreenContent(viewModel: AuthViewModel) {
     val state by viewModel.state.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+    val navigator = LocalNavigator.currentOrThrow
+    val snackbarHostState = remember { SnackbarHostState() }
 
     var login by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    val snackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
-
-    // ⚡ вот тут красиво и лаконично
     viewModel.sideEffect.collectInLaunchedEffect { effect ->
         when (effect) {
-            is AuthSideEffect.ShowSnackbar -> {
-                snackbarHostState.showSnackbar(effect.message)
-            }
-
-            is AuthSideEffect.NavigateToHome -> {
-                // переход на главный экран
-            }
+            is AuthSideEffect.ShowSnackbar -> snackbarHostState.showSnackbar(effect.message)
+            is AuthSideEffect.NavigateToHome -> navigator.push(MainScreen)
         }
     }
 
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) {
+    Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { paddingValues ->
         when (state) {
-            is AuthState.EnterCredentials -> LoginForm(isLoading = isLoading, onSubmit = { l, p ->
-                login = l
-                password = p
-                viewModel.process(AuthIntent.SubmitCredentials(l, p))
-            }
+            is AuthState.EnterCredentials -> LoginForm(
+                isLoading = isLoading,
+                onSubmit = { l, p ->
+                    login = l
+                    password = p
+                    viewModel.process(AuthIntent.SubmitCredentials(l, p))
+                },
+                modifier = Modifier.padding(paddingValues)
             )
 
-            is AuthState.WaitingForOtp -> OtpForm { otp ->
-                viewModel.process(AuthIntent.SubmitOtp(login, password, otp))
+            is AuthState.WaitingForOtp -> OtpForm {
+                viewModel.process(AuthIntent.SubmitOtp(login, password, it))
             }
 
-            is AuthState.RequirePasswordChange -> PasswordChangeForm { newPass ->
-                viewModel.process(AuthIntent.SubmitNewPassword(newPass))
+            is AuthState.RequirePasswordChange -> PasswordChangeForm {
+                viewModel.process(AuthIntent.SubmitNewPassword(it))
             }
 
-            is AuthState.WaitingForPasswordOtp -> PasswordOtpForm { otp ->
-                viewModel.process(
-                    AuthIntent.SubmitPasswordOtp(
-                        "dummy",
-                        otp
-                    )
-                ) // replace with stored pass
+            is AuthState.WaitingForPasswordOtp -> PasswordOtpForm {
+                viewModel.process(AuthIntent.SubmitPasswordOtp("dummy", it))
             }
 
-            is AuthState.Authorized -> Text("Добро пожаловать!")
             is AuthState.PasswordChanged -> Text("Пароль изменён. Авторизуйтесь заново.")
+            else -> {}
         }
     }
 }
 
 @Composable
-fun LoginForm(isLoading: Boolean, onSubmit: (String, String) -> Unit) {
+fun LoginForm(
+    isLoading: Boolean,
+    onSubmit: (String, String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     var login by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    Column(Modifier.padding(16.dp)) {
+    Column(modifier.padding(16.dp)) {
         OutlinedTextField(value = login, onValueChange = { login = it }, label = { Text("Логин") })
         OutlinedTextField(
             value = password,
