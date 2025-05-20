@@ -1,14 +1,90 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Desktop.
+# 📁 Структура проекта cmp-b2b (KMP + Compose Multiplatform)
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - `commonMain` is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    `iosMain` would be the right folder for such calls.
+## 🧱 Основные модули
 
-* `/iosApp` contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform, 
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+- `composeApp/` — общий KMP-модуль (основная логика и UI)
+- `iosApp/` — iOS-оболочка
+- `androidMain/` — специфичный код для Android
+- `commonMain/` — общая бизнес-логика, UI и архитектура
+
+---
+
+## 📁 Папки в `commonMain/kotlin`
+
+### `features/`
+Каждая фича разделена на подмодули по архитектуре MVI:
+
+```
+features/
+├── auth/              // Авторизация (двухэтапная)
+├── home/              // Главный экран со списком клиентов
+└── client/            // Детали клиента (MVI)
+```
+
+#### Внутри каждой фичи:
+- `presentation/` — ViewModel, Intent, State, SideEffect, UI
+- `domain/` — модели и интерфейсы
+- `data/` — реализации (например, `ClientRepositoryImpl.kt`)
 
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+### `di/`
+Koin-модули:
+- `AppModule.kt` — базовые зависимости
+- `HomeModule.kt`, `ClientModule.kt`, `ConfigModule.kt` — по фичам
+- `InitKoin.kt` (в `androidMain`) — вызов `startKoin()` с модулями
+
+
+### `networking/`
+- `HttpClientFactory.kt` — конфигурация Ktor клиента
+
+
+### `config/`
+- `AppConfig.kt`, `Config.kt` — конфигурации окружений (baseUrl и т.д.)
+
+
+### `model/`
+- Общие модели (`Client`, `Account`, и т.д.)
+
+
+### `ui/`
+- Переиспользуемые UI-компоненты (например, `ScreenWrapper.kt`)
+
+
+### `App.kt`
+- Точка входа в Compose-приложение (на уровне общего UI)
+
+---
+
+## ⚙️ Используемые технологии
+
+- **Kotlin Multiplatform (KMP)** + **Compose Multiplatform** (Android + iOS)
+- **Voyager** — навигация
+- **Koin** — DI-фреймворк
+- **Ktor** — HTTP-клиент
+- **MVI архитектура** — Intent → State → SideEffect → UI
+
+---
+
+## 🔁 Пример фичи (ClientDetail)
+```
+features/client/
+├── data/
+│   └── ClientRepositoryImpl.kt
+├── domain/
+│   ├── model/ClientDetail.kt
+│   └── repository/ClientRepository.kt
+└── presentation/
+    ├── ClientDetailIntent.kt
+    ├── ClientDetailState.kt
+    ├── ClientDetailViewModel.kt
+    └── ClientDetailScreen.kt
+```
+
+---
+
+## 🚀 Расширение
+Для добавления новой фичи:
+1. Создай `features/имя_фичи/{data, domain, presentation}`
+2. Реализуй MVI (Intent, State, ViewModel, Screen)
+3. Зарегистрируй ViewModel и Repository в `di/FeatureModule.kt`
+4. Добавь модуль в `InitKoin.kt`

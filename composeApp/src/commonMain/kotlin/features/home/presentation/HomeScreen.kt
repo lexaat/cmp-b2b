@@ -4,15 +4,18 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import io.ktor.websocket.Frame
+import features.client.presentation.ErrorView
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel) {
-    val state by viewModel.uiState.collectAsState()
+    val stateValue = viewModel.state.collectAsState().value
 
-    when {
-        state.isLoading -> CircularProgressIndicator()
-        state.error != null -> Frame.Text("Ошибка: ${state.error}")
-        else -> ClientListScreen(state.clients)
+    when (stateValue) {
+        is HomeState.Loading -> CircularProgressIndicator()
+        is HomeState.Error -> ErrorView(
+            message = stateValue.message, // smart cast сработает
+            onRetry = { viewModel.dispatch(HomeIntent.Retry) }
+        )
+        is HomeState.Data -> ClientListScreen(stateValue.clients)
     }
 }

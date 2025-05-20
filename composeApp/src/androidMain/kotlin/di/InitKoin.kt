@@ -4,6 +4,7 @@ import org.koin.core.context.startKoin
 
 fun initKoinAndroid() {
     startKoin {
-        modules(configModule, appModule, homeModule)
+        modules(
+            clientModule,configModule, appModule, homeModule)
     }
 }

@@ -50,8 +50,8 @@ fun LoginScreenContent(viewModel: AuthViewModel) {
 
     viewModel.sideEffect.collectInLaunchedEffect { effect ->
         when (effect) {
-            is AuthSideEffect.ShowSnackbar -> snackbarHostState.showSnackbar(effect.message)
-            is AuthSideEffect.NavigateToHome -> navigator.push(MainScreen)
+            is AuthSideEffect.ShowError -> snackbarHostState.showSnackbar(effect.message)
+            is AuthSideEffect.NavigateToMain -> navigator.push(MainScreen)
         }
     }
 
@@ -63,21 +63,21 @@ fun LoginScreenContent(viewModel: AuthViewModel) {
                     onSubmit = { l, p ->
                         login = l
                         password = p
-                        viewModel.process(AuthIntent.SubmitCredentials(l, p))
+                        viewModel.dispatch(AuthIntent.SubmitCredentials(l, p))
                     },
                     modifier = Modifier.padding(paddingValues)
                 )
 
                 is AuthState.WaitingForOtp -> OtpForm {
-                    viewModel.process(AuthIntent.SubmitOtp(login, password, it))
+                    viewModel.dispatch(AuthIntent.SubmitOtp(login, password, it))
                 }
 
                 is AuthState.RequirePasswordChange -> PasswordChangeForm {
-                    viewModel.process(AuthIntent.SubmitNewPassword(login, password, it))
+                    viewModel.dispatch(AuthIntent.SubmitNewPassword(login, password, it))
                 }
 
                 is AuthState.WaitingForPasswordOtp -> PasswordOtpForm {
-                    viewModel.process(AuthIntent.SubmitPasswordOtp(login, password, "", it))
+                    viewModel.dispatch(AuthIntent.SubmitPasswordOtp(login, password, "", it))
                 }
 
                 is AuthState.PasswordChanged -> Text("Пароль изменён. Авторизуйтесь заново.")
