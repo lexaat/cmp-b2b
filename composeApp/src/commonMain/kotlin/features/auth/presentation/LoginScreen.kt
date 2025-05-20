@@ -4,13 +4,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -23,16 +23,18 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import core.ui.collectInLaunchedEffect
+import features.common.ui.collectInLaunchedEffect
 import features.main.presentation.MainScreen
 import org.koin.compose.koinInject
+import ui.components.ScreenWrapper
 
 object LoginScreen : Screen {
     @Composable
     override fun Content() {
         val viewModel = koinInject<AuthViewModel>()
-        LoginScreenContent(viewModel = viewModel)
-
+        ScreenWrapper {
+            LoginScreenContent(viewModel = viewModel)
+        }
     }
 }
 
@@ -71,11 +73,11 @@ fun LoginScreenContent(viewModel: AuthViewModel) {
                 }
 
                 is AuthState.RequirePasswordChange -> PasswordChangeForm {
-                    viewModel.process(AuthIntent.SubmitNewPassword(it))
+                    viewModel.process(AuthIntent.SubmitNewPassword(login, password, it))
                 }
 
                 is AuthState.WaitingForPasswordOtp -> PasswordOtpForm {
-                    viewModel.process(AuthIntent.SubmitPasswordOtp("dummy", it))
+                    viewModel.process(AuthIntent.SubmitPasswordOtp(login, password, "", it))
                 }
 
                 is AuthState.PasswordChanged -> Text("Пароль изменён. Авторизуйтесь заново.")

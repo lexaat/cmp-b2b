@@ -56,17 +56,19 @@ class AuthRepositoryImpl(
         val credentials = "$username:$password"
         val encoded = credentials.encodeToByteArray().encodeBase64()
 
-        return httpClient.post("https://b2b-test.hayotbank.uz/Mobile.svc/login") {
+        return httpClient.post("${config.baseUrl}/login") {
             contentType(ContentType.Application.Json)
             header("Authorization", "Basic $encoded")
             setBody(LoginRequest(otp = otp))
         }.body()
     }
 
-    override suspend fun changePassword(newPassword: String, otp: String): AuthResponse {
-        return httpClient.post("https://b2b-test.hayotbank.uz/Mobile.svc/ChangePassword") {
+    override suspend fun changePassword(username: String, password: String, newPassword: String, otp: String): AuthResponse {
+        val credentials = "$username:$password"
+        val encoded = credentials.encodeToByteArray().encodeBase64()
+        return httpClient.post("${config.baseUrl}/ChangePassword") {
             contentType(ContentType.Application.Json)
-            header("Authorization", "••••••")
+            header("Authorization", "Basic $encoded")
             setBody(ChangePasswordRequest(newPassword, otp))
         }.body()
     }

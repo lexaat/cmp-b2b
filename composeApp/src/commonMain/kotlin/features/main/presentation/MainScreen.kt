@@ -2,10 +2,11 @@ package features.main.presentation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,9 +26,9 @@ object MainScreen : Screen {
 
         Scaffold(
             bottomBar = {
-                BottomNavigation {
+                NavigationBar {
                     tabs.forEach { tab ->
-                        BottomNavigationItem(
+                        NavigationBarItem(
                             selected = tab == selectedTab,
                             onClick = {
                                 selectedTab = tab

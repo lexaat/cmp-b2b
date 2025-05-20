@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AuthResponse(
-    val error: AuthError? = null,
+    val error: ApiError? = null,
     val id: Long,
     val result: AuthResult? = null
 )
@@ -20,7 +20,7 @@ data class AuthResult(
 )
 
 @Serializable
-data class AuthError(
+data class ApiError(
     val code: Int,
     val message: String
 )

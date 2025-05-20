@@ -2,6 +2,7 @@ package features.auth.presentation
 
 import androidx.lifecycle.ViewModel
 import features.auth.domain.AuthRepository
+import features.common.domain.auth.TokenManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -9,7 +10,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import utils.TokenManager
 
 class AuthViewModel(
     private val authRepository: AuthRepository,
@@ -31,8 +31,8 @@ class AuthViewModel(
         when (intent) {
             is AuthIntent.SubmitCredentials -> login(intent.username, intent.password)
             is AuthIntent.SubmitOtp -> verifyOtp(intent.username, intent.password, intent.otp)
-            is AuthIntent.SubmitNewPassword -> changePasswordStage1(intent.newPassword)
-            is AuthIntent.SubmitPasswordOtp -> changePasswordStage2(intent.newPassword, intent.otp)
+            is AuthIntent.SubmitNewPassword -> changePasswordStage1(intent.username, intent.password, intent.newPassword)
+            is AuthIntent.SubmitPasswordOtp -> changePasswordStage2(intent.username, intent.password, intent.newPassword, intent.otp)
         }
     }
 
@@ -73,9 +73,9 @@ class AuthViewModel(
         }
     }
 
-    private fun changePasswordStage1(newPassword: String) {
+    private fun changePasswordStage1(username: String, password: String, newPassword: String) {
         viewModelScope.launch {
-            val result = authRepository.changePassword(newPassword, "")
+            val result = authRepository.changePassword(username, password, newPassword, "")
             if (result.error == null) {
                 newPasswordBuffer = newPassword
                 _state.value = AuthState.WaitingForPasswordOtp
@@ -85,9 +85,9 @@ class AuthViewModel(
         }
     }
 
-    private fun changePasswordStage2(newPassword: String, otp: String) {
+    private fun changePasswordStage2(username: String, password: String, newPassword: String, otp: String) {
         viewModelScope.launch {
-            val result = authRepository.changePassword(newPassword, otp)
+            val result = authRepository.changePassword(username, password, newPassword, otp)
             if (result.error == null) {
                 _state.value = AuthState.PasswordChanged
             } else {

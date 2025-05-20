@@ -1,11 +1,6 @@
-package utils
+package features.common.data.auth
 
-interface TokenManager {
-    fun saveTokens(accessToken: String, refreshToken: String)
-    fun getAccessToken(): String?
-    fun getRefreshToken(): String?
-    fun clear()
-}
+import features.common.domain.auth.TokenManager
 
 class InMemoryTokenManager : TokenManager {
     private var accessToken: String? = null
@@ -18,6 +13,7 @@ class InMemoryTokenManager : TokenManager {
 
     override fun getAccessToken() = accessToken
     override fun getRefreshToken() = refreshToken
+
     override fun clear() {
         accessToken = null
         refreshToken = null
