@@ -1,5 +1,6 @@
 package features.auth.presentation
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -53,31 +54,33 @@ fun LoginScreenContent(viewModel: AuthViewModel) {
     }
 
     Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { paddingValues ->
-        when (state) {
-            is AuthState.EnterCredentials -> LoginForm(
-                isLoading = isLoading,
-                onSubmit = { l, p ->
-                    login = l
-                    password = p
-                    viewModel.process(AuthIntent.SubmitCredentials(l, p))
-                },
-                modifier = Modifier.padding(paddingValues)
-            )
+        Box(modifier = Modifier.padding(paddingValues)) {
+            when (state) {
+                is AuthState.EnterCredentials -> LoginForm(
+                    isLoading = isLoading,
+                    onSubmit = { l, p ->
+                        login = l
+                        password = p
+                        viewModel.process(AuthIntent.SubmitCredentials(l, p))
+                    },
+                    modifier = Modifier.padding(paddingValues)
+                )
 
-            is AuthState.WaitingForOtp -> OtpForm {
-                viewModel.process(AuthIntent.SubmitOtp(login, password, it))
+                is AuthState.WaitingForOtp -> OtpForm {
+                    viewModel.process(AuthIntent.SubmitOtp(login, password, it))
+                }
+
+                is AuthState.RequirePasswordChange -> PasswordChangeForm {
+                    viewModel.process(AuthIntent.SubmitNewPassword(it))
+                }
+
+                is AuthState.WaitingForPasswordOtp -> PasswordOtpForm {
+                    viewModel.process(AuthIntent.SubmitPasswordOtp("dummy", it))
+                }
+
+                is AuthState.PasswordChanged -> Text("Пароль изменён. Авторизуйтесь заново.")
+                else -> {}
             }
-
-            is AuthState.RequirePasswordChange -> PasswordChangeForm {
-                viewModel.process(AuthIntent.SubmitNewPassword(it))
-            }
-
-            is AuthState.WaitingForPasswordOtp -> PasswordOtpForm {
-                viewModel.process(AuthIntent.SubmitPasswordOtp("dummy", it))
-            }
-
-            is AuthState.PasswordChanged -> Text("Пароль изменён. Авторизуйтесь заново.")
-            else -> {}
         }
     }
 }

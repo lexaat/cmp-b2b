@@ -17,6 +17,11 @@ class AuthRepositoryImpl(
     private val httpClient: HttpClient,
     private val config: AppConfig
 ) : AuthRepository {
+
+    init {
+        println("AuthRepositoryImpl initialized with ${config.baseUrl}")
+    }
+
     override suspend fun login(username: String, password: String): AuthResponse {
         val credentials = "$username:$password"
         val encoded = credentials.encodeToByteArray().encodeBase64()
