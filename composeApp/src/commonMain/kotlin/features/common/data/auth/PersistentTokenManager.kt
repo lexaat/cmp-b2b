@@ -17,7 +17,7 @@ class PersistentTokenManager(private val settings: Settings) : TokenManager {
     override fun getAccessToken(): String? = settings[accessKey]
     override fun getRefreshToken(): String? = settings[refreshKey]
 
-    override fun clear() {
+    override fun clearTokens() {
         settings.remove(accessKey)
         settings.remove(refreshKey)
     }

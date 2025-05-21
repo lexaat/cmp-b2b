@@ -1,6 +1,6 @@
 package uz.hb.b2b
 
-import App
+import app.App
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable

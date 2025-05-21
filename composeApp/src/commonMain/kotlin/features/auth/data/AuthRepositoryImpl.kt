@@ -1,7 +1,11 @@
-package features.auth.domain
+package features.auth.data
 
 import config.AppConfig
+import features.auth.domain.AuthRepository
 import features.auth.model.AuthResponse
+import features.auth.model.ChangePasswordRequest
+import features.auth.model.LoginRequest
+import features.auth.model.RefreshTokenRequest
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.ClientRequestException
@@ -10,8 +14,6 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.*
 import io.ktor.util.encodeBase64
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 
 class AuthRepositoryImpl(
     private val httpClient: HttpClient,
@@ -91,13 +93,19 @@ class AuthRepositoryImpl(
             setBody(ChangePasswordRequest(newPassword, otp))
         }.body()
     }
+
+    override suspend fun refreshToken(refreshToken: String): AuthResponse {
+        return try {
+            val response = httpClient.post("${config.baseUrl}/RefreshToken") {
+                setBody(RefreshTokenRequest(refresh_token = refreshToken))
+            }
+            response.body()
+        } catch (e: Exception) {
+            println("Unknown error: ${e.message}")
+            throw e
+        }
+    }
 }
 
-@Serializable
-data class LoginRequest(val otp: String)
 
-@Serializable
-data class ChangePasswordRequest(
-    @SerialName("new_password") val newPassword: String,
-    val otp: String
-)
+

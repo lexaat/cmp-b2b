@@ -30,13 +30,6 @@ actual class HttpClientFactory actual constructor(
                 })
             }
 
-            install(Logging) {
-                logger = Logger.SIMPLE
-                level = LogLevel.INFO // Заголовки + статус
-            }
-
-            install(LoggingBodyPlugin) // ← подключаем наш кастомный логгер
-
             install(DefaultRequest) {
                 header(HttpHeaders.ContentType, ContentType.Application.Json)
             }
@@ -45,7 +38,8 @@ actual class HttpClientFactory actual constructor(
             install("AuthHeader") {
                 requestPipeline.intercept(HttpRequestPipeline.State) {
                     val url = context.url.encodedPath.lowercase()
-                    if (!url.contains("/login") && !url.contains("/refresh")) {
+                    if (!url.contains("/login") &&
+                        !url.contains("/refreshtoken")) {
                         val token = tokenManager.getAccessToken()
                         if (!token.isNullOrBlank()) {
                             context.headers.append(HttpHeaders.Authorization, "Bearer $token")
@@ -54,6 +48,8 @@ actual class HttpClientFactory actual constructor(
                     proceed()
                 }
             }
+
+            install(LoggingBodyPlugin) // ← подключаем наш кастомный логгер
         }
     }
 }

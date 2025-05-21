@@ -14,7 +14,7 @@ class InMemoryTokenManager : TokenManager {
     override fun getAccessToken() = accessToken
     override fun getRefreshToken() = refreshToken
 
-    override fun clear() {
+    override fun clearTokens() {
         accessToken = null
         refreshToken = null
     }

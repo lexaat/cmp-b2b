@@ -1,9 +1,10 @@
 package di
 
+import app.AppViewModel
 import config.AppConfig
 import config.Config
 import features.auth.domain.AuthRepository
-import features.auth.domain.AuthRepositoryImpl
+import features.auth.data.AuthRepositoryImpl
 import features.auth.presentation.AuthViewModel
 import features.common.data.auth.PersistentTokenManager
 import features.common.domain.auth.TokenManager
@@ -28,5 +29,6 @@ val appModule = module {
         )
     }
 
+    single { AppViewModel(get(), get()) }
     single { AuthViewModel(get(), get()) }
 }
