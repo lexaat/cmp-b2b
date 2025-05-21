@@ -7,7 +7,9 @@ import io.ktor.client.engine.darwin.*
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.plugins.logging.SIMPLE
 import io.ktor.client.request.HttpRequestPipeline
 import io.ktor.client.request.header
 import io.ktor.http.ContentType
@@ -22,12 +24,18 @@ actual class HttpClientFactory actual constructor(
     actual fun create(): HttpClient {
         return HttpClient(Darwin) {
             install(ContentNegotiation) {
-                json(Json { ignoreUnknownKeys = true })
+                json(Json {
+                    ignoreUnknownKeys = true
+                    prettyPrint = true
+                })
             }
 
             install(Logging) {
-                level = LogLevel.ALL
+                logger = Logger.SIMPLE
+                level = LogLevel.INFO // Заголовки + статус
             }
+
+            install(LoggingBodyPlugin) // ← подключаем наш кастомный логгер
 
             install(DefaultRequest) {
                 header(HttpHeaders.ContentType, ContentType.Application.Json)

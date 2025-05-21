@@ -56,11 +56,30 @@ class AuthRepositoryImpl(
         val credentials = "$username:$password"
         val encoded = credentials.encodeToByteArray().encodeBase64()
 
-        return httpClient.post("${config.baseUrl}/login") {
-            contentType(ContentType.Application.Json)
-            header("Authorization", "Basic $encoded")
-            setBody(LoginRequest(otp = otp))
-        }.body()
+        return try {
+            val response = httpClient.post("${config.baseUrl}/login") {
+                contentType(ContentType.Application.Json)
+                header(HttpHeaders.Authorization, "Basic $encoded")
+                setBody(LoginRequest(otp = otp))
+            }
+
+            val responseBody = response.bodyAsText()
+            println("Raw Response Body: $responseBody")
+
+            response.body()
+        } catch (e: ClientRequestException) {
+            // Ошибка 4xx
+            println("Client error: ${e.response.status}")
+            throw e
+        } catch (e: ServerResponseException) {
+            // Ошибка 5xx
+            println("Server error: ${e.response.status}")
+            throw e
+        } catch (e: Exception) {
+            // Другая ошибка (например, network error)
+            println("Unknown error: ${e.message}")
+            throw e
+        }
     }
 
     override suspend fun changePassword(username: String, password: String, newPassword: String, otp: String): AuthResponse {

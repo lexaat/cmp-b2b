@@ -25,30 +25,67 @@ class AuthViewModel(
 
     fun dispatch(intent: AuthIntent) {
         when (intent) {
+
+            //Ввод логина и пароля
             is AuthIntent.SubmitCredentials -> launchWithLoader {
                 val response = authRepository.login(intent.username, intent.password)
 
-                response.error?.let {
-                    _sideEffect.emit(AuthSideEffect.ShowError(it.message))
-                    return@launchWithLoader
-                }
+                val error = response.error
+                val result = response.result
 
-                val result = response.result ?: throw IllegalStateException("Пустой ответ")
-                tokenManager.saveTokens(
-                    accessToken = result.accessToken,
-                    refreshToken = result.refreshToken
-                )
-                _sideEffect.emit(AuthSideEffect.NavigateToMain)
+                when (error?.code) {
+                    61712 -> {
+                        _state.value = AuthState.WaitingForOtp
+                    }
+                    60150 -> {
+                        _state.value = AuthState.RequirePasswordChange
+                    }
+                    null -> {
+                        if (result != null) {
+                            tokenManager.saveTokens(
+                                accessToken = result.accessToken,
+                                refreshToken = result.refreshToken
+                            )
+                            _sideEffect.emit(AuthSideEffect.NavigateToMain)
+                        } else {
+                            _sideEffect.emit(AuthSideEffect.ShowError("Пустой результат от сервера"))
+                        }
+                    }
+                    else -> {
+                        _sideEffect.emit(AuthSideEffect.ShowError(error.message))
+                    }
+                }
             }
 
+            //Ввод смс кода
             is AuthIntent.SubmitOtp -> launchWithLoader {
-                val token = authRepository.verifyOtp(intent.username, intent.password, intent.otp)
-                token.result?.let {
-                    tokenManager.saveTokens(
-                        accessToken = it.accessToken,
-                        refreshToken = token.result.refreshToken)
+                val response = authRepository.verifyOtp(intent.username, intent.password, intent.otp)
+
+                val error = response.error
+                val result = response.result
+
+                when (error?.code) {
+                    61712 -> {
+                        _state.value = AuthState.WaitingForOtp
+                    }
+                    60150 -> {
+                        _state.value = AuthState.RequirePasswordChange
+                    }
+                    null -> {
+                        if (result != null) {
+                            tokenManager.saveTokens(
+                                accessToken = result.accessToken,
+                                refreshToken = result.refreshToken
+                            )
+                            _sideEffect.emit(AuthSideEffect.NavigateToMain)
+                        } else {
+                            _sideEffect.emit(AuthSideEffect.ShowError("Пустой результат от сервера"))
+                        }
+                    }
+                    else -> {
+                        _sideEffect.emit(AuthSideEffect.ShowError(error.message))
+                    }
                 }
-                _sideEffect.emit(AuthSideEffect.NavigateToMain)
             }
 
             is AuthIntent.SubmitNewPassword -> launchWithLoader {

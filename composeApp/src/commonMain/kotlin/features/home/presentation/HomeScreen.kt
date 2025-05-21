@@ -4,18 +4,21 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import features.client.presentation.ErrorView
+import cafe.adriel.voyager.core.screen.Screen
+import androidx.compose.material3.Text
+import org.koin.compose.koinInject
 
-@Composable
-fun HomeScreen(viewModel: HomeViewModel) {
-    val stateValue = viewModel.state.collectAsState().value
+object HomeScreen : Screen {
+    @Composable
+    override fun Content() {
+        val viewModel = koinInject<HomeViewModel>()
+        val state by viewModel.state.collectAsState()
 
-    when (stateValue) {
-        is HomeState.Loading -> CircularProgressIndicator()
-        is HomeState.Error -> ErrorView(
-            message = stateValue.message, // smart cast сработает
-            onRetry = { viewModel.dispatch(HomeIntent.Retry) }
-        )
-        is HomeState.Data -> ClientListScreen(stateValue.clients)
+        when (state) {
+            is HomeState.Loading -> CircularProgressIndicator()
+            is HomeState.Data -> ClientListScreen((state as HomeState.Data).clients)
+            is HomeState.Error -> Text("Ошибка: ${(state as HomeState.Error).message}")
+        }
     }
 }
+

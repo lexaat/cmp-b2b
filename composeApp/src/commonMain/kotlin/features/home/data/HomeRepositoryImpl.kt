@@ -5,10 +5,10 @@ import features.home.data.dto.ClientsResponseDto
 import features.home.data.mapper.toDomain
 import features.home.domain.model.Client
 import features.home.domain.repository.HomeRepository
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.request.*
-import io.ktor.http.*
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import model.ApiResponse
 
 class HomeRepositoryImpl(private val httpClient: HttpClient,
@@ -16,7 +16,6 @@ class HomeRepositoryImpl(private val httpClient: HttpClient,
 ) : HomeRepository {
     override suspend fun getClients(): List<Client> {
         val response = httpClient.post("${config.baseUrl}/GetClients1C") {
-            contentType(ContentType.Application.Json)
             setBody("{}")
         }.body<ApiResponse<ClientsResponseDto>>()
 
