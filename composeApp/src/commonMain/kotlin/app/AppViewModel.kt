@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cafe.adriel.voyager.core.screen.Screen
 import features.auth.domain.AuthRepository
-import features.auth.presentation.LoginScreen
+import features.auth.presentation.login.LoginScreen
 import features.common.domain.auth.TokenManager
 import features.main.presentation.MainScreen
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,6 +14,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
+import kotlinx.datetime.Clock
+
 
 private var json: Json = Json { ignoreUnknownKeys = true }
 
@@ -69,8 +71,7 @@ class AppViewModel(
             val payloadJson = decodeJwtPayload(parts[1])
             val payload = json.decodeFromString<JwtPayload>(payloadJson)
 
-
-            val currentTime = System.currentTimeMillis() / 1000
+            val currentTime = Clock.System.now().epochSeconds
             payload.exp < currentTime
         } catch (e: Exception) {
             true

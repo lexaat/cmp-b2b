@@ -1,20 +1,19 @@
 package features.home.presentation
 
-import androidx.lifecycle.ViewModel
+import core.presentation.BaseViewModel
+import core.error.ApiErrorHandler
 import androidx.lifecycle.viewModelScope
 import features.home.domain.repository.HomeRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val repository: HomeRepository
-) : ViewModel() {
+    private val repository: HomeRepository,
+    errorHandler: ApiErrorHandler<HomeSideEffect>
+) : BaseViewModel<HomeSideEffect>(errorHandler) {
 
     private val _state = MutableStateFlow<HomeState>(HomeState.Loading)
     val state: StateFlow<HomeState> = _state
-
-    private val _sideEffect = MutableSharedFlow<HomeSideEffect>()
-    val sideEffect: SharedFlow<HomeSideEffect> = _sideEffect
 
     init {
         dispatch(HomeIntent.LoadClients)
@@ -36,14 +35,14 @@ class HomeViewModel(
                 _state.value = HomeState.Data(clients)
             } catch (e: Exception) {
                 _state.value = HomeState.Error(e.message ?: "Ошибка загрузки клиентов")
-                _sideEffect.emit(HomeSideEffect.ShowError(e.message ?: "Ошибка"))
+                _sideEffect.emit(HomeSideEffect.ShowHomeError(e.message ?: "Ошибка"))
             }
         }
     }
 
     private fun selectClient(id: String) {
         viewModelScope.launch {
-            _sideEffect.emit(HomeSideEffect.NavigateToClientDetail(id))
+            //_sideEffect.emit(HomeSideEffect.NavigateToClientDetail(id))
         }
     }
 }

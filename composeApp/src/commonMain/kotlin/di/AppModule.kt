@@ -5,11 +5,12 @@ import config.AppConfig
 import config.Config
 import features.auth.domain.AuthRepository
 import features.auth.data.AuthRepositoryImpl
-import features.auth.presentation.AuthViewModel
+import features.auth.presentation.login.LoginViewModel
 import features.common.data.auth.PersistentTokenManager
 import features.common.domain.auth.TokenManager
 import networking.HttpClientFactory
 import com.russhwolf.settings.Settings
+import features.auth.presentation.login_otp.OtpViewModel
 import io.ktor.client.HttpClient
 import org.koin.dsl.module
 
@@ -30,5 +31,6 @@ val appModule = module {
     }
 
     single { AppViewModel(get(), get()) }
-    single { AuthViewModel(get(), get()) }
+    single { LoginViewModel(get(), get()) }
+    single { OtpViewModel(get(), get()) }
 }

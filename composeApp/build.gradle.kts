@@ -68,7 +68,7 @@ kotlin {
             implementation(libs.voyager.koin)
 
             implementation(libs.lifecycle.viewmodel)
-
+            implementation(libs.kotlinx.datetime)
             implementation(libs.multiplatform.settings.no.arg)
         }
         nativeMain.dependencies {

@@ -1,4 +1,4 @@
-package features.auth.presentation
+package features.auth.presentation.login
 
 import androidx.lifecycle.ViewModel
 import features.auth.domain.AuthRepository
@@ -8,14 +8,14 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.MainScope
 
-class AuthViewModel(
+class LoginViewModel(
     private val authRepository: AuthRepository,
     private val tokenManager: TokenManager,
     private val coroutineScope: CoroutineScope = MainScope()
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<AuthState>(AuthState.EnterCredentials)
-    val state: StateFlow<AuthState> = _state
+    private val _state = MutableStateFlow<LoginState>(LoginState.EnterCredentials)
+    val state: StateFlow<LoginState> = _state
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
@@ -23,11 +23,11 @@ class AuthViewModel(
     private val _sideEffect = MutableSharedFlow<AuthSideEffect>()
     val sideEffect: SharedFlow<AuthSideEffect> = _sideEffect
 
-    fun dispatch(intent: AuthIntent) {
+    fun dispatch(intent: LoginIntent) {
         when (intent) {
 
             //Ввод логина и пароля
-            is AuthIntent.SubmitCredentials -> launchWithLoader {
+            is LoginIntent.SubmitCredentials -> launchWithLoader {
                 val response = authRepository.login(intent.username, intent.password)
 
                 val error = response.error
@@ -35,10 +35,10 @@ class AuthViewModel(
 
                 when (error?.code) {
                     61712 -> {
-                        _state.value = AuthState.WaitingForOtp
+                        _sideEffect.emit(AuthSideEffect.NavigateToOtp)
                     }
                     60150 -> {
-                        _state.value = AuthState.RequirePasswordChange
+                        _sideEffect.emit(AuthSideEffect.NavigateToPasswordChange)
                     }
                     null -> {
                         if (result != null) {
@@ -57,8 +57,9 @@ class AuthViewModel(
                 }
             }
 
+
             //Ввод смс кода
-            is AuthIntent.SubmitOtp -> launchWithLoader {
+            is LoginIntent.SubmitOtp -> launchWithLoader {
                 val response = authRepository.verifyOtp(intent.username, intent.password, intent.otp)
 
                 val error = response.error
@@ -66,10 +67,10 @@ class AuthViewModel(
 
                 when (error?.code) {
                     61712 -> {
-                        _state.value = AuthState.WaitingForOtp
+                        _sideEffect.emit(AuthSideEffect.NavigateToOtp)
                     }
                     60150 -> {
-                        _state.value = AuthState.RequirePasswordChange
+                        _sideEffect.emit(AuthSideEffect.NavigateToPasswordChange)
                     }
                     null -> {
                         if (result != null) {
@@ -88,7 +89,7 @@ class AuthViewModel(
                 }
             }
 
-            is AuthIntent.SubmitNewPassword -> launchWithLoader {
+            is LoginIntent.SubmitNewPassword -> launchWithLoader {
                 val response = authRepository.changePassword(
                     username = intent.username,
                     password = intent.password,
@@ -101,10 +102,10 @@ class AuthViewModel(
                 }
 
                 // симулируем, что всегда требуется подтверждение
-                _state.value = AuthState.WaitingForPasswordOtp
+                _state.value = LoginState.WaitingForPasswordOtp
             }
 
-            is AuthIntent.SubmitPasswordOtp -> launchWithLoader {
+            is LoginIntent.SubmitPasswordOtp -> launchWithLoader {
 //                val token = authRepository.confirmPasswordChange(
 //                    intent.username,
 //                    intent.password,
@@ -113,6 +114,10 @@ class AuthViewModel(
 //                )
 //                tokenManager.saveToken(token)
                 _sideEffect.emit(AuthSideEffect.NavigateToMain)
+            }
+
+            LoginIntent.ClearState -> {
+                _state.value = LoginState.EnterCredentials
             }
         }
     }

@@ -2,6 +2,10 @@ package features.auth.presentation
 
 import app.cash.turbine.test
 import features.auth.domain.AuthRepository
+import features.auth.presentation.login.LoginIntent
+import features.auth.presentation.login.LoginViewModel
+import features.auth.presentation.login.AuthSideEffect
+import features.auth.presentation.login.LoginState
 import features.common.domain.auth.TokenManager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
@@ -17,13 +21,13 @@ class AuthViewModelTest {
 
     private lateinit var authRepository: AuthRepository
     private lateinit var tokenManager: TokenManager
-    private lateinit var viewModel: AuthViewModel
+    private lateinit var viewModel: LoginViewModel
 
     @BeforeTest
     fun setup() {
         authRepository = mockk()
         tokenManager = mockk(relaxed = true)
-        viewModel = AuthViewModel(authRepository, tokenManager, testScope)
+        viewModel = LoginViewModel(authRepository, tokenManager, testScope)
     }
 
     @Test
@@ -37,7 +41,7 @@ class AuthViewModelTest {
         )
 
         // when
-        viewModel.dispatch(AuthIntent.SubmitCredentials("user", "pass"))
+        viewModel.dispatch(LoginIntent.SubmitCredentials("user", "pass"))
 
         // then
         viewModel.sideEffect.test {
@@ -56,16 +60,16 @@ class AuthViewModelTest {
             token = ""
         )
 
-        viewModel.dispatch(AuthIntent.SubmitCredentials("user", "pass"))
+        viewModel.dispatch(LoginIntent.SubmitCredentials("user", "pass"))
 
-        assertEquals(AuthState.RequirePasswordChange, viewModel.state.first())
+        assertEquals(LoginState.RequirePasswordChange, viewModel.state.first())
     }
 
     @Test
     fun `error during login emits error side effect`() = testScope.runTest {
         coEvery { authRepository.login(any(), any()) } throws RuntimeException("Ошибка логина")
 
-        viewModel.dispatch(AuthIntent.SubmitCredentials("fail", "bad"))
+        viewModel.dispatch(LoginIntent.SubmitCredentials("fail", "bad"))
 
         viewModel.sideEffect.test {
             val effect = awaitItem()
