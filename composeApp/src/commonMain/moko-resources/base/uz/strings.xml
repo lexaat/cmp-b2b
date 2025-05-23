@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="login">Login</string>
+    <string name="password">Parol</string>
+    <string name="enter">Kirish</string>
+    <string name="sms_code">SMS kodi</string>
+    <string name="approve">Tasdiqlash</string>
+</resources>

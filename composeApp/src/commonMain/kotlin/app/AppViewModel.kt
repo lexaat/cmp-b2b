@@ -14,6 +14,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
+import kotlinx.datetime.Clock
 
 private var json: Json = Json { ignoreUnknownKeys = true }
 
@@ -69,8 +70,7 @@ class AppViewModel(
             val payloadJson = decodeJwtPayload(parts[1])
             val payload = json.decodeFromString<JwtPayload>(payloadJson)
 
-
-            val currentTime = System.currentTimeMillis() / 1000
+            val currentTime = Clock.System.now().epochSeconds
             payload.exp < currentTime
         } catch (e: Exception) {
             true

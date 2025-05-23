@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="login">login</string>
+    <string name="password">password</string>
+    <string name="enter">enter</string>
+    <string name="sms_code">SMS Code</string>
+    <string name="approve">Approve</string>
+</resources>

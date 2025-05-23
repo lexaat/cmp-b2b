@@ -7,9 +7,12 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.multiplatform.resources)
 }
 
 kotlin {
+    applyDefaultHierarchyTemplate()
+
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
@@ -28,6 +31,7 @@ kotlin {
             isStatic = true
         }
     }
+
     
     sourceSets {
         val desktopMain by getting
@@ -43,7 +47,7 @@ kotlin {
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
-
+            implementation(libs.kotlinx.datetime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
             implementation(libs.kotlinx.io.core)
@@ -70,6 +74,9 @@ kotlin {
             implementation(libs.lifecycle.viewmodel)
 
             implementation(libs.multiplatform.settings.no.arg)
+
+            implementation(libs.moko.resource)
+            implementation(libs.moko.resource.compose)
         }
         nativeMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -80,6 +87,14 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
         }
     }
+}
+
+multiplatformResources {
+    resourcesPackage.set("uz.hb.b2b") // ← твой пакет
+    resourcesClassName.set("SharedRes") // Опционально, по умолчанию MR
+    resourcesVisibility.set(dev.icerock.gradle.MRVisibility.Internal) // Опционально, по умолчанию Public
+    iosBaseLocalizationRegion.set("en") // Опционально, по умолчанию "en"
+    iosMinimalDeploymentTarget.set("11.0") // Опционально, по умолчанию "9.0"
 }
 
 android {

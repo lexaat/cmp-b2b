@@ -23,10 +23,12 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.icerock.moko.resources.compose.stringResource
 import features.common.ui.collectInLaunchedEffect
 import features.main.presentation.MainScreen
 import org.koin.compose.koinInject
 import ui.components.ScreenWrapper
+import uz.hb.b2b.SharedRes
 
 object LoginScreen : Screen {
     @Composable
@@ -80,7 +82,7 @@ fun LoginScreenContent(viewModel: AuthViewModel) {
                     viewModel.dispatch(AuthIntent.SubmitPasswordOtp(login, password, "", it))
                 }
 
-                is AuthState.PasswordChanged -> Text("Пароль изменён. Авторизуйтесь заново.")
+                is AuthState.PasswordChanged -> Text(stringResource(SharedRes.strings.login))
                 else -> {}
             }
         }
@@ -96,11 +98,11 @@ fun LoginForm(
     var login by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     Column(modifier.padding(16.dp)) {
-        OutlinedTextField(value = login, onValueChange = { login = it }, label = { Text("Логин") })
+        OutlinedTextField(value = login, onValueChange = { login = it }, label = { Text(stringResource(SharedRes.strings.login)) })
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Пароль") })
+            label = { Text(stringResource(SharedRes.strings.password)) })
         Button(
             onClick = { onSubmit(login, password) },
             enabled = !isLoading,
@@ -113,7 +115,7 @@ fun LoginForm(
                     strokeWidth = 2.dp
                 )
             } else {
-                Text("Войти")
+                Text(stringResource(SharedRes.strings.enter))
             }
         }
     }
@@ -125,7 +127,7 @@ fun OtpForm(onSubmit: (String) -> Unit) {
     Column(Modifier.padding(16.dp)) {
         OutlinedTextField(value = otp, onValueChange = { otp = it }, label = { Text("Код из СМС") })
         Button(onClick = { onSubmit(otp) }, modifier = Modifier.padding(top = 8.dp)) {
-            Text("Подтвердить")
+            Text(stringResource(SharedRes.strings.approve))
         }
     }
 }
