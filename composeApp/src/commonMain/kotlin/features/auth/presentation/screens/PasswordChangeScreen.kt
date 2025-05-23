@@ -12,7 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.icerock.moko.resources.compose.stringResource
 import features.auth.presentation.login.LoginState
+import uz.hb.b2b.SharedRes
 
 data class PasswordChangeScreen(val login: String, val oldPassword: String) : Screen {
     @Composable
@@ -34,12 +36,16 @@ data class PasswordChangeScreen(val login: String, val oldPassword: String) : Sc
                 OutlinedTextField(
                     value = newPass,
                     onValueChange = { newPass = it },
-                    label = { Text("Новый пароль") }
+                    label = { Text(
+                        stringResource(
+                        SharedRes.strings.new_password)
+                    ) }
                 )
                 Button(onClick = {
                     viewModel.dispatch(LoginIntent.SubmitNewPassword(login, oldPassword, newPass))
                 }, modifier = Modifier.padding(top = 8.dp)) {
-                    Text("Продолжить")
+                    Text(stringResource(
+                        SharedRes.strings.to_continue))
                 }
             }
         }

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cafe.adriel.voyager.core.screen.Screen
 import features.auth.domain.AuthRepository
-import features.auth.presentation.LoginScreen
+import features.auth.presentation.login.LoginScreen
 import features.common.domain.auth.TokenManager
 import features.main.presentation.MainScreen
 import kotlinx.coroutines.flow.MutableStateFlow

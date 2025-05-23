@@ -1,8 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-    <string name="login">Login</string>
-    <string name="password">Parol</string>
-    <string name="enter">Kirish</string>
+    <string name="app_name">B2B Ilova</string>
+    <string name="home">Bosh sahifa</string>
+    <string name="profile">Profil</string>
+    <string name="logout_app">Ilovadan chiqish</string>
+    <string name="logout">Chiqish</string>
+    <string name="logout_confirm">Rostdan ham chiqmoqchimisiz?</string>
+    <string name="yes">Ha</string>
+    <string name="cancel">Bekor qilish</string>
+    <string name="an_error">Xatolik</string>
+    <string name="client">Mijoz</string>
+    <string name="accounts">Hisoblar</string>
+    <string name="balance">Balans</string>
+    <string name="inn">STIR</string>
+    <string name="id">ID</string>
+    <string name="retry">Qayta urinish</string>
+    <string name="login">Kirish</string>
     <string name="sms_code">SMS kodi</string>
-    <string name="approve">Tasdiqlash</string>
+    <string name="confirm">Tasdiqlash</string>
+    <string name="new_password">Yangi parol</string>
+    <string name="to_continue">Davom etish</string>
+    <string name="change_password">Parolni almashtirish</string>
+    <string name="password">Parol</string>
 </resources>

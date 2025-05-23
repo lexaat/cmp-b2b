@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.stringResource
+import uz.hb.b2b.SharedRes
 
 data class PasswordOtpScreen(val login: String, val oldPassword: String, val newPassword: String) : Screen {
     @Composable
@@ -19,11 +21,15 @@ data class PasswordOtpScreen(val login: String, val oldPassword: String, val new
 
         ScreenWrapper {
             Column(Modifier.padding(16.dp)) {
-                OutlinedTextField(value = otp, onValueChange = { otp = it }, label = { Text("Код из СМС") })
+                OutlinedTextField(value = otp, onValueChange = { otp = it }, label = { Text(
+                    stringResource(
+                    SharedRes.strings.sms_code)
+                ) })
                 Button(onClick = {
                     viewModel.dispatch(LoginIntent.SubmitPasswordOtp(login, oldPassword, newPassword, otp))
                 }, modifier = Modifier.padding(top = 8.dp)) {
-                    Text("Сменить пароль")
+                    Text(stringResource(
+                        SharedRes.strings.change_password))
                 }
             }
         }

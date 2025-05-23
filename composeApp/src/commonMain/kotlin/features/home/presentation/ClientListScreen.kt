@@ -7,8 +7,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.stringResource
 
 import features.home.domain.model.*
+import uz.hb.b2b.SharedRes
 
 @Composable
 fun ClientListScreen(clients: List<Client>) {
@@ -30,12 +32,16 @@ fun ClientItem(client: Client) {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(client.name, style = MaterialTheme.typography.titleLarge)
-            Text("ИНН: ${client.inn}", style = MaterialTheme.typography.bodyMedium)
+            Text("${
+                stringResource(
+                SharedRes.strings.inn)
+            }: ${client.inn}", style = MaterialTheme.typography.bodyMedium)
             Text(client.address, style = MaterialTheme.typography.bodyMedium)
 
             Spacer(modifier = Modifier.height(8.dp))
             if (client.accounts.isNotEmpty()) {
-                Text("Счета:", style = MaterialTheme.typography.labelMedium)
+                Text("${stringResource(
+                    SharedRes.strings.accounts)}:", style = MaterialTheme.typography.labelMedium)
                 client.accounts.forEach { account ->
                     AccountItem(account)
                 }
@@ -48,6 +54,7 @@ fun ClientItem(client: Client) {
 fun AccountItem(account: Account) {
     Column(modifier = Modifier.padding(start = 12.dp, top = 4.dp)) {
         Text("№ ${account.account}", style = MaterialTheme.typography.bodySmall)
-        Text("Баланс: ${account.balanceOut}", style = MaterialTheme.typography.bodySmall)
+        Text("${stringResource(
+            SharedRes.strings.balance)}: ${account.balanceOut}", style = MaterialTheme.typography.bodySmall)
     }
 }

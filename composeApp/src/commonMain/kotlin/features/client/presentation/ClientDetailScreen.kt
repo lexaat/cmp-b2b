@@ -6,7 +6,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
+import dev.icerock.moko.resources.compose.stringResource
 import org.koin.compose.koinInject
+import uz.hb.b2b.SharedRes
 
 class ClientDetailScreen(private val clientId: String) : Screen {
     @Composable
@@ -31,9 +33,13 @@ class ClientDetailScreen(private val clientId: String) : Screen {
 @Composable
 fun ErrorView(message: String, onRetry: () -> Unit) {
     Column(modifier = Modifier.padding(16.dp)) {
-        Text("Ошибка: $message")
+        Text("${
+            stringResource(
+            SharedRes.strings.an_error)
+        }: $message")
         Button(onClick = onRetry, modifier = Modifier.padding(top = 8.dp)) {
-            Text("Повторить")
+            Text(stringResource(
+                SharedRes.strings.retry))
         }
     }
 }

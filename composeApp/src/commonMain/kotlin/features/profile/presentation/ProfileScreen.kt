@@ -24,9 +24,11 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import features.auth.presentation.LoginScreen
+import dev.icerock.moko.resources.compose.stringResource
+import features.auth.presentation.login.LoginScreen
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.compose.koinInject
+import uz.hb.b2b.SharedRes
 
 object ProfileScreen: Screen {
     @Composable
@@ -57,32 +59,40 @@ object ProfileScreen: Screen {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("👤 Профиль", style = MaterialTheme.typography.titleLarge)
+            Text("👤 ${
+                stringResource(
+                SharedRes.strings.profile)
+            }", style = MaterialTheme.typography.titleLarge)
             Spacer(Modifier.height(24.dp))
             Button(
                 onClick = { viewModel.confirmLogout() },
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
             ) {
-                Text("Выйти из приложения")
+                Text(stringResource(
+                    SharedRes.strings.logout_app))
             }
         }
 
         if (showDialog) {
             AlertDialog(
                 onDismissRequest = { showDialog = false },
-                title = { Text("Выход") },
-                text = { Text("Вы уверены, что хотите выйти?") },
+                title = { Text(stringResource(
+                    SharedRes.strings.logout)) },
+                text = { Text(stringResource(
+                    SharedRes.strings.logout_confirm)) },
                 confirmButton = {
                     TextButton(onClick = {
                         showDialog = false
                         viewModel.logout()
                     }) {
-                        Text("Да")
+                        Text(stringResource(
+                            SharedRes.strings.yes))
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { showDialog = false }) {
-                        Text("Отмена")
+                        Text(stringResource(
+                            SharedRes.strings.cancel))
                     }
                 }
             )

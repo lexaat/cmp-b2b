@@ -22,12 +22,16 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.icerock.moko.resources.compose.stringResource
 import features.auth.presentation.login_otp.OtpScreen
 import features.auth.presentation.screens.PasswordChangeScreen
 import features.common.ui.collectInLaunchedEffect
 import features.main.presentation.MainScreen
 import org.koin.compose.koinInject
 import ui.components.ScreenWrapper
+import uz.hb.b2b.SharedRes
+import core.i18n.LocaleController
+import features.common.ui.LanguageDropdown
 
 object LoginScreen : Screen {
     @Composable
@@ -78,12 +82,17 @@ fun LoginForm(
 ) {
     var login by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    val locale by LocaleController.locale.collectAsState()
+
     Column(modifier.padding(16.dp)) {
-        OutlinedTextField(value = login, onValueChange = { login = it }, label = { Text("Логин") })
+        OutlinedTextField(value = login, onValueChange = { login = it }, label = { Text(stringResource(
+            SharedRes.strings.login)) })
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Пароль") })
+            label = { Text(stringResource(
+                SharedRes.strings.password)) })
         Button(
             onClick = { onSubmit(login, password) },
             enabled = !isLoading,
@@ -96,8 +105,13 @@ fun LoginForm(
                     strokeWidth = 2.dp
                 )
             } else {
-                Text("Войти")
+                Text(stringResource(
+                    SharedRes.strings.login))
             }
         }
+        LanguageDropdown(
+            selected = locale,
+            onLanguageSelected = { lang -> LocaleController.setLocale(lang) }
+        )
     }
 }

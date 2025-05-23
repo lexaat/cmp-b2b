@@ -10,10 +10,12 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.icerock.moko.resources.compose.stringResource
 import features.common.ui.collectInLaunchedEffect
 import features.main.presentation.MainScreen
 import org.koin.compose.koinInject
 import ui.components.ScreenWrapper
+import uz.hb.b2b.SharedRes
 
 data class OtpScreen(val login: String, val password: String) : Screen {
     @Composable
@@ -40,11 +42,15 @@ data class OtpScreen(val login: String, val password: String) : Screen {
         Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { paddingValues ->
             ScreenWrapper {
                 Column(Modifier.padding(16.dp)) {
-                    OutlinedTextField(value = otp, onValueChange = { otp = it }, label = { Text("Код из СМС") })
+                    OutlinedTextField(value = otp, onValueChange = { otp = it }, label = { Text(
+                        stringResource(
+                        SharedRes.strings.sms_code)
+                    ) })
                     Button(onClick = {
                         viewModel.dispatch(OtpIntent.SubmitOtp(login, password, otp))
                     }, modifier = Modifier.padding(top = 8.dp)) {
-                        Text("Подтвердить")
+                        Text(stringResource(
+                            SharedRes.strings.confirm))
                     }
                 }
             }

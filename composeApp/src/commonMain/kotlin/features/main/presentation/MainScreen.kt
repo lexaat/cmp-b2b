@@ -10,14 +10,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.screen.Screen
+import dev.icerock.moko.resources.compose.stringResource
 import features.home.presentation.HomeScreen
 import features.profile.presentation.ProfileScreen
+import uz.hb.b2b.SharedRes
 
 object MainScreen : Screen {
 
     @Composable
     override fun Content() {
-        val tabItems = listOf("Главная", "Профиль")
+        val tabItems = listOf(
+            stringResource(
+            SharedRes.strings.home), stringResource(
+                SharedRes.strings.profile))
         var selectedTab by remember { mutableStateOf(0) }
         val screens = listOf(HomeScreen, ProfileScreen)
 

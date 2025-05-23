@@ -1,8 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-    <string name="login">login</string>
-    <string name="password">password</string>
-    <string name="enter">enter</string>
+    <string name="app_name">B2B App</string>
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
+    <string name="logout_app">Log out of the app</string>
+    <string name="logout">Logout</string>
+    <string name="logout_confirm">Are you sure you want to logout?</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
+    <string name="an_error">Error</string>
+    <string name="client">Client</string>
+    <string name="accounts">Accounts</string>
+    <string name="balance">Balance</string>
+    <string name="inn">TIN</string>
+    <string name="id">ID</string>
+    <string name="retry">Retry</string>
+    <string name="login">Login</string>
     <string name="sms_code">SMS Code</string>
-    <string name="approve">Approve</string>
+    <string name="confirm">Confirm</string>
+    <string name="new_password">New Password</string>
+    <string name="to_continue">Continue</string>
+    <string name="change_password">Change Password</string>
+    <string name="password">password</string>
 </resources>

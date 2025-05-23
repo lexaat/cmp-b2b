@@ -155,6 +155,12 @@ android {
             buildConfigField("String", "ENVIRONMENT", "\"prod\"")
         }
     }
+
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
 }
 dependencies {
     implementation(libs.androidx.material3.android)

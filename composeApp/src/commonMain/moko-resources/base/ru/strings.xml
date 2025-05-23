@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-    <string name="login">Логин</string>
+    <string name="home">Главная</string>
+    <string name="profile">Профиль</string>
+    <string name="logout_app">Выйти из приложения</string>
+    <string name="logout">Выход</string>
+    <string name="logout_confirm">Вы уверены, что хотите выйти?</string>
+    <string name="yes">Да</string>
+    <string name="cancel">Отмена</string>
+    <string name="error">Ошибка</string>
+    <string name="client">Клиент</string>
+    <string name="accounts">Счета</string>
+    <string name="balance">Баланс</string>
+    <string name="inn">ИНН</string>
+    <string name="id">ID</string>
+    <string name="retry">Повторить</string>
+    <string name="login">Войти</string>
+    <string name="sms_code">Код из СМС</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="new_password">Новый пароль</string>
+    <string name="to_continue">Продолжить</string>
+    <string name="change_password">Сменить пароль</string>
     <string name="password">Пароль</string>
-    <string name="enter">Войти</string>
-    <string name="sms_code">Код из SMS</string>
-    <string name="approve">Подтвердить</string>
 </resources>
