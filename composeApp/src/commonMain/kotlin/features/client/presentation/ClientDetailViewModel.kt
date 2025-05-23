@@ -1,17 +1,15 @@
 package features.client.presentation
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import core.error.ApiErrorHandler
-import core.presentation.BaseViewModel
 import features.client.domain.repository.ClientRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class ClientDetailViewModel(
-    private val repository: ClientRepository,
-    errorHandler: ApiErrorHandler<ClientSideEffect>
-) : BaseViewModel<ClientSideEffect>(errorHandler) {
+    private val repository: ClientRepository
+) : ViewModel() {
 
     private val _state = MutableStateFlow<ClientDetailState>(ClientDetailState.Loading)
     val state: StateFlow<ClientDetailState> = _state

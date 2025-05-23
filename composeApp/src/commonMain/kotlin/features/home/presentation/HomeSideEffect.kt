@@ -1,7 +1,6 @@
 package features.home.presentation
 
-import core.presentation.BaseSideEffect
-
-sealed class HomeSideEffect : BaseSideEffect {
-    data class ShowHomeError(val message: String) : HomeSideEffect()
+sealed class HomeSideEffect {
+    data class ShowError(val message: String) : HomeSideEffect()
+    data class NavigateToClientDetail(val clientId: String) : HomeSideEffect()
 }

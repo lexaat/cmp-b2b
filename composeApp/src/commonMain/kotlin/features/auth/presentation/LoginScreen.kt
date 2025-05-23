@@ -1,5 +1,6 @@
-package features.auth.presentation.login
+package features.auth.presentation
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,8 +23,6 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import features.auth.presentation.login_otp.OtpScreen
-import features.auth.presentation.screens.PasswordChangeScreen
 import features.common.ui.collectInLaunchedEffect
 import features.main.presentation.MainScreen
 import org.koin.compose.koinInject
@@ -32,7 +31,7 @@ import ui.components.ScreenWrapper
 object LoginScreen : Screen {
     @Composable
     override fun Content() {
-        val viewModel = koinInject<LoginViewModel>()
+        val viewModel = koinInject<AuthViewModel>()
         ScreenWrapper {
             LoginScreenContent(viewModel = viewModel)
         }
@@ -40,7 +39,8 @@ object LoginScreen : Screen {
 }
 
 @Composable
-fun LoginScreenContent(viewModel: LoginViewModel) {
+fun LoginScreenContent(viewModel: AuthViewModel) {
+    val state by viewModel.state.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val navigator = LocalNavigator.currentOrThrow
     val snackbarHostState = remember { SnackbarHostState() }
@@ -52,21 +52,38 @@ fun LoginScreenContent(viewModel: LoginViewModel) {
         when (effect) {
             is AuthSideEffect.ShowError -> snackbarHostState.showSnackbar(effect.message)
             is AuthSideEffect.NavigateToMain -> navigator.push(MainScreen)
-            is AuthSideEffect.NavigateToOtp -> navigator.push(OtpScreen(login, password))
-            is AuthSideEffect.NavigateToPasswordChange -> navigator.push(PasswordChangeScreen(login, password))
         }
     }
 
     Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { paddingValues ->
-        LoginForm(
-            isLoading = isLoading,
-            onSubmit = { l, p ->
-                login = l
-                password = p
-                viewModel.dispatch(LoginIntent.SubmitCredentials(l, p))
-            },
-            modifier = Modifier.padding(paddingValues)
-        )
+        Box(modifier = Modifier.padding(paddingValues)) {
+            when (state) {
+                is AuthState.EnterCredentials -> LoginForm(
+                    isLoading = isLoading,
+                    onSubmit = { l, p ->
+                        login = l
+                        password = p
+                        viewModel.dispatch(AuthIntent.SubmitCredentials(l, p))
+                    },
+                    modifier = Modifier.padding(paddingValues)
+                )
+
+                is AuthState.WaitingForOtp -> OtpForm {
+                    viewModel.dispatch(AuthIntent.SubmitOtp(login, password, it))
+                }
+
+                is AuthState.RequirePasswordChange -> PasswordChangeForm {
+                    viewModel.dispatch(AuthIntent.SubmitNewPassword(login, password, it))
+                }
+
+                is AuthState.WaitingForPasswordOtp -> PasswordOtpForm {
+                    viewModel.dispatch(AuthIntent.SubmitPasswordOtp(login, password, "", it))
+                }
+
+                is AuthState.PasswordChanged -> Text("Пароль изменён. Авторизуйтесь заново.")
+                else -> {}
+            }
+        }
     }
 }
 
@@ -98,6 +115,42 @@ fun LoginForm(
             } else {
                 Text("Войти")
             }
+        }
+    }
+}
+
+@Composable
+fun OtpForm(onSubmit: (String) -> Unit) {
+    var otp by remember { mutableStateOf("") }
+    Column(Modifier.padding(16.dp)) {
+        OutlinedTextField(value = otp, onValueChange = { otp = it }, label = { Text("Код из СМС") })
+        Button(onClick = { onSubmit(otp) }, modifier = Modifier.padding(top = 8.dp)) {
+            Text("Подтвердить")
+        }
+    }
+}
+
+@Composable
+fun PasswordChangeForm(onSubmit: (String) -> Unit) {
+    var newPass by remember { mutableStateOf("") }
+    Column(Modifier.padding(16.dp)) {
+        OutlinedTextField(
+            value = newPass,
+            onValueChange = { newPass = it },
+            label = { Text("Новый пароль") })
+        Button(onClick = { onSubmit(newPass) }, modifier = Modifier.padding(top = 8.dp)) {
+            Text("Продолжить")
+        }
+    }
+}
+
+@Composable
+fun PasswordOtpForm(onSubmit: (String) -> Unit) {
+    var otp by remember { mutableStateOf("") }
+    Column(Modifier.padding(16.dp)) {
+        OutlinedTextField(value = otp, onValueChange = { otp = it }, label = { Text("Код из СМС") })
+        Button(onClick = { onSubmit(otp) }, modifier = Modifier.padding(top = 8.dp)) {
+            Text("Сменить пароль")
         }
     }
 }

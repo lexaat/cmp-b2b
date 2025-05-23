@@ -11,8 +11,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.screen.Screen
 import features.home.presentation.HomeScreen
-import features.profile.presentation.ProfileScreen
-
 
 object MainScreen : Screen {
 
@@ -20,7 +18,7 @@ object MainScreen : Screen {
     override fun Content() {
         val tabItems = listOf("Главная", "Профиль")
         var selectedTab by remember { mutableStateOf(0) }
-        val screens = listOf(HomeScreen, ProfileScreen)
+        val screens = listOf(HomeScreen, ProfileTab)
 
         Column {
             TabRow(selectedTabIndex = selectedTab) {
