@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -33,13 +34,13 @@ fun App() {
                 println("🔄 Theme recomposed. Dark = $isDark")
 
                 val backgroundColor = MaterialTheme.colorScheme.background
-                ApplySystemBarsColors(backgroundColor, isDark)
+                UpdateSystemBars(backgroundColor, isDark)
 
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(WindowInsets.safeDrawing.asPaddingValues())
                         .background(backgroundColor)
+                        .windowInsetsPadding(WindowInsets.safeDrawing)
                 ) {
                     AppRoot()
                 }
