@@ -77,6 +77,9 @@ kotlin {
 
             implementation(libs.moko.resource)
             implementation(libs.moko.resource.compose)
+
+            implementation(libs.accompanist.systemuicontroller)
+
         }
         nativeMain.dependencies {
             implementation(libs.ktor.client.darwin)

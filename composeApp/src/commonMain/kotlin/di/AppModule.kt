@@ -1,8 +1,11 @@
 package di
 
 import app.AppViewModel
+import app.ThemeViewModel
 import config.AppConfig
 import config.Config
+import data.theme.ThemeRepository
+import data.theme.ThemeRepositoryImpl
 import features.auth.domain.AuthRepository
 import features.auth.data.AuthRepositoryImpl
 import features.auth.presentation.login.LoginViewModel
@@ -13,8 +16,10 @@ import com.russhwolf.settings.Settings
 import features.auth.presentation.login_otp.OtpViewModel
 import io.ktor.client.HttpClient
 import org.koin.dsl.module
+import org.koin.core.module.dsl.viewModel
 
 val appModule = module {
+
     single<TokenManager> { PersistentTokenManager(Settings()) }
 
     single<HttpClient> {
@@ -22,6 +27,10 @@ val appModule = module {
     }
 
     single<AppConfig> { Config.current }
+
+
+    single<ThemeRepository> { ThemeRepositoryImpl(Settings()) }
+    viewModel { ThemeViewModel(get()) }
 
     single<AuthRepository> {
         AuthRepositoryImpl(

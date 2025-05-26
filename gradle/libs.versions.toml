@@ -1,4 +1,5 @@
 [versions]
+accompanistSystemuicontroller = "0.32.0"
 agp = "8.10.0"
 android-compileSdk = "36"
 android-minSdk = "24"
@@ -21,6 +22,7 @@ voyager = "1.1.0-beta02"
 moko-resources = "0.24.5"
 
 [libraries]
+accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
 androidx-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3Android" }
 compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose" }
 compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose" }

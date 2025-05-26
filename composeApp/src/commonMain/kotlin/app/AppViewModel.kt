@@ -3,6 +3,7 @@ package app
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cafe.adriel.voyager.core.screen.Screen
+import core.i18n.LocaleController
 import features.auth.domain.AuthRepository
 import features.auth.presentation.login.LoginScreen
 import features.common.domain.auth.TokenManager
@@ -27,6 +28,7 @@ class AppViewModel(
     val startScreen: StateFlow<Screen?> = _startScreen
 
     init {
+        LocaleController.applySavedLocaleOrSystemDefault()
         viewModelScope.launch {
             val accessToken = tokenManager.getAccessToken()
             val refreshToken = tokenManager.getRefreshToken()

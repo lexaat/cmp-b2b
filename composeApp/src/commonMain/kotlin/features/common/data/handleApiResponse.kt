@@ -1,6 +1,6 @@
 package features.common.data
 
-import model.ApiResponse
+import data.model.ApiResponse
 
 class ApiException(val code: Int, override val message: String) : Exception(message)
 

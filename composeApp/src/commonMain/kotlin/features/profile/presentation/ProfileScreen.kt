@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,24 +22,30 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.ThemeViewModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.icerock.moko.resources.compose.stringResource
 import features.auth.presentation.login.LoginScreen
 import kotlinx.coroutines.flow.collectLatest
+import org.koin.compose.getKoin
 import org.koin.compose.koinInject
+import ui.theme.LocalThemeViewModel
 import uz.hb.b2b.SharedRes
 
 object ProfileScreen: Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val viewModel = koinInject<ProfileViewModel>()
+        val profileViewModel = koinInject<ProfileViewModel>()
+        val themeViewModel = LocalThemeViewModel.current ?: getKoin().get<ThemeViewModel>()
         var showDialog by remember { mutableStateOf(false) }
 
+        val isDark by themeViewModel.isDark.collectAsState()
+
         LaunchedEffect(Unit) {
-            viewModel.sideEffect.collectLatest { effect ->
+            profileViewModel.sideEffect.collectLatest { effect ->
                 when (effect) {
                     is ProfileSideEffect.NavigateToLogin -> {
                         navigator.replaceAll(LoginScreen)
@@ -65,11 +72,20 @@ object ProfileScreen: Screen {
             }", style = MaterialTheme.typography.titleLarge)
             Spacer(Modifier.height(24.dp))
             Button(
-                onClick = { viewModel.confirmLogout() },
+                onClick = { profileViewModel.confirmLogout() },
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
             ) {
                 Text(stringResource(
                     SharedRes.strings.logout_app))
+            }
+            Text("Текущая тема: ${if (isDark) "Тёмная" else "Светлая"}",
+                color = MaterialTheme.colorScheme.onBackground)
+            Button(onClick = { themeViewModel.toggleTheme() },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    contentColor = MaterialTheme.colorScheme.onSecondary
+                )) {
+                Text("Сменить тему")
             }
         }
 
@@ -83,7 +99,7 @@ object ProfileScreen: Screen {
                 confirmButton = {
                     TextButton(onClick = {
                         showDialog = false
-                        viewModel.logout()
+                        profileViewModel.logout()
                     }) {
                         Text(stringResource(
                             SharedRes.strings.yes))

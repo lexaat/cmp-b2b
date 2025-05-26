@@ -10,10 +10,17 @@ object LocaleController {
 
     fun setLocale(code: String) {
         StringDesc.localeType = StringDesc.LocaleType.Custom(code)
+        LocaleStorage.saveLocale(code)
         _locale.value = code
     }
 
-    fun useSystemLocale() {
-        StringDesc.localeType = StringDesc.LocaleType.System
+    fun applySavedLocaleOrSystemDefault() {
+        val saved = LocaleStorage.loadLocale()
+        if (saved != null) {
+            StringDesc.localeType = StringDesc.LocaleType.Custom(saved)
+            _locale.value = saved
+        } else {
+            StringDesc.localeType = StringDesc.LocaleType.System
+        }
     }
 }

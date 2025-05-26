@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -32,6 +33,8 @@ import ui.components.ScreenWrapper
 import uz.hb.b2b.SharedRes
 import core.i18n.LocaleController
 import features.common.ui.LanguageDropdown
+import dev.icerock.moko.resources.desc.desc
+import dev.icerock.moko.resources.compose.localized
 
 object LoginScreen : Screen {
     @Composable
@@ -86,13 +89,17 @@ fun LoginForm(
     val locale by LocaleController.locale.collectAsState()
 
     Column(modifier.padding(16.dp)) {
-        OutlinedTextField(value = login, onValueChange = { login = it }, label = { Text(stringResource(
-            SharedRes.strings.login)) })
+        key(locale) {
+        OutlinedTextField(
+            value = login,
+            onValueChange = { login = it },
+            label = { Text(SharedRes.strings.login.desc().localized()) }
+        )
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text(stringResource(
-                SharedRes.strings.password)) })
+            label = { Text(SharedRes.strings.password.desc().localized()) }
+        )
         Button(
             onClick = { onSubmit(login, password) },
             enabled = !isLoading,
@@ -105,10 +112,9 @@ fun LoginForm(
                     strokeWidth = 2.dp
                 )
             } else {
-                Text(stringResource(
-                    SharedRes.strings.login))
+                Text(SharedRes.strings.login.desc().localized())
             }
-        }
+        }}
         LanguageDropdown(
             selected = locale,
             onLanguageSelected = { lang -> LocaleController.setLocale(lang) }
