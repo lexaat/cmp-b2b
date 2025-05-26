@@ -18,7 +18,6 @@ fun AppRoot(
     val startScreen by appViewModel.startScreen.collectAsState()
 
     if (startScreen != null) {
-        // если нужно, передай themeViewModel дальше
         Navigator(screen = startScreen!!)
     } else {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

@@ -10,11 +10,9 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import org.koin.compose.KoinContext
 import org.koin.compose.koinInject
 import ui.theme.AppTheme
@@ -22,28 +20,29 @@ import ui.theme.LocalThemeViewModel
 
 @Composable
 fun App() {
+
     KoinContext {
         val themeViewModel = koinInject<ThemeViewModel>()
-        InternalApp(themeViewModel)
-    }
-}
+        val isDark by themeViewModel.isDark.collectAsState()
 
-@Composable
-private fun InternalApp(themeViewModel: ThemeViewModel) {
-    val isDark by themeViewModel.isDark.collectAsState()
+        CompositionLocalProvider(LocalThemeViewModel provides themeViewModel) {
+            val background = MaterialTheme.colorScheme.background
+            currentBackgroundColorArgb = background.toIntArgb()
 
-    CompositionLocalProvider(LocalThemeViewModel provides themeViewModel) {
-        AppTheme(darkTheme = isDark) {
-            println("🔄 Theme recomposed. Dark = $isDark")
+            AppTheme(darkTheme = isDark) {
+                println("🔄 Theme recomposed. Dark = $isDark")
 
-            // Важно: Navigator должен быть ВНУТРИ
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(WindowInsets.safeDrawing.asPaddingValues())
-                    .background(MaterialTheme.colorScheme.background)
-            ) {
-                AppRoot()
+                val backgroundColor = MaterialTheme.colorScheme.background
+                ApplySystemBarsColors(backgroundColor, isDark)
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(WindowInsets.safeDrawing.asPaddingValues())
+                        .background(backgroundColor)
+                ) {
+                    AppRoot()
+                }
             }
         }
     }
