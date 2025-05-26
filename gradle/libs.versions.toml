@@ -5,6 +5,7 @@ android-compileSdk = "36"
 android-minSdk = "24"
 android-targetSdk = "36"
 androidx-activityCompose = "1.10.1"
+biometric = "1.2.0-alpha05"
 compose = "1.6.11"
 
 koinCore = "4.0.4"
@@ -23,6 +24,7 @@ moko-resources = "0.24.5"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
+androidx-biometric = { module = "androidx.biometric:biometric", version.ref = "biometric" }
 androidx-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3Android" }
 compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose" }
 compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose" }

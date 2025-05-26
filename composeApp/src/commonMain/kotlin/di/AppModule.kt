@@ -17,6 +17,7 @@ import features.auth.presentation.login_otp.OtpViewModel
 import io.ktor.client.HttpClient
 import org.koin.dsl.module
 import org.koin.core.module.dsl.viewModel
+import platform.BiometricAuthenticator
 
 val appModule = module {
 
@@ -28,6 +29,7 @@ val appModule = module {
 
     single<AppConfig> { Config.current }
 
+    single<BiometricAuthenticator> { provideBiometricAuthenticator() }
 
     single<ThemeRepository> { ThemeRepositoryImpl(Settings()) }
     viewModel { ThemeViewModel(get()) }
