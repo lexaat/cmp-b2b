@@ -6,15 +6,15 @@ class InMemoryTokenManager : TokenManager {
     private var accessToken: String? = null
     private var refreshToken: String? = null
 
-    override fun saveTokens(accessToken: String, refreshToken: String) {
+    override suspend fun saveTokens(accessToken: String, refreshToken: String) {
         this.accessToken = accessToken
         this.refreshToken = refreshToken
     }
 
-    override fun getAccessToken() = accessToken
-    override fun getRefreshToken() = refreshToken
+    override suspend fun getAccessToken() = accessToken
+    override suspend fun getRefreshToken() = refreshToken
 
-    override fun clearTokens() {
+    override suspend fun clearTokens() {
         accessToken = null
         refreshToken = null
     }

@@ -1,24 +1,24 @@
 package features.common.data.auth
 
-import com.russhwolf.settings.Settings
-import com.russhwolf.settings.get
-import com.russhwolf.settings.set
 import features.common.domain.auth.TokenManager
+import data.storage.SecureStorage
+import kotlinx.coroutines.runBlocking
 
-class PersistentTokenManager(private val settings: Settings) : TokenManager {
+class PersistentTokenManager(private val storage: SecureStorage) : TokenManager {
     private val accessKey = "access_token"
     private val refreshKey = "refresh_token"
 
-    override fun saveTokens(accessToken: String, refreshToken: String) {
-        settings[accessKey] = accessToken
-        settings[refreshKey] = refreshToken
+    override suspend fun saveTokens(accessToken: String, refreshToken: String) {
+        storage.put(accessKey, accessToken)
+        storage.put(refreshKey, refreshToken)
     }
 
-    override fun getAccessToken(): String? = settings[accessKey]
-    override fun getRefreshToken(): String? = settings[refreshKey]
+    override suspend fun getAccessToken(): String? = storage.get(accessKey)
 
-    override fun clearTokens() {
-        settings.remove(accessKey)
-        settings.remove(refreshKey)
+    override suspend fun getRefreshToken(): String? = storage.get(refreshKey)
+
+    override suspend fun clearTokens() {
+        storage.remove(accessKey)
+        storage.remove(refreshKey)
     }
 }
