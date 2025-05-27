@@ -1,5 +1,6 @@
 package features.auth.model
 
+import core.model.ApiError
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -19,8 +20,4 @@ data class AuthResult(
     @SerialName("token_type") val tokenType: String
 )
 
-@Serializable
-data class ApiError(
-    val code: Int,
-    val message: String
-)
+

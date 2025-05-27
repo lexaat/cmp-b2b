@@ -22,4 +22,9 @@
     <string name="to_continue">Продолжить</string>
     <string name="change_password">Сменить пароль</string>
     <string name="password">Пароль</string>
+    <string name="no_data">Нет данных для отображения</string>
+    <string name="repeat">Повторить</string>
+    <string name="current_theme">Текущая тема</string>
+    <string name="change_theme">Сменить тему</string>
+
 </resources>

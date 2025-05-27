@@ -14,15 +14,19 @@ import data.model.ApiResponse
 class HomeRepositoryImpl(private val httpClient: HttpClient,
                          private val config: AppConfig
 ) : HomeRepository {
-    override suspend fun getClients(): List<Client> {
+
+    override suspend fun getClients(): ApiResponse<List<Client>> {
         val response = httpClient.post("${config.baseUrl}/GetClients1C") {
             setBody("{}")
         }.body<ApiResponse<ClientsResponseDto>>()
 
-        if (response.error?.code != null && response.error.code != 0) {
-            throw Exception("API error: ${response.error.message} (code ${response.error.code})")
-        }
+        // пробрасывать ошибку наружу больше не надо — это теперь задача ErrorHandler
+        val mappedClients = response.result?.clients?.map { it.toDomain() } ?: emptyList()
 
-        return response.result?.clients?.map { it.toDomain() } ?: emptyList()
+        return ApiResponse(
+            error = response.error,
+            result = mappedClients,
+            id = response.id
+        )
     }
 }

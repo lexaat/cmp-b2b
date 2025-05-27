@@ -2,41 +2,63 @@ package features.home.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import core.error.ApiErrorHandler
+import core.presentation.BaseSideEffect
 import features.home.domain.repository.HomeRepository
+import features.home.domain.usecase.GetClientsUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val repository: HomeRepository
+    private val getClientsUseCase: GetClientsUseCase,
+    private val errorHandler: ApiErrorHandler<BaseSideEffect>,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<HomeState>(HomeState.Loading)
     val state: StateFlow<HomeState> = _state
 
-    private val _sideEffect = MutableSharedFlow<HomeSideEffect>()
-    val sideEffect: SharedFlow<HomeSideEffect> = _sideEffect
+    private val _sideEffect = MutableSharedFlow<BaseSideEffect>()
+    val sideEffect: SharedFlow<BaseSideEffect> = _sideEffect
 
     init {
-        dispatch(HomeIntent.LoadClients)
+        reduce(HomeIntent.LoadClients)
     }
 
-    fun dispatch(intent: HomeIntent) {
+    fun reduce(intent: HomeIntent) {
         when (intent) {
-            is HomeIntent.LoadClients -> loadClients()
+            is HomeIntent.LoadClients,
             is HomeIntent.Retry -> loadClients()
-            is HomeIntent.SelectClient -> selectClient(intent.id)
+
+            is HomeIntent.SelectClient -> viewModelScope.launch {
+                _sideEffect.emit(HomeSideEffect.NavigateToClientDetail(intent.id))
+            }
         }
     }
 
     private fun loadClients() {
-        _state.value = HomeState.Loading
+        _state.value = when (_state.value) {
+            is HomeState.Data -> HomeState.Refreshing
+            else -> HomeState.Loading
+        }
+
         viewModelScope.launch {
-            try {
-                val clients = repository.getClients()
-                _state.value = HomeState.Data(clients)
-            } catch (e: Exception) {
-                _state.value = HomeState.Error(e.message ?: "Ошибка загрузки клиентов")
-                _sideEffect.emit(HomeSideEffect.ShowError(e.message ?: "Ошибка"))
+            val result = errorHandler.handleApiCall(
+                call = { getClientsUseCase() },
+                retry = { getClientsUseCase() }
+            )
+
+            result.sideEffect?.let { _sideEffect.emit(it) }
+
+            result.result?.let { clients ->
+                if (clients.isEmpty()) {
+                    _state.value = HomeState.Empty
+                } else {
+                    _state.value = HomeState.Data(clients)
+                }
+            } ?: run {
+                if (result.sideEffect == null) {
+                    _state.value = HomeState.Error("Неизвестная ошибка")
+                }
             }
         }
     }

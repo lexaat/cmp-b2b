@@ -78,14 +78,14 @@ object ProfileScreen: Screen {
                 Text(stringResource(
                     SharedRes.strings.logout_app))
             }
-            Text("Текущая тема: ${if (isDark) "Тёмная" else "Светлая"}",
+            Text("${stringResource(SharedRes.strings.current_theme)}: ${if (isDark) "Тёмная" else "Светлая"}",
                 color = MaterialTheme.colorScheme.onBackground)
             Button(onClick = { themeViewModel.toggleTheme() },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.secondary,
                     contentColor = MaterialTheme.colorScheme.onSecondary
                 )) {
-                Text("Сменить тему")
+                Text(stringResource(SharedRes.strings.change_theme))
             }
         }
 

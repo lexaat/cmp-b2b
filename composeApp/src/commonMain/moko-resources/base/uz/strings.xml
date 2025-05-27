@@ -22,4 +22,9 @@
     <string name="to_continue">Davom etish</string>
     <string name="change_password">Parolni almashtirish</string>
     <string name="password">Parol</string>
+    <string name="no_data">Ko‘rsatish uchun ma’lumot yo‘q</string>
+    <string name="repeat">Qayta urinib ko‘rish</string>
+    <string name="current_theme">Joriy mavzu</string>
+    <string name="change_theme">Mavzuni almashtirish</string>
+
 </resources>

@@ -1,3 +1,6 @@
 package core.presentation
 
-interface BaseSideEffect
+interface BaseSideEffect {
+    object NavigateToLogin : BaseSideEffect
+    data class ShowError(val message: String) : BaseSideEffect
+}

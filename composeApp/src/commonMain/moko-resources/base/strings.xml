@@ -22,4 +22,9 @@
     <string name="to_continue">Continue</string>
     <string name="change_password">Change Password</string>
     <string name="password">Password</string>
+    <string name="no_data">No data to display</string>
+    <string name="repeat">Retry</string>
+    <string name="current_theme">Current theme</string>
+    <string name="change_theme">Change theme</string>
+
 </resources>

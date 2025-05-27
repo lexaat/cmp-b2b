@@ -15,6 +15,6 @@ val homeModule = module {
         )
     }
     single { GetClientsUseCase(get()) }
-    viewModel { HomeViewModel(get()) }
+    viewModel { HomeViewModel(get(), get()) }
 
 }
