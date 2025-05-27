@@ -1,19 +1,22 @@
 package core.i18n
 
-import com.russhwolf.settings.Settings
-import com.russhwolf.settings.get
-import com.russhwolf.settings.set
+import data.storage.SecureStorage
+import kotlinx.coroutines.runBlocking
 
 object LocaleStorage {
     private const val KEY_LOCALE = "app_locale"
 
-    private val settings: Settings = Settings()
+    lateinit var storage: SecureStorage
 
-    fun saveLocale(lang: String) {
-        settings[KEY_LOCALE] = lang
+    fun init(storage: SecureStorage) {
+        this.storage = storage
     }
 
-    fun loadLocale(): String? {
-        return settings[KEY_LOCALE]
+    fun saveLocale(lang: String) = runBlocking {
+        storage.put(KEY_LOCALE, lang)
+    }
+
+    fun loadLocale(): String? = runBlocking {
+        storage.get(KEY_LOCALE)
     }
 }

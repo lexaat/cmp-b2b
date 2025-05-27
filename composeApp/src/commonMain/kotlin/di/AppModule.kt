@@ -6,22 +6,22 @@ import config.AppConfig
 import config.Config
 import data.theme.ThemeRepository
 import data.theme.ThemeRepositoryImpl
-import features.auth.domain.AuthRepository
 import features.auth.data.AuthRepositoryImpl
+import features.auth.domain.AuthRepository
 import features.auth.presentation.login.LoginViewModel
+import features.auth.presentation.login_otp.OtpViewModel
 import features.common.data.auth.PersistentTokenManager
 import features.common.domain.auth.TokenManager
-import networking.HttpClientFactory
-import com.russhwolf.settings.Settings
-import features.auth.presentation.login_otp.OtpViewModel
 import io.ktor.client.HttpClient
-import org.koin.dsl.module
+import networking.HttpClientFactory
 import org.koin.core.module.dsl.viewModel
+import org.koin.dsl.module
 import platform.BiometricAuthenticator
 
 val appModule = module {
 
-    single<TokenManager> { PersistentTokenManager(Settings()) }
+    single<TokenManager> { PersistentTokenManager(get()) }
+    single<ThemeRepository> { ThemeRepositoryImpl(get()) }
 
     single<HttpClient> {
         HttpClientFactory(get()).create()
@@ -31,7 +31,6 @@ val appModule = module {
 
     single<BiometricAuthenticator> { provideBiometricAuthenticator() }
 
-    single<ThemeRepository> { ThemeRepositoryImpl(Settings()) }
     viewModel { ThemeViewModel(get()) }
 
     single<AuthRepository> {

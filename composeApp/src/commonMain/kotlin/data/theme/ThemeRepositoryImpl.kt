@@ -1,11 +1,11 @@
 package data.theme
 
-import com.russhwolf.settings.Settings
+import data.storage.SecureStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class ThemeRepositoryImpl(
-    private val settings: Settings
+    private val storage: SecureStorage
 ) : ThemeRepository {
 
     companion object {
@@ -13,10 +13,10 @@ class ThemeRepositoryImpl(
     }
 
     override suspend fun isDarkTheme(): Boolean = withContext(Dispatchers.Default) {
-        settings.getBoolean(DARK_THEME_KEY, false)
+        storage.get(DARK_THEME_KEY)?.toBoolean() ?: false
     }
 
     override suspend fun setDarkTheme(enabled: Boolean) = withContext(Dispatchers.Default) {
-        settings.putBoolean(DARK_THEME_KEY, enabled)
+        storage.put(DARK_THEME_KEY, enabled.toString())
     }
 }

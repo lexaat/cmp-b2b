@@ -1,5 +1,6 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -18,7 +19,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     jvm("desktop")
     
     listOf(
@@ -45,6 +46,7 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
 
+            implementation(libs.androidx.security.crypto)
             implementation(libs.androidx.biometric)
 
         }
@@ -76,7 +78,8 @@ kotlin {
 
             implementation(libs.lifecycle.viewmodel)
 
-            implementation(libs.multiplatform.settings.no.arg)
+            //implementation(libs.multiplatform.settings.no.arg)
+
 
             implementation(libs.moko.resource)
             implementation(libs.moko.resource.compose)
@@ -86,6 +89,7 @@ kotlin {
         }
         nativeMain.dependencies {
             implementation(libs.ktor.client.darwin)
+            implementation(libs.kotlinx.coroutines.core)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -183,4 +187,5 @@ compose.desktop {
         }
     }
 }
+
 
