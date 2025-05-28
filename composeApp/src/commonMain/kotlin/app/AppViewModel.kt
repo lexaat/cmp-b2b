@@ -16,11 +16,14 @@ import kotlinx.serialization.json.Json
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlinx.datetime.Clock
+import platform.BiometricAuthenticator
+import platform.BiometricResult
 
 private var json: Json = Json { ignoreUnknownKeys = true }
 
 class AppViewModel(
     private val tokenManager: TokenManager,
+    private val biometricAuthenticator: BiometricAuthenticator,
     private val authRepository: AuthRepository // нужен метод ping или аналог
 ) : ViewModel() {
 
@@ -29,19 +32,19 @@ class AppViewModel(
 
     init {
         LocaleController.applySavedLocaleOrSystemDefault()
+
         viewModelScope.launch {
             val accessToken = tokenManager.getAccessToken()
             val refreshToken = tokenManager.getRefreshToken()
+
             if (refreshToken.isNullOrBlank()) {
                 _startScreen.value = LoginScreen
                 return@launch
             }
 
-            // 1. локальная проверка
             if (accessToken != null && !isTokenExpired(accessToken)) {
                 _startScreen.value = MainScreen
 
-                // 2. фоновая проверка на сервере
                 launch {
                     val stillValid = checkTokenOnServer(refreshToken)
                     if (!stillValid) {
@@ -50,10 +53,33 @@ class AppViewModel(
                     }
                 }
             } else {
-                _startScreen.value = LoginScreen
+                // ✅ Попытка входа по биометрии
+                val result = biometricAuthenticator.authenticate("Вход с использованием биометрии")
+                if (result is BiometricResult.Success) {
+                    try {
+                        val response = authRepository.refreshToken(refreshToken)
+                        val responseResult = response.result
+
+                        if (responseResult != null) {
+                            tokenManager.saveTokens(responseResult.accessToken, responseResult.refreshToken)
+                            _startScreen.value = MainScreen
+                        } else {
+                            // возможно, ошибка в ответе от сервера
+                            tokenManager.clearTokens()
+                            _startScreen.value = LoginScreen
+                        }
+                    } catch (e: Exception) {
+                        tokenManager.clearTokens()
+                        _startScreen.value = LoginScreen
+                    }
+                } else {
+                    // отказ или ошибка → оставляем на экране логина
+                    _startScreen.value = LoginScreen
+                }
             }
         }
     }
+
 
     @OptIn(ExperimentalEncodingApi::class)
     private fun decodeJwtPayload(payloadBase64Url: String): String {

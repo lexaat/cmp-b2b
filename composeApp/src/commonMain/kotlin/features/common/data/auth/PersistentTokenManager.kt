@@ -19,6 +19,6 @@ class PersistentTokenManager(private val storage: SecureStorage) : TokenManager 
 
     override suspend fun clearTokens() {
         storage.remove(accessKey)
-        storage.remove(refreshKey)
+        //storage.remove(refreshKey)
     }
 }

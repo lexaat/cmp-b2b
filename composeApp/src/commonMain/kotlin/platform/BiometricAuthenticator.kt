@@ -2,6 +2,7 @@ package platform
 
 interface BiometricAuthenticator {
     suspend fun authenticate(reason: String): BiometricResult
+    suspend fun isBiometricAvailable(): Boolean // ← добавляем
 }
 
 sealed class BiometricResult {

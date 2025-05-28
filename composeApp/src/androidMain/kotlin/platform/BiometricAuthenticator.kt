@@ -1,40 +1,49 @@
 package platform
 
 import android.content.Context
+import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
-import kotlinx.coroutines.CompletableDeferred
+import androidx.fragment.app.FragmentActivity
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 
-class AndroidBiometricAuthenticator(private val context: Context) : BiometricAuthenticator {
+class BiometricAuthenticatorAndroid(
+    private val activity: FragmentActivity
+) : BiometricAuthenticator {
 
-    override suspend fun authenticate(reason: String): BiometricResult {
-        val result = CompletableDeferred<BiometricResult>()
-        val executor = ContextCompat.getMainExecutor(context)
-
+    override suspend fun authenticate(reason: String): BiometricResult = suspendCancellableCoroutine { cont ->
+        val executor = ContextCompat.getMainExecutor(activity)
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
             .setTitle(reason)
-            .setNegativeButtonText("Cancel")
+            .setNegativeButtonText("Отмена")
             .build()
 
         val biometricPrompt = BiometricPrompt(
-            context as androidx.fragment.app.FragmentActivity,
+            activity,
             executor,
             object : BiometricPrompt.AuthenticationCallback() {
-                override fun onAuthenticationSucceeded(resultAuth: BiometricPrompt.AuthenticationResult) {
-                    result.complete(BiometricResult.Success)
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    cont.resume(BiometricResult.Success)
                 }
 
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                    result.complete(BiometricResult.Failed(errString.toString()))
+                    cont.resume(BiometricResult.Failed(errString.toString()))
                 }
 
                 override fun onAuthenticationFailed() {
-                    result.complete(BiometricResult.Failed("Authentication failed"))
+                    cont.resume(BiometricResult.Failed("Ошибка биометрической аутентификации"))
                 }
-            })
+            }
+        )
 
         biometricPrompt.authenticate(promptInfo)
+    }
 
-        return result.await()
+    override suspend fun isBiometricAvailable(): Boolean {
+        val biometricManager = BiometricManager.from(activity)
+        return biometricManager.canAuthenticate(
+            BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL
+        ) == BiometricManager.BIOMETRIC_SUCCESS
     }
 }

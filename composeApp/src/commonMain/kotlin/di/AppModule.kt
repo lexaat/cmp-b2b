@@ -29,10 +29,7 @@ val appModule = module {
 
     single<AppConfig> { Config.current }
 
-    single<BiometricAuthenticator> { provideBiometricAuthenticator() }
-
     viewModel { ThemeViewModel(get()) }
-
     single<AuthRepository> {
         AuthRepositoryImpl(
             httpClient = get(),
@@ -40,7 +37,7 @@ val appModule = module {
         )
     }
 
-    single { AppViewModel(get(), get()) }
-    single { LoginViewModel(get(), get()) }
+    single { AppViewModel(get(), get(), get()) }
+    single { LoginViewModel(get(), get(), get()) }
     single { OtpViewModel(get(), get()) }
 }

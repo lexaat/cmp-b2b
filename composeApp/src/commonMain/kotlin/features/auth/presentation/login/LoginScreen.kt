@@ -87,6 +87,9 @@ fun LoginForm(
     var login by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
+    val viewModel = koinInject<LoginViewModel>()
+    val canUseBiometrics by viewModel.canUseBiometrics.collectAsState()
+
     val locale by LocaleController.locale.collectAsState()
 
     Column(modifier.padding(16.dp)) {
@@ -116,6 +119,16 @@ fun LoginForm(
                 Text(SharedRes.strings.login.desc().localized())
             }
         }}
+
+        if (canUseBiometrics) {
+            Button(
+                onClick = { viewModel.loginWithBiometrics() },
+                modifier = Modifier.padding(top = 8.dp)
+            ) {
+                Text("Войти по биометрии") // можно использовать локализованную строку
+            }
+        }
+
         LanguageSelector()
     }
 }

@@ -45,10 +45,11 @@ kotlin {
 
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
+            implementation(libs.koin.core)
 
             implementation(libs.androidx.security.crypto)
+            implementation(libs.androidx.datastore.preferences)
             implementation(libs.androidx.biometric)
-
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)

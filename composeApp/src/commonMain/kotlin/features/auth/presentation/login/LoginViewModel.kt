@@ -7,10 +7,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.MainScope
+import platform.BiometricAuthenticator
+import platform.BiometricResult
 
 class LoginViewModel(
     private val authRepository: AuthRepository,
     private val tokenManager: TokenManager,
+    private val biometricAuthenticator: BiometricAuthenticator,
     private val coroutineScope: CoroutineScope = MainScope()
 ) : ViewModel() {
 
@@ -22,6 +25,16 @@ class LoginViewModel(
 
     private val _sideEffect = MutableSharedFlow<AuthSideEffect>()
     val sideEffect: SharedFlow<AuthSideEffect> = _sideEffect
+
+    val canUseBiometrics = MutableStateFlow(false)
+
+    init {
+        coroutineScope.launch {
+            val token = tokenManager.getRefreshToken()
+            val biometricsAvailable = biometricAuthenticator.isBiometricAvailable()
+            canUseBiometrics.value = token != null && biometricsAvailable
+        }
+    }
 
     fun dispatch(intent: LoginIntent) {
         when (intent) {
@@ -120,7 +133,37 @@ class LoginViewModel(
                 _state.value = LoginState.EnterCredentials
             }
         }
+
+
     }
+
+    fun loginWithBiometrics() {
+        coroutineScope.launch {
+            val result = biometricAuthenticator.authenticate("Войти с использованием биометрии")
+            if (result is BiometricResult.Success) {
+                val refreshToken = tokenManager.getRefreshToken()
+                if (refreshToken != null) {
+                    try {
+                        val response = authRepository.refreshToken(refreshToken)
+                        val auth = response.result
+                        if (auth != null) {
+                            tokenManager.saveTokens(auth.accessToken, auth.refreshToken)
+                            _sideEffect.emit(AuthSideEffect.NavigateToMain)
+                        } else {
+                            _sideEffect.emit(AuthSideEffect.ShowError("Пустой ответ от сервера"))
+                        }
+                    } catch (e: Exception) {
+                        _sideEffect.emit(AuthSideEffect.ShowError("Ошибка при обновлении токена"))
+                    }
+                } else {
+                    _sideEffect.emit(AuthSideEffect.ShowError("Нет refresh токена"))
+                }
+            } else if (result is BiometricResult.Failed) {
+                _sideEffect.emit(AuthSideEffect.ShowError(result.message))
+            }
+        }
+    }
+
 
     private fun launchWithLoader(block: suspend () -> Unit) = coroutineScope.launch {
         _isLoading.value = true
