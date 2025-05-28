@@ -42,7 +42,7 @@ object HomeScreen : Screen {
         LaunchedEffect(Unit) {
             viewModel.sideEffect.collect { effect ->
                 when (effect) {
-                    is BaseSideEffect.NavigateToLogin -> {
+                    is BaseSideEffect.SessionExpired -> {
                         navigator.popUntilRoot()
                         navigator.push(AuthScreen)
                     }

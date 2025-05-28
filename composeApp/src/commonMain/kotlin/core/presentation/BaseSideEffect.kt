@@ -1,11 +1,10 @@
 package core.presentation
 
-import features.auth.presentation.login.AuthSideEffect
-
 interface BaseSideEffect {
-    object NavigateToLogin : BaseSideEffect
+    object SessionExpired : BaseSideEffect
+    object NavigateBack   : BaseSideEffect
     data class ShowError(val message: String) : BaseSideEffect
-    object NavigateToMain : BaseSideEffect
-    object NavigateToOtp : BaseSideEffect
-    object NavigateToPasswordChange : BaseSideEffect
+    //object NavigateToMain : BaseSideEffect
+    //object NavigateToOtp : BaseSideEffect
+    //object NavigateToPasswordChange : BaseSideEffect
 }

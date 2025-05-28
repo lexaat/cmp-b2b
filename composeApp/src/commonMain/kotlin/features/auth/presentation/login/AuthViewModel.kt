@@ -17,15 +17,15 @@ class AuthViewModel(
     private val authRepository: AuthRepository,
     private val tokenManager: TokenManager,
     private val biometricAuthenticator: BiometricAuthenticator,
-    private val errorHandler: ApiErrorHandler<BaseSideEffect>,
+    private val errorHandler: ApiErrorHandler<AuthSideEffect>,
     private val coroutineScope: CoroutineScope = MainScope()
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<AuthState>(AuthState.EnterCredentials)
     val state: StateFlow<AuthState> = _state
 
-    private val _sideEffect = MutableSharedFlow<BaseSideEffect>()
-    val sideEffect: SharedFlow<BaseSideEffect> = _sideEffect
+    private val _sideEffect = MutableSharedFlow<AuthSideEffect>()
+    val sideEffect: SharedFlow<AuthSideEffect> = _sideEffect
 
     val canUseBiometrics = MutableStateFlow(false)
 
@@ -58,9 +58,9 @@ class AuthViewModel(
                 when {
                     it.accessToken.isNotBlank() -> {
                         tokenManager.saveTokens(it.accessToken, it.refreshToken)
-                        _sideEffect.emit(BaseSideEffect.NavigateToMain)
+                        _sideEffect.emit(AuthSideEffect.NavigateToMain)
                     }
-                    else -> _sideEffect.emit(BaseSideEffect.ShowError("Пустой токен"))
+                    else -> _sideEffect.emit(AuthSideEffect.ShowError("Пустой токен"))
                 }
             }
 
@@ -79,18 +79,18 @@ class AuthViewModel(
                         val auth = response.result
                         if (auth != null) {
                             tokenManager.saveTokens(auth.accessToken, auth.refreshToken)
-                            _sideEffect.emit(BaseSideEffect.NavigateToMain)
+                            _sideEffect.emit(AuthSideEffect.NavigateToMain)
                         } else {
-                            _sideEffect.emit(BaseSideEffect.ShowError("Пустой ответ от сервера"))
+                            _sideEffect.emit(AuthSideEffect.ShowError("Пустой ответ от сервера"))
                         }
                     } catch (e: Exception) {
-                        _sideEffect.emit(BaseSideEffect.ShowError("Ошибка при обновлении токена"))
+                        _sideEffect.emit(AuthSideEffect.ShowError("Ошибка при обновлении токена"))
                     }
                 } else {
-                    _sideEffect.emit(BaseSideEffect.ShowError("Нет refresh токена"))
+                    _sideEffect.emit(AuthSideEffect.ShowError("Нет refresh токена"))
                 }
             } else if (result is BiometricResult.Failed) {
-                _sideEffect.emit(BaseSideEffect.ShowError(result.message))
+                _sideEffect.emit(AuthSideEffect.ShowError(result.message))
             }
         }
     }

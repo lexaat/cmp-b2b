@@ -63,10 +63,11 @@ fun LoginScreenContent(viewModel: AuthViewModel) {
 
     viewModel.sideEffect.collectInLaunchedEffect { effect ->
         when (effect) {
-            is BaseSideEffect.ShowError -> snackbarHostState.showSnackbar(effect.message)
-            is BaseSideEffect.NavigateToMain -> navigator.push(MainScreen)
-            is BaseSideEffect.NavigateToOtp -> navigator.push(OtpScreen(login, password))
-            is BaseSideEffect.NavigateToPasswordChange -> navigator.push(PasswordChangeScreen(login, password))
+            is AuthSideEffect.ShowError -> snackbarHostState.showSnackbar(effect.message)
+            is AuthSideEffect.NavigateToMain -> navigator.push(MainScreen)
+            is AuthSideEffect.NavigateToOtp -> navigator.push(OtpScreen(login, password))
+            is AuthSideEffect.NavigateToPasswordChange -> navigator.push(PasswordChangeScreen(login, password))
+            AuthSideEffect.SessionExpired -> TODO()
         }
     }
 

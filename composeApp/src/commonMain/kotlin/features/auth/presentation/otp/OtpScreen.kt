@@ -36,6 +36,8 @@ data class OtpScreen(val login: String, val password: String) : Screen {
             when (effect) {
                 is OtpSideEffect.ShowError -> snackbarHostState.showSnackbar(effect.message)
                 is OtpSideEffect.NavigateToMain -> navigator.push(MainScreen)
+                OtpSideEffect.NavigateBack -> TODO()
+                OtpSideEffect.SessionExpired -> TODO()
             }
         }
 

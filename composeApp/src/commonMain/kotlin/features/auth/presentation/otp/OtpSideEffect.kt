@@ -2,7 +2,10 @@ package features.auth.presentation.otp
 
 import core.presentation.BaseSideEffect
 
-sealed class OtpSideEffect : BaseSideEffect {
-    data class ShowError(val message: String) : OtpSideEffect()
-    object NavigateToMain : OtpSideEffect()
+sealed interface OtpSideEffect : BaseSideEffect {
+    object NavigateToMain : OtpSideEffect
+
+    object SessionExpired : OtpSideEffect, BaseSideEffect
+    object NavigateBack   : OtpSideEffect, BaseSideEffect
+    data class ShowError(val message: String) : OtpSideEffect, BaseSideEffect
 }

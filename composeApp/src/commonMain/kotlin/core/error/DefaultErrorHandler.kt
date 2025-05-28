@@ -1,11 +1,11 @@
 package core.error
 
-import core.model.ApiError
 import core.model.ResultWithEffect
 import core.presentation.BaseSideEffect
 import core.session.LogoutManager
 import data.model.ApiResponse
 import features.auth.domain.AuthRepository
+import features.auth.presentation.login.AuthSideEffect
 import features.common.domain.auth.TokenManager
 
 class DefaultErrorHandler(
@@ -25,14 +25,14 @@ class DefaultErrorHandler(
                     val refreshToken = tokenManager.getRefreshToken()
                     if (refreshToken.isNullOrBlank()) {
                         logoutManager.clearSession()
-                        return ResultWithEffect(sideEffect = BaseSideEffect.NavigateToLogin)
+                        return ResultWithEffect(sideEffect = BaseSideEffect.SessionExpired)
                     }
 
                     val refreshResponse = authRepository.refreshToken(refreshToken = refreshToken)
 
                     if (refreshResponse.error?.code == 61608) {
                         logoutManager.clearSession()
-                        ResultWithEffect(sideEffect = BaseSideEffect.NavigateToLogin)
+                        ResultWithEffect(sideEffect = BaseSideEffect.SessionExpired)
                     } else {
                         val retried = retry()
                         retried.error?.let {
@@ -43,11 +43,11 @@ class DefaultErrorHandler(
 
                 61608 -> {
                     logoutManager.clearSession()
-                    ResultWithEffect(sideEffect = BaseSideEffect.NavigateToLogin)
+                    ResultWithEffect(sideEffect = BaseSideEffect.SessionExpired)
                 }
 
                 61712 -> {
-                    ResultWithEffect(sideEffect = BaseSideEffect.NavigateToOtp)
+                    ResultWithEffect(sideEffect = AuthSideEffect.NavigateToOtp)
                 }
 
                 else -> ResultWithEffect(sideEffect = BaseSideEffect.ShowError(error.message))
