@@ -20,6 +20,8 @@
 		<string>ru</string>
 		<string>uz</string>
 	</array>
+	<key>NSFaceIDUsageDescription</key>
+    <string>Для входа в приложение по биометрии</string>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
