@@ -35,6 +35,7 @@ import core.i18n.LocaleController
 import features.common.ui.LanguageDropdown
 import dev.icerock.moko.resources.desc.desc
 import dev.icerock.moko.resources.compose.localized
+import ui.components.LanguageSelector
 
 object LoginScreen : Screen {
     @Composable
@@ -115,9 +116,6 @@ fun LoginForm(
                 Text(SharedRes.strings.login.desc().localized())
             }
         }}
-        LanguageDropdown(
-            selected = locale,
-            onLanguageSelected = { lang -> LocaleController.setLocale(lang) }
-        )
+        LanguageSelector()
     }
 }

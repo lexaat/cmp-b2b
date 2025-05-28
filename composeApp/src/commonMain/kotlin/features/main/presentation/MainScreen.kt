@@ -5,11 +5,14 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.screen.Screen
+import core.i18n.LocaleController
 import dev.icerock.moko.resources.compose.stringResource
 import features.home.presentation.HomeScreen
 import features.profile.presentation.ProfileScreen
@@ -19,24 +22,30 @@ object MainScreen : Screen {
 
     @Composable
     override fun Content() {
-        val tabItems = listOf(
-            stringResource(
-            SharedRes.strings.home), stringResource(
-                SharedRes.strings.profile))
-        var selectedTab by remember { mutableStateOf(0) }
+        val currentLocale by LocaleController.locale.collectAsState()
+
+        // Сохраняем таб вне key(...) — чтобы он не сбрасывался
+        var selectedTab by rememberSaveable { mutableStateOf(0) }
         val screens = listOf(HomeScreen, ProfileScreen)
 
-        Column {
-            TabRow(selectedTabIndex = selectedTab) {
-                tabItems.forEachIndexed { index, title ->
-                    Tab(
-                        selected = selectedTab == index,
-                        onClick = { selectedTab = index },
-                        text = { Text(title) }
-                    )
+        key(currentLocale) {
+            Column {
+                TabRow(selectedTabIndex = selectedTab) {
+                    listOf(
+                        stringResource(SharedRes.strings.home),
+                        stringResource(SharedRes.strings.profile)
+                    ).forEachIndexed { index, title ->
+                        Tab(
+                            selected = selectedTab == index,
+                            onClick = { selectedTab = index },
+                            text = { Text(title) }
+                        )
+                    }
                 }
+                screens[selectedTab].Content()
             }
-            screens[selectedTab].Content()
         }
     }
+
 }
+
