@@ -37,6 +37,6 @@ val appModule = module {
     }
 
     single { AppViewModel(get(), get(), get()) }
-    single { AuthViewModel(get(), get(), get()) }
+    single { AuthViewModel(get(), get(), get(), get()) }
     single { OtpViewModel(get(), get()) }
 }

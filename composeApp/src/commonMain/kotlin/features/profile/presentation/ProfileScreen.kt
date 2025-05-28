@@ -29,8 +29,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import core.i18n.LocaleController
 import dev.icerock.moko.resources.compose.stringResource
-import dev.icerock.moko.resources.desc.StringDesc
-import features.auth.presentation.login.LoginScreen
+import features.auth.presentation.AuthScreen
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.compose.getKoin
 import org.koin.compose.koinInject
@@ -54,7 +53,7 @@ object ProfileScreen: Screen {
             profileViewModel.sideEffect.collectLatest { effect ->
                 when (effect) {
                     is ProfileSideEffect.NavigateToLogin -> {
-                        navigator.replaceAll(LoginScreen)
+                        navigator.replaceAll(AuthScreen)
                     }
 
                     is ProfileSideEffect.ShowLogoutConfirmation -> {

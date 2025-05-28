@@ -1,15 +1,7 @@
 package features.auth.model
 
-import core.model.ApiError
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-
-@Serializable
-data class AuthResponse(
-    val error: ApiError? = null,
-    val id: Long,
-    val result: AuthResult? = null
-)
 
 @Serializable
 data class AuthResult(

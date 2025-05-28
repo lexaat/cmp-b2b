@@ -17,6 +17,9 @@ class OtpViewModel(
     private val _state = MutableStateFlow<OtpState>(OtpState.EnterOtp)
     val state: StateFlow<OtpState> = _state
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
     private val _sideEffect = MutableSharedFlow<OtpSideEffect>()
     val sideEffect: SharedFlow<OtpSideEffect> = _sideEffect
 

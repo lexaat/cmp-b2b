@@ -24,6 +24,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import core.i18n.LocaleController
+import core.presentation.BaseSideEffect
 import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.desc.desc
 import features.auth.presentation.login.AuthIntent
@@ -34,8 +35,6 @@ import features.auth.presentation.otp.OtpScreen
 import features.auth.presentation.password.change.PasswordChangeScreen
 import features.common.ui.collectInLaunchedEffect
 import features.main.presentation.MainScreen
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import org.koin.compose.koinInject
 import ui.components.LanguageSelector
 import ui.components.ScreenWrapper
@@ -56,18 +55,18 @@ fun LoginScreenContent(viewModel: AuthViewModel) {
     val navigator = LocalNavigator.currentOrThrow
     val snackbarHostState = remember { SnackbarHostState() }
 
+    val state by viewModel.state.collectAsState()
+    val isLoading = state is AuthState.Loading
+
     var login by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    val isLoading: StateFlow<Boolean> = state.map { it is AuthState.Loading }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
-
     viewModel.sideEffect.collectInLaunchedEffect { effect ->
         when (effect) {
-            is AuthSideEffect.ShowError -> snackbarHostState.showSnackbar(effect.message)
-            is AuthSideEffect.NavigateToMain -> navigator.push(MainScreen)
-            is AuthSideEffect.NavigateToOtp -> navigator.push(OtpScreen(login, password))
-            is AuthSideEffect.NavigateToPasswordChange -> navigator.push(PasswordChangeScreen(login, password))
+            is BaseSideEffect.ShowError -> snackbarHostState.showSnackbar(effect.message)
+            is BaseSideEffect.NavigateToMain -> navigator.push(MainScreen)
+            is BaseSideEffect.NavigateToOtp -> navigator.push(OtpScreen(login, password))
+            is BaseSideEffect.NavigateToPasswordChange -> navigator.push(PasswordChangeScreen(login, password))
         }
     }
 
@@ -138,3 +137,4 @@ fun LoginForm(
         LanguageSelector()
     }
 }
+

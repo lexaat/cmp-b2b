@@ -46,6 +46,10 @@ class DefaultErrorHandler(
                     ResultWithEffect(sideEffect = BaseSideEffect.NavigateToLogin)
                 }
 
+                61712 -> {
+                    ResultWithEffect(sideEffect = BaseSideEffect.NavigateToOtp)
+                }
+
                 else -> ResultWithEffect(sideEffect = BaseSideEffect.ShowError(error.message))
             }
         }
