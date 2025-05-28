@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import cafe.adriel.voyager.core.screen.Screen
 import core.i18n.LocaleController
 import features.auth.domain.AuthRepository
-import features.auth.presentation.login.LoginScreen
+import features.auth.presentation.AuthScreen
 import features.common.domain.auth.TokenManager
 import features.main.presentation.MainScreen
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,7 +38,7 @@ class AppViewModel(
             val refreshToken = tokenManager.getRefreshToken()
 
             if (refreshToken.isNullOrBlank()) {
-                _startScreen.value = LoginScreen
+                _startScreen.value = AuthScreen
                 return@launch
             }
 
@@ -49,7 +49,7 @@ class AppViewModel(
                     val stillValid = checkTokenOnServer(refreshToken)
                     if (!stillValid) {
                         tokenManager.clearTokens()
-                        _startScreen.value = LoginScreen
+                        _startScreen.value = AuthScreen
                     }
                 }
             } else {
@@ -66,15 +66,15 @@ class AppViewModel(
                         } else {
                             // возможно, ошибка в ответе от сервера
                             tokenManager.clearTokens()
-                            _startScreen.value = LoginScreen
+                            _startScreen.value = AuthScreen
                         }
                     } catch (e: Exception) {
                         tokenManager.clearTokens()
-                        _startScreen.value = LoginScreen
+                        _startScreen.value = AuthScreen
                     }
                 } else {
                     // отказ или ошибка → оставляем на экране логина
-                    _startScreen.value = LoginScreen
+                    _startScreen.value = AuthScreen
                 }
             }
         }

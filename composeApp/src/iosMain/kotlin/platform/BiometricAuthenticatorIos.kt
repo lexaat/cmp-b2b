@@ -1,10 +1,9 @@
 package platform
 
 import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.coroutines.suspendCancellableCoroutine
 import platform.LocalAuthentication.LAContext
 import platform.LocalAuthentication.LAPolicyDeviceOwnerAuthenticationWithBiometrics
-import platform.darwin.NSObject
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
 class BiometricAuthenticatorIos : BiometricAuthenticator {

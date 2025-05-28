@@ -1,4 +1,4 @@
-package features.auth.presentation.login
+package features.auth.presentation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -23,24 +23,28 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import dev.icerock.moko.resources.compose.stringResource
-import features.auth.presentation.login_otp.OtpScreen
-import features.auth.presentation.screens.PasswordChangeScreen
+import core.i18n.LocaleController
+import dev.icerock.moko.resources.compose.localized
+import dev.icerock.moko.resources.desc.desc
+import features.auth.presentation.login.AuthIntent
+import features.auth.presentation.login.AuthSideEffect
+import features.auth.presentation.login.AuthState
+import features.auth.presentation.login.AuthViewModel
+import features.auth.presentation.otp.OtpScreen
+import features.auth.presentation.password.change.PasswordChangeScreen
 import features.common.ui.collectInLaunchedEffect
 import features.main.presentation.MainScreen
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import org.koin.compose.koinInject
+import ui.components.LanguageSelector
 import ui.components.ScreenWrapper
 import uz.hb.b2b.SharedRes
-import core.i18n.LocaleController
-import features.common.ui.LanguageDropdown
-import dev.icerock.moko.resources.desc.desc
-import dev.icerock.moko.resources.compose.localized
-import ui.components.LanguageSelector
 
-object LoginScreen : Screen {
+object AuthScreen : Screen {
     @Composable
     override fun Content() {
-        val viewModel = koinInject<LoginViewModel>()
+        val viewModel = koinInject<AuthViewModel>()
         ScreenWrapper {
             LoginScreenContent(viewModel = viewModel)
         }
@@ -48,13 +52,15 @@ object LoginScreen : Screen {
 }
 
 @Composable
-fun LoginScreenContent(viewModel: LoginViewModel) {
-    val isLoading by viewModel.isLoading.collectAsState()
+fun LoginScreenContent(viewModel: AuthViewModel) {
     val navigator = LocalNavigator.currentOrThrow
     val snackbarHostState = remember { SnackbarHostState() }
 
     var login by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    val isLoading: StateFlow<Boolean> = state.map { it is AuthState.Loading }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     viewModel.sideEffect.collectInLaunchedEffect { effect ->
         when (effect) {
@@ -71,7 +77,7 @@ fun LoginScreenContent(viewModel: LoginViewModel) {
             onSubmit = { l, p ->
                 login = l
                 password = p
-                viewModel.dispatch(LoginIntent.SubmitCredentials(l, p))
+                viewModel.reduce(AuthIntent.SubmitCredentials(l, p))
             },
             modifier = Modifier.padding(paddingValues)
         )
@@ -87,7 +93,7 @@ fun LoginForm(
     var login by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    val viewModel = koinInject<LoginViewModel>()
+    val viewModel = koinInject<AuthViewModel>()
     val canUseBiometrics by viewModel.canUseBiometrics.collectAsState()
 
     val locale by LocaleController.locale.collectAsState()

@@ -1,4 +1,4 @@
-package features.auth.presentation.login_otp
+package features.auth.presentation.otp
 
 import core.presentation.BaseSideEffect
 

@@ -1,4 +1,4 @@
-package features.auth.presentation.screens
+package features.auth.presentation.password.otp
 
 import androidx.compose.runtime.*
 import cafe.adriel.voyager.core.screen.Screen
@@ -16,7 +16,7 @@ import uz.hb.b2b.SharedRes
 data class PasswordOtpScreen(val login: String, val oldPassword: String, val newPassword: String) : Screen {
     @Composable
     override fun Content() {
-        val viewModel = koinInject<LoginViewModel>()
+        val viewModel = koinInject<PasswordOtpViewModel>()
         var otp by remember { mutableStateOf("") }
 
         ScreenWrapper {
@@ -26,7 +26,7 @@ data class PasswordOtpScreen(val login: String, val oldPassword: String, val new
                     SharedRes.strings.sms_code)
                 ) })
                 Button(onClick = {
-                    viewModel.dispatch(LoginIntent.SubmitPasswordOtp(login, oldPassword, newPassword, otp))
+                    viewModel.dispatch(PasswordOtpIntent.SubmitNewPassword(username = "", password = ""))
                 }, modifier = Modifier.padding(top = 8.dp)) {
                     Text(stringResource(
                         SharedRes.strings.change_password))

@@ -1,8 +1,7 @@
-package features.auth.presentation.login_otp
+package features.auth.presentation.otp
 
 import androidx.lifecycle.ViewModel
 import features.auth.domain.AuthRepository
-import features.auth.presentation.login.LoginState
 import features.common.domain.auth.TokenManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
@@ -15,11 +14,8 @@ class OtpViewModel(
     private val coroutineScope: CoroutineScope = MainScope()
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<LoginState>(LoginState.EnterCredentials)
-    val state: StateFlow<LoginState> = _state
-
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading
+    private val _state = MutableStateFlow<OtpState>(OtpState.EnterOtp)
+    val state: StateFlow<OtpState> = _state
 
     private val _sideEffect = MutableSharedFlow<OtpSideEffect>()
     val sideEffect: SharedFlow<OtpSideEffect> = _sideEffect
@@ -51,7 +47,6 @@ class OtpViewModel(
                     }
                 }
             }
-            OtpIntent.ClearState -> TODO()
         }
     }
 

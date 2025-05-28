@@ -20,8 +20,7 @@ kotlin {
         }
     }
 
-    jvm("desktop")
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -35,8 +34,7 @@ kotlin {
 
     
     sourceSets {
-        val desktopMain by getting
-        
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
@@ -91,11 +89,6 @@ kotlin {
         nativeMain.dependencies {
             implementation(libs.ktor.client.darwin)
             implementation(libs.kotlinx.coroutines.core)
-        }
-        desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
-
-            implementation(libs.ktor.client.okhttp)
         }
     }
 }
@@ -177,16 +170,6 @@ dependencies {
     implementation(libs.androidx.material3.android)
 }
 
-compose.desktop {
-    application {
-        mainClass = "MainKt"
 
-        nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "uz.hb.b2b"
-            packageVersion = "1.0.0"
-        }
-    }
-}
 
 

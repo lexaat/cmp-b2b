@@ -1,6 +1,6 @@
 // features/auth/presentation/screens/OtpScreen.kt
 
-package features.auth.presentation.login_otp
+package features.auth.presentation.otp
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*

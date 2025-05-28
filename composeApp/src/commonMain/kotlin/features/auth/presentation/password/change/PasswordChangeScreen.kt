@@ -1,4 +1,4 @@
-package features.auth.presentation.screens
+package features.auth.presentation.password.change
 
 import androidx.compose.runtime.*
 import cafe.adriel.voyager.core.screen.Screen
@@ -14,19 +14,20 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.icerock.moko.resources.compose.stringResource
 import features.auth.presentation.login.LoginState
+import features.auth.presentation.password.otp.PasswordOtpScreen
 import uz.hb.b2b.SharedRes
 
 data class PasswordChangeScreen(val login: String, val oldPassword: String) : Screen {
     @Composable
     override fun Content() {
-        val viewModel = koinInject<LoginViewModel>()
+        val viewModel = koinInject<PasswordChangeViewModel>()
         val navigator = LocalNavigator.currentOrThrow
         var newPass by remember { mutableStateOf("") }
 
         val state by viewModel.state.collectAsState()
 
         LaunchedEffect(state) {
-            if (state is LoginState.WaitingForPasswordOtp) {
+            if (state is PasswordChangeState.WaitingForPasswordOtp) {
                 navigator.push(PasswordOtpScreen(login, oldPassword, newPass))
             }
         }
@@ -42,7 +43,7 @@ data class PasswordChangeScreen(val login: String, val oldPassword: String) : Sc
                     ) }
                 )
                 Button(onClick = {
-                    viewModel.dispatch(LoginIntent.SubmitNewPassword(login, oldPassword, newPass))
+                    viewModel.dispatch(PasswordChangeIntent.SubmitNewPassword(username = "", password = ""))
                 }, modifier = Modifier.padding(top = 8.dp)) {
                     Text(stringResource(
                         SharedRes.strings.to_continue))
