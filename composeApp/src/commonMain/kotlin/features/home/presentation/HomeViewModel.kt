@@ -5,9 +5,13 @@ import androidx.lifecycle.viewModelScope
 import core.error.ApiCallHandler
 import core.presentation.BaseSideEffect
 import features.auth.presentation.login.AuthSideEffect
+import features.home.domain.model.Client
 import features.home.domain.usecase.GetClientsUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 
 class HomeViewModel(
     private val getClientsUseCase: GetClientsUseCase,
@@ -20,7 +24,11 @@ class HomeViewModel(
     private val _sideEffect = MutableSharedFlow<BaseSideEffect>()
     val sideEffect: SharedFlow<BaseSideEffect> = _sideEffect
 
+    var clients by mutableStateOf<List<Client>>(emptyList())
+        private set
+
     init {
+        loadClients()
         reduce(HomeIntent.LoadClients)
     }
 

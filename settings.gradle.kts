@@ -13,6 +13,14 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
+
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id == "app.cash.sqldelight") {
+                useModule("app.cash.sqldelight:gradle-plugin:${requested.version}")
+            }
+        }
+    }
 }
 
 dependencyResolutionManagement {
@@ -25,6 +33,15 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
+    }
+}
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
+gradle.settingsEvaluated {
+    // включаем auto-download для toolchains
+    gradle.rootProject {
+        extensions.extraProperties["org.gradle.java.installations.auto-download"] = true
     }
 }
 

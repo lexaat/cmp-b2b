@@ -11,7 +11,9 @@ val homeModule = module {
     single<HomeRepository> {
         HomeRepositoryImpl(
             httpClient = get(),
-            config = get()
+            config = get(),
+            homeQueries = get(),
+            clock = get()
         )
     }
     single { GetClientsUseCase(get()) }

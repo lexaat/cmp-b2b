@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.multiplatform.resources)
+    id("app.cash.sqldelight") version "2.1.0"
 }
 
 kotlin {
@@ -16,10 +17,20 @@ kotlin {
 
     androidTarget {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_1_8)
         }
     }
 
+    sourceSets.all {
+        languageSettings.optIn("kotlin.RequiresOptIn")
+    }
+
+    // SQLDelight / SQLiter может использовать sqlite3 C-библиотеку
+    targets.withType<KotlinNativeTarget>().configureEach {
+        binaries.withType<org.jetbrains.kotlin.gradle.plugin.mpp.Framework>().configureEach {
+            linkerOpts("-lsqlite3")
+        }
+    }
 
     listOf(
         iosX64(),
@@ -48,6 +59,9 @@ kotlin {
             implementation(libs.androidx.security.crypto)
             implementation(libs.androidx.datastore.preferences)
             implementation(libs.androidx.biometric)
+
+            implementation(libs.android.driver)
+
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -85,10 +99,35 @@ kotlin {
 
             implementation(libs.accompanist.systemuicontroller)
 
+            implementation(libs.runtime)
+            implementation(libs.coroutines.extensions)
+            implementation(libs.kotlinx.datetime)
+
         }
         nativeMain.dependencies {
             implementation(libs.ktor.client.darwin)
             implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.native.driver)
+            implementation(libs.coroutines.extensions)
+        }
+
+        val iosMain by getting {
+            dependencies {
+                // другие зависимости
+            }
+
+            // Добавим линковку с system libsqlite3
+            kotlin.srcDir("src/iosMain/kotlin")
+            languageSettings.optIn("kotlin.RequiresOptIn")
+
+        }
+    }
+}
+
+sqldelight {
+    databases {
+        create("AppDatabase") {
+            packageName.set("database")
         }
     }
 }
@@ -133,8 +172,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_1_8 // оставить 1.8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     buildFeatures {
         compose = true
@@ -164,6 +203,10 @@ android {
         language {
             enableSplit = false
         }
+    }
+
+    kotlin {
+        jvmToolchain(22)
     }
 }
 dependencies {

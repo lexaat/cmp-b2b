@@ -1,0 +1,35 @@
+CREATE TABLE Client (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    inn TEXT NOT NULL,
+    address TEXT NOT NULL,
+    last_updated INTEGER NOT NULL
+);
+
+CREATE TABLE Account (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    client_inn TEXT NOT NULL,
+    account TEXT NOT NULL,
+    balance_in INTEGER NOT NULL,
+    balance_out INTEGER NOT NULL
+);
+
+selectClientLastUpdated:
+SELECT MAX(last_updated) AS maxUpdated FROM Client;
+
+selectAllClients:
+SELECT * FROM Client;
+
+selectAccountsByClientId:
+SELECT * FROM Account WHERE client_inn = ?;
+
+insertClient:
+INSERT INTO Client(name, inn, address, last_updated)
+VALUES(:name, :inn, :address, :last_updated);
+
+deleteAccountsByClientInn:
+DELETE FROM Account WHERE client_inn = ?;
+
+insertAccount:
+INSERT INTO Account(client_inn, account, balance_in, balance_out)
+VALUES(:client_inn, :account, :balance_in, :balance_out);
