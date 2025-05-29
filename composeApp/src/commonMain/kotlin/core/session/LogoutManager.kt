@@ -6,7 +6,7 @@ class LogoutManager(
     private val tokenManager: TokenManager
 ) {
     suspend fun clearSession() {
-        tokenManager.clearTokens()
+        tokenManager.clearAccessToken()
         // Можно добавить logout-вызов на сервер или очистку других данных
     }
 }

@@ -26,18 +26,12 @@ data class OtpScreen(val login: String, val password: String) : Screen {
 
         val snackbarHostState = remember { SnackbarHostState() }
 
-//        // 🛑 Перехватываем кнопку "назад"
-//        BackHandler {
-//            viewModel.dispatch(OtpIntent.ClearState) // сбрасываем стейт (если нужно)
-//            navigator.pop() // возвращаемся назад
-//        }
-
         viewModel.sideEffect.collectInLaunchedEffect { effect ->
             when (effect) {
                 is OtpSideEffect.ShowError -> snackbarHostState.showSnackbar(effect.message)
                 is OtpSideEffect.NavigateToMain -> navigator.push(MainScreen)
-                OtpSideEffect.NavigateBack -> TODO()
-                OtpSideEffect.SessionExpired -> TODO()
+                OtpSideEffect.NavigateBack -> { /* обработано глобально */ }
+                OtpSideEffect.SessionExpired -> { /* обработано глобально */ }
             }
         }
 

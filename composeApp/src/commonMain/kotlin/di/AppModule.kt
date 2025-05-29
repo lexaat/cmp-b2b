@@ -2,8 +2,11 @@ package di
 
 import app.AppViewModel
 import app.ThemeViewModel
+import cafe.adriel.voyager.navigator.Navigator
 import config.AppConfig
 import config.Config
+import core.error.ApiCallHandler
+import core.error.GlobalErrorHandler
 import data.theme.ThemeRepository
 import data.theme.ThemeRepositoryImpl
 import features.auth.data.AuthRepositoryImpl
@@ -35,6 +38,12 @@ val appModule = module {
             config = get()
         )
     }
+
+    factory { (navigator: Navigator) ->
+        GlobalErrorHandler(navigator, get())
+    }
+
+    single { ApiCallHandler(get(), get(), get()) }
 
     single { AppViewModel(get(), get(), get()) }
     single { AuthViewModel(get(), get(), get(), get()) }

@@ -2,7 +2,7 @@ package features.auth.presentation.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import core.error.ApiErrorHandler
+import core.error.ApiCallHandler
 import core.presentation.BaseSideEffect
 import features.auth.domain.AuthRepository
 import features.common.domain.auth.TokenManager
@@ -17,7 +17,7 @@ class AuthViewModel(
     private val authRepository: AuthRepository,
     private val tokenManager: TokenManager,
     private val biometricAuthenticator: BiometricAuthenticator,
-    private val errorHandler: ApiErrorHandler<AuthSideEffect>,
+    private val apiCallHandler: ApiCallHandler,
     private val coroutineScope: CoroutineScope = MainScope()
 ) : ViewModel() {
 
@@ -43,28 +43,30 @@ class AuthViewModel(
         }
     }
 
-    private fun login(username: String, password: String) {
+    fun login(username: String, password: String) {
         viewModelScope.launch {
-            _state.value = AuthState.Loading
-
-            val result = errorHandler.handleApiCall(
+            val result = apiCallHandler.handleApiCall(
                 call = { authRepository.login(username, password) },
-                retry = { authRepository.login(username, password) }
-            )
-
-            result.sideEffect?.let { _sideEffect.emit(it) }
-
-            result.result?.let {
-                when {
-                    it.accessToken.isNotBlank() -> {
-                        tokenManager.saveTokens(it.accessToken, it.refreshToken)
-                        _sideEffect.emit(AuthSideEffect.NavigateToMain)
+                retry = { authRepository.login(username, password) },
+                effectMapper = { baseEffect ->
+                    when (baseEffect) {
+                        is BaseSideEffect.ShowError -> AuthSideEffect.ShowError(baseEffect.message)
+                        BaseSideEffect.SessionExpired -> AuthSideEffect.SessionExpired
+                        BaseSideEffect.NavigateBack -> AuthSideEffect.NavigateBack
+                        else -> error("Unsupported side effect: $baseEffect")
                     }
-                    else -> _sideEffect.emit(AuthSideEffect.ShowError("Пустой токен"))
+                }
+            )
+            result.sideEffect?.let { _sideEffect.emit(it) }
+            result.result?.let { auth ->
+                // обработка успешного входа
+                if (auth.accessToken.isNotBlank()) {
+                    tokenManager.saveTokens(auth.accessToken, auth.refreshToken)
+                    _sideEffect.emit(AuthSideEffect.NavigateToMain)
+                } else {
+                    _sideEffect.emit(AuthSideEffect.ShowError("Пустой токен"))
                 }
             }
-
-            _state.value = AuthState.EnterCredentials
         }
     }
 

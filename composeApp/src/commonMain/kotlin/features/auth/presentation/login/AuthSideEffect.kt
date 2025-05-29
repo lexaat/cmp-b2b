@@ -9,4 +9,5 @@ sealed interface AuthSideEffect : BaseSideEffect {
 
     object SessionExpired : AuthSideEffect, BaseSideEffect
     data class ShowError(val message: String) : AuthSideEffect, BaseSideEffect
+    object NavigateBack   : AuthSideEffect, BaseSideEffect
 }

@@ -2,15 +2,16 @@ package features.home.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import core.error.ApiErrorHandler
+import core.error.ApiCallHandler
 import core.presentation.BaseSideEffect
+import features.auth.presentation.login.AuthSideEffect
 import features.home.domain.usecase.GetClientsUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val getClientsUseCase: GetClientsUseCase,
-    private val errorHandler: ApiErrorHandler<BaseSideEffect>,
+    private val apiCallHandler: ApiCallHandler,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<HomeState>(HomeState.Loading)
@@ -41,9 +42,18 @@ class HomeViewModel(
         }
 
         viewModelScope.launch {
-            val result = errorHandler.handleApiCall(
+
+            val result = apiCallHandler.handleApiCall(
                 call = { getClientsUseCase() },
-                retry = { getClientsUseCase() }
+                retry = { getClientsUseCase() },
+                effectMapper = { baseEffect ->
+                    when (baseEffect) {
+                        is BaseSideEffect.ShowError -> AuthSideEffect.ShowError(baseEffect.message)
+                        BaseSideEffect.SessionExpired -> AuthSideEffect.SessionExpired
+                        BaseSideEffect.NavigateBack -> AuthSideEffect.NavigateBack
+                        else -> error("Unsupported side effect: $baseEffect")
+                    }
+                }
             )
 
             result.sideEffect?.let { _sideEffect.emit(it) }

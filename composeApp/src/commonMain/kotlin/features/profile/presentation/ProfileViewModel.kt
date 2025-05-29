@@ -21,7 +21,7 @@ class ProfileViewModel(
 
     fun logout() {
         CoroutineScope(Dispatchers.Main).launch {
-            tokenManager.clearTokens()
+            tokenManager.clearAccessToken()
             _sideEffect.emit(ProfileSideEffect.NavigateToLogin)
         }
     }

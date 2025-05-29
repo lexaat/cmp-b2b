@@ -48,7 +48,7 @@ class AppViewModel(
                 launch {
                     val stillValid = checkTokenOnServer(refreshToken)
                     if (!stillValid) {
-                        tokenManager.clearTokens()
+                        tokenManager.clearAccessToken()
                         _startScreen.value = AuthScreen
                     }
                 }
@@ -65,11 +65,11 @@ class AppViewModel(
                             _startScreen.value = MainScreen
                         } else {
                             // возможно, ошибка в ответе от сервера
-                            tokenManager.clearTokens()
+                            tokenManager.clearAccessToken()
                             _startScreen.value = AuthScreen
                         }
                     } catch (e: Exception) {
-                        tokenManager.clearTokens()
+                        tokenManager.clearAccessToken()
                         _startScreen.value = AuthScreen
                     }
                 } else {

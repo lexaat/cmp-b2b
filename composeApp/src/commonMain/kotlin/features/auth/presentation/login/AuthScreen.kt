@@ -39,6 +39,7 @@ import org.koin.compose.koinInject
 import ui.components.LanguageSelector
 import ui.components.ScreenWrapper
 import uz.hb.b2b.SharedRes
+import core.error.GlobalErrorHandler
 
 object AuthScreen : Screen {
     @Composable
@@ -61,13 +62,31 @@ fun LoginScreenContent(viewModel: AuthViewModel) {
     var login by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
+    // Инъекция с параметрами!
+    val globalErrorHandler = koinInject<GlobalErrorHandler>(
+        parameters = { org.koin.core.parameter.parametersOf(navigator) }
+    )
+
     viewModel.sideEffect.collectInLaunchedEffect { effect ->
+        // 1. Делегируем глобальные сайд-эффекты
+        globalErrorHandler.handle(effect)
+
+        // 2. Фичевые эффекты
         when (effect) {
-            is AuthSideEffect.ShowError -> snackbarHostState.showSnackbar(effect.message)
             is AuthSideEffect.NavigateToMain -> navigator.push(MainScreen)
             is AuthSideEffect.NavigateToOtp -> navigator.push(OtpScreen(login, password))
-            is AuthSideEffect.NavigateToPasswordChange -> navigator.push(PasswordChangeScreen(login, password))
-            AuthSideEffect.SessionExpired -> TODO()
+            is AuthSideEffect.NavigateToPasswordChange -> navigator.push(
+                PasswordChangeScreen(
+                    login,
+                    password
+                )
+            )
+
+            AuthSideEffect.NavigateBack -> { /* обработано глобально */ }
+            AuthSideEffect.SessionExpired -> { /* обработано глобально */ }
+            is AuthSideEffect.ShowError -> {
+                snackbarHostState.showSnackbar(effect.message)
+            }
         }
     }
 
