@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import core.error.ApiCallHandler
 import core.presentation.BaseSideEffect
 import features.auth.presentation.login.AuthSideEffect
-import features.home.domain.model.Client
+import domain.model.Client
 import features.home.domain.usecase.GetClientsUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch

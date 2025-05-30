@@ -1,6 +1,6 @@
 package features.home.presentation
 
-import features.home.domain.model.Client
+import domain.model.Client
 
 sealed interface HomeState {
     object Loading : HomeState

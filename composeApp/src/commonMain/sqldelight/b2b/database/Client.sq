@@ -1,0 +1,44 @@
+import kotlin.Int;
+
+CREATE TABLE IF NOT EXISTS ClientEntity (
+    id INTEGER NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    code TEXT NOT NULL,
+    inn TEXT NOT NULL,
+    address TEXT NOT NULL,
+    phone TEXT NOT NULL,
+    branch TEXT NOT NULL,
+    doc_num TEXT NOT NULL,
+    buh_name TEXT NOT NULL,
+    dir_name TEXT NOT NULL,
+    oper_day TEXT NOT NULL,
+    payment_scheme TEXT NOT NULL,
+    cards_count INTEGER AS Int NOT NULL,
+    cert_sn TEXT NOT NULL,
+    pinfl TEXT,
+    k2_count INTEGER AS Int NOT NULL
+);
+
+selectAllClients:
+SELECT * FROM ClientEntity;
+
+selectClientById:
+SELECT * FROM ClientEntity
+WHERE id = ?;
+
+insertClient:
+INSERT OR REPLACE INTO ClientEntity
+VALUES ?;
+
+deleteAllClients:
+DELETE FROM ClientEntity;
+
+deleteAllAccounts:
+DELETE FROM AccountEntity;
+
+deleteAllZpUpiAccounts:
+DELETE FROM ZpUpiAccountEntity;
+
+selectAccountsByClientId:
+SELECT * FROM AccountEntity
+WHERE client_id = ?;

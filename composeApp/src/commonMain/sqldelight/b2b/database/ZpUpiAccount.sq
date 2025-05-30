@@ -1,0 +1,5 @@
+CREATE TABLE ZpUpiAccountEntity (
+    client_id INTEGER NOT NULL REFERENCES ClientEntity(id),
+    account TEXT NOT NULL,
+    branch TEXT NOT NULL
+);

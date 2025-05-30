@@ -8,8 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
-
-import features.home.domain.model.*
+import domain.model.Client
+import domain.model.Account
 import uz.hb.b2b.SharedRes
 
 @Composable
@@ -55,6 +55,6 @@ fun AccountItem(account: Account) {
     Column(modifier = Modifier.padding(start = 12.dp, top = 4.dp)) {
         Text("№ ${account.account}", style = MaterialTheme.typography.bodySmall)
         Text("${stringResource(
-            SharedRes.strings.balance)}: ${account.balanceOut}", style = MaterialTheme.typography.bodySmall)
+            SharedRes.strings.balance)}: ${account.valuta}", style = MaterialTheme.typography.bodySmall)
     }
 }

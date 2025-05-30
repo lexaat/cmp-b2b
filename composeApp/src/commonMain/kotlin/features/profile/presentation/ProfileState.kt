@@ -1,6 +1,6 @@
 package features.profile.presentation
 
-import features.home.domain.model.Client
+import domain.model.Client
 
 sealed class ProfileState {
     object Loading : ProfileState()

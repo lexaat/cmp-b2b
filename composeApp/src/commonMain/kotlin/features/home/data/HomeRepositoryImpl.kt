@@ -1,34 +1,41 @@
 package features.home.data
 
+import b2b.database.AccountQueries
+import b2b.database.ClientQueries
+import b2b.database.DataSyncMetaQueries
 import config.AppConfig
+import data.mapper.toDomain
+import data.mapper.toEntity
+import data.model.ApiResponse
+import domain.model.Account
+import domain.model.Client
 import features.home.data.dto.ClientsResponseDto
-import features.home.data.mapper.toDomain
-import features.home.domain.model.Client
 import features.home.domain.repository.HomeRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import data.model.ApiResponse
-import features.home.domain.model.Account
-import home.HomeQueries
 import kotlinx.datetime.Clock
 
 class HomeRepositoryImpl(
     private val httpClient: HttpClient,
     private val config: AppConfig,
-    private val homeQueries: HomeQueries,
+    private val clientQueries: ClientQueries,
+    private val accountQueries: AccountQueries,
+    private val metaQueries: DataSyncMetaQueries,
     private val clock: Clock = Clock.System
 ) : HomeRepository {
 
     private val cacheDurationMillis = 5 * 60 * 1000L
 
     override suspend fun getClients(forceRefresh: Boolean): ApiResponse<List<Client>> {
-        val lastUpdated = homeQueries.selectClientLastUpdated().executeAsOneOrNull()?.maxUpdated
+        val lastUpdated = metaQueries
+            .selectLastUpdatedForTable("ClientEntity")
+            .executeAsOneOrNull()
 
         val currentTime = clock.now().toEpochMilliseconds()
 
-        val cachedClients = homeQueries.selectAllClients().executeAsList()
+        val cachedClients = clientQueries.selectAllClients().executeAsList()
 
         val shouldRefresh = forceRefresh ||
                 cachedClients.isEmpty() ||
@@ -43,44 +50,31 @@ class HomeRepositoryImpl(
             response.result?.clients?.let { clientsDto ->
                 val clients = clientsDto.map { it.toDomain() }
 
+                // очистка старых данных
+                clientQueries.deleteAllClients()
+                clientQueries.deleteAllAccounts()
+
                 clients.forEach { client ->
-                    homeQueries.insertClient(
-                        inn = client.inn,
-                        name = client.name,
-                        address = client.address,
-                        last_updated = currentTime
-                    )
-
-                    homeQueries.deleteAccountsByClientInn(client.inn)
-
+                    clientQueries.insertClient(client.toEntity())
                     client.accounts.forEach { account ->
-                        homeQueries.insertAccount(
-                            account = account.account,
-                            client_inn = client.inn,
-                            balance_in = account.balanceIn,
-                            balance_out = account.balanceOut
-                        )
+                        accountQueries.insertAccount(account.toEntity(client.id))
                     }
                 }
+
+                // сохраняем новое время обновления
+                metaQueries.updateLastUpdatedForTable("ClientEntity", currentTime)
 
                 ApiResponse(result = clients, error = response.error, id = response.id)
             } ?: ApiResponse(result = emptyList(), error = response.error, id = response.id)
         } else {
             ApiResponse(
                 result = cachedClients.map { dbClient ->
-                    val accounts = homeQueries.selectAccountsByClientId(dbClient.inn).executeAsList().map { dbAccount ->
-                        Account(
-                            account = dbAccount.account,
-                            balanceIn = dbAccount.balance_in,
-                            balanceOut = dbAccount.balance_out
-                        )
-                    }
-                    Client(
-                        name = dbClient.name,
-                        inn = dbClient.inn,
-                        address = dbClient.address,
-                        accounts = accounts
-                    )
+                    val accounts = clientQueries
+                        .selectAccountsByClientId(dbClient.id)
+                        .executeAsList()
+                        .map { it.toDomain() }
+
+                    dbClient.toDomain(accounts)
                 },
                 error = null,
                 id = null
@@ -88,31 +82,23 @@ class HomeRepositoryImpl(
         }
     }
 
+
     override suspend fun getClientsFromCache(): List<Client> {
-        return homeQueries.selectAllClients().executeAsList().map { dbClient ->
-            val accounts = homeQueries.selectAccountsByClientId(dbClient.inn).executeAsList().map { dbAccount ->
-                Account(
-                    account = dbAccount.account,
-                    balanceIn = dbAccount.balance_in,
-                    balanceOut = dbAccount.balance_out
-                )
+        return clientQueries.selectAllClients()
+            .executeAsList()
+            .map { dbClient ->
+                val accounts = clientQueries
+                    .selectAccountsByClientId(dbClient.id) // важно: использовать `id`, а не `inn`
+                    .executeAsList()
+                    .map { it.toDomain() }
+
+                dbClient.toDomain(accounts)
             }
-            Client(
-                name = dbClient.name,
-                inn = dbClient.inn,
-                address = dbClient.address,
-                accounts = accounts
-            )
-        }
     }
 
     override suspend fun getAccountsForClient(clientId: Long): List<Account> {
-        return homeQueries.selectAccountsByClientId("clientId").executeAsList().map { dbAccount ->
-            Account(
-                account = dbAccount.account,
-                balanceIn = dbAccount.balance_in,
-                balanceOut = dbAccount.balance_out
-            )
-        }
+        return clientQueries.selectAccountsByClientId(clientId)
+            .executeAsList()
+            .map { it.toDomain() }
     }
 }

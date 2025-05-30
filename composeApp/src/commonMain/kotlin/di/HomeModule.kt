@@ -12,7 +12,9 @@ val homeModule = module {
         HomeRepositoryImpl(
             httpClient = get(),
             config = get(),
-            homeQueries = get(),
+            clientQueries = get(),
+            accountQueries = get(),
+            metaQueries = get(),
             clock = get()
         )
     }

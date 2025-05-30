@@ -98,7 +98,6 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.sqldelight.runtime)
             implementation(libs.sqldelight.coroutines)
-
         }
         nativeMain.dependencies {
 
@@ -122,7 +121,11 @@ kotlin {
 sqldelight {
     databases {
         create("AppDatabase") {
-            packageName.set("database")
+            packageName.set("b2b.database")
+            schemaOutputDirectory.set(file("src/commonMain/sqldelight"))
+            migrationOutputDirectory.set(file("src/commonMain/sqldelight/b2b/migrations"))
+            verifyMigrations.set(true)
+
         }
     }
 }

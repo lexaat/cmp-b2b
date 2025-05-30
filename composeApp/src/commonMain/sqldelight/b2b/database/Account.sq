@@ -1,0 +1,25 @@
+import kotlin.Int;
+
+CREATE TABLE IF NOT EXISTS AccountEntity (
+    aid INTEGER NOT NULL PRIMARY KEY,
+    client_id INTEGER NOT NULL REFERENCES ClientEntity(id),
+    account TEXT NOT NULL,
+    name TEXT NOT NULL,
+    branch TEXT NOT NULL,
+    state INTEGER AS Int NOT NULL,
+    sgn TEXT NOT NULL,
+    valuta TEXT NOT NULL,
+    dt INTEGER NOT NULL,
+    ct INTEGER NOT NULL,
+    o_date TEXT NOT NULL,
+    l_date TEXT NOT NULL,
+    s_in INTEGER NOT NULL,
+    s_out INTEGER NOT NULL,
+    canpay INTEGER AS Int NOT NULL,
+    notif_in INTEGER AS Int NOT NULL,
+    notif_out INTEGER AS Int NOT NULL
+);
+
+insertAccount:
+INSERT OR REPLACE INTO AccountEntity
+VALUES ?;

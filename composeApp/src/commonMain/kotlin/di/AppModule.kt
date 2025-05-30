@@ -7,9 +7,11 @@ import config.AppConfig
 import config.Config
 import core.error.ApiCallHandler
 import core.error.GlobalErrorHandler
+import data.local.adapter.accountEntityAdapter
+import data.local.adapter.clientEntityAdapter
 import data.theme.ThemeRepository
 import data.theme.ThemeRepositoryImpl
-import database.AppDatabase
+import b2b.database.AppDatabase
 import features.auth.data.AuthRepositoryImpl
 import features.auth.domain.AuthRepository
 import features.common.data.auth.PersistentTokenManager
@@ -32,8 +34,13 @@ val appModule = module {
     single<AppConfig> { Config.current }
     single<Clock> { Clock.System }
 
-    single { AppDatabase(get()) } // Инициализируй свою базу данных тут
-    single { get<AppDatabase>().homeQueries }
+    single { AppDatabase(
+        driver = get(),
+        ClientEntityAdapter = clientEntityAdapter,
+        AccountEntityAdapter = accountEntityAdapter) }
+    single { get<AppDatabase>().clientQueries }
+    single { get<AppDatabase>().accountQueries }
+    single { get<AppDatabase>().dataSyncMetaQueries }
 
     viewModel { ThemeViewModel(get()) }
     single<AuthRepository> {

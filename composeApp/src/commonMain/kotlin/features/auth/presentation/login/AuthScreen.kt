@@ -23,8 +23,8 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import core.error.GlobalErrorHandler
 import core.i18n.LocaleController
-import core.presentation.BaseSideEffect
 import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.desc.desc
 import features.auth.presentation.login.AuthIntent
@@ -39,7 +39,6 @@ import org.koin.compose.koinInject
 import ui.components.LanguageSelector
 import ui.components.ScreenWrapper
 import uz.hb.b2b.SharedRes
-import core.error.GlobalErrorHandler
 
 object AuthScreen : Screen {
     @Composable

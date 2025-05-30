@@ -5,7 +5,7 @@ import core.i18n.LocaleStorage
 import data.storage.SecureStorage
 import data.storage.SecureStorageFactory
 import org.koin.dsl.module
-import database.AppDatabase
+import b2b.database.AppDatabase
 import core.DatabaseDriverFactory
 
 val iosModule = module {
@@ -20,6 +20,6 @@ val iosModule = module {
     }
 
     single {
-        AppDatabase(get())
+        AppDatabase(get(), get(), get())
     }
 }

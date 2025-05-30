@@ -5,10 +5,9 @@ import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import core.DatabaseDriverFactory
 import core.i18n.LocaleStorage
 import data.storage.SecureStorageFactory
-import database.AppDatabase
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
-
+import b2b.database.AppDatabase
 
 val androidModule = module {
     single {

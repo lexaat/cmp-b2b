@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS DataSyncMeta (
+    table_name TEXT NOT NULL PRIMARY KEY,
+    last_updated INTEGER NOT NULL
+);
+
+selectLastUpdatedForTable:
+SELECT last_updated FROM DataSyncMeta
+WHERE table_name = ?;
+
+updateLastUpdatedForTable:
+INSERT OR REPLACE INTO DataSyncMeta(table_name, last_updated)
+VALUES (?, ?);
