@@ -3,10 +3,10 @@ package features.auth.data
 import config.AppConfig
 import data.model.ApiResponse
 import features.auth.domain.AuthRepository
-import features.auth.model.AuthResult
-import features.auth.model.ChangePasswordRequest
-import features.auth.model.LoginRequest
-import features.auth.model.RefreshTokenRequest
+import features.auth.domain.model.AuthResult
+import features.auth.domain.model.ChangePasswordRequest
+import features.auth.domain.model.LoginRequest
+import features.auth.domain.model.RefreshTokenRequest
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.ClientRequestException
@@ -25,15 +25,15 @@ class AuthRepositoryImpl(
         println("AuthRepositoryImpl initialized with ${config.baseUrl}")
     }
 
-    override suspend fun login(username: String, password: String): ApiResponse<AuthResult> {
-        val credentials = "$username:$password"
+    override suspend fun login(request: LoginRequest): ApiResponse<AuthResult> {
+        val credentials = "${request.username}:${request.password}"
         val encoded = credentials.encodeToByteArray().encodeBase64()
 
         return try {
             val response = httpClient.post("${config.baseUrl}/login") {
                 contentType(ContentType.Application.Json)
                 header(HttpHeaders.Authorization, "Basic $encoded")
-                setBody(LoginRequest(otp = ""))
+                setBody(request)
             }
 
             val responseBody = response.bodyAsText()
@@ -95,10 +95,10 @@ class AuthRepositoryImpl(
         }.body()
     }
 
-    override suspend fun refreshToken(refreshToken: String): ApiResponse<AuthResult> {
+    override suspend fun refreshToken(request: RefreshTokenRequest): ApiResponse<AuthResult> {
         return try {
             val response = httpClient.post("${config.baseUrl}/RefreshToken") {
-                setBody(RefreshTokenRequest(refresh_token = refreshToken))
+                setBody(request)
             }
             response.body()
         } catch (e: Exception) {

@@ -1,6 +1,5 @@
 package data.model
 
-import core.model.ApiError
 import kotlinx.serialization.Serializable
 
 @Serializable

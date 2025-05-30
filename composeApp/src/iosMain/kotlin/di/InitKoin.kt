@@ -9,6 +9,7 @@ fun initKoinIOS() {
             clientModule,
             configModule,
             appModule,
+            authModule,
             homeModule,
             profileModule,
             errorModule,

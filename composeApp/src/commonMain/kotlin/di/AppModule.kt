@@ -12,8 +12,6 @@ import data.theme.ThemeRepositoryImpl
 import database.AppDatabase
 import features.auth.data.AuthRepositoryImpl
 import features.auth.domain.AuthRepository
-import features.auth.presentation.login.AuthViewModel
-import features.auth.presentation.otp.OtpViewModel
 import features.common.data.auth.PersistentTokenManager
 import features.common.domain.auth.TokenManager
 import io.ktor.client.HttpClient
@@ -52,6 +50,4 @@ val appModule = module {
     single { ApiCallHandler(get(), get(), get()) }
 
     single { AppViewModel(get(), get(), get()) }
-    single { AuthViewModel(get(), get(), get(), get()) }
-    single { OtpViewModel(get(), get()) }
 }

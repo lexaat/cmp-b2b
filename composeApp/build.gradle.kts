@@ -20,16 +20,12 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_1_8)
         }
     }
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
 
     sourceSets.all {
         languageSettings.optIn("kotlin.RequiresOptIn")
-    }
-
-    // SQLDelight / SQLiter может использовать sqlite3 C-библиотеку
-    targets.withType<KotlinNativeTarget>().configureEach {
-        binaries.withType<org.jetbrains.kotlin.gradle.plugin.mpp.Framework>().configureEach {
-            linkerOpts("-lsqlite3")
-        }
     }
 
     listOf(
@@ -40,9 +36,9 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+            linkerOpts("-lsqlite3")
         }
     }
-
     
     sourceSets {
 
@@ -60,7 +56,7 @@ kotlin {
             implementation(libs.androidx.datastore.preferences)
             implementation(libs.androidx.biometric)
 
-            implementation(libs.android.driver)
+            implementation(libs.sqldelight.android.driver)
 
         }
         commonMain.dependencies {
@@ -99,21 +95,20 @@ kotlin {
 
             implementation(libs.accompanist.systemuicontroller)
 
-            implementation(libs.runtime)
-            implementation(libs.coroutines.extensions)
             implementation(libs.kotlinx.datetime)
+            implementation(libs.sqldelight.runtime)
+            implementation(libs.sqldelight.coroutines)
 
         }
         nativeMain.dependencies {
-            implementation(libs.ktor.client.darwin)
-            implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.native.driver)
-            implementation(libs.coroutines.extensions)
+
         }
 
         val iosMain by getting {
             dependencies {
-                // другие зависимости
+                implementation(libs.ktor.client.darwin)
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.sqldelight.native)
             }
 
             // Добавим линковку с system libsqlite3
@@ -203,10 +198,6 @@ android {
         language {
             enableSplit = false
         }
-    }
-
-    kotlin {
-        jvmToolchain(22)
     }
 }
 dependencies {

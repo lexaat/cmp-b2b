@@ -1,13 +1,12 @@
 package core.error
 
 import core.presentation.BaseSideEffect
-import features.auth.domain.AuthRepository
-import features.auth.presentation.login.AuthSideEffect
-import features.common.domain.auth.TokenManager
 import core.session.LogoutManager
 import data.model.ApiResponse
-import features.auth.presentation.AuthScreen
-import features.main.presentation.MainScreen
+import features.auth.domain.model.RefreshTokenRequest
+import features.auth.domain.usecase.RefreshTokenUseCase
+import features.auth.presentation.login.AuthSideEffect
+import features.common.domain.auth.TokenManager
 
 /** Универсальный результат: результат или sideEffect (одноразовое событие) */
 data class ResultWithEffect<T, S>(
@@ -16,7 +15,7 @@ data class ResultWithEffect<T, S>(
 )
 
 class ApiCallHandler(
-    private val authRepository: AuthRepository,
+    private val refreshTokenUseCase: RefreshTokenUseCase,
     private val tokenManager: TokenManager,
     private val logoutManager: LogoutManager
 ) {
@@ -36,7 +35,7 @@ class ApiCallHandler(
                         logoutManager.clearSession()
                         ResultWithEffect(sideEffect = effectMapper(BaseSideEffect.SessionExpired))
                     } else {
-                        val refreshResponse = authRepository.refreshToken(refreshToken = refreshToken)
+                        val refreshResponse = refreshTokenUseCase(RefreshTokenRequest(refresh_token = refreshToken))
                         if (refreshResponse.error?.code == 61608) {
                             logoutManager.clearSession()
                             ResultWithEffect(sideEffect = effectMapper(BaseSideEffect.SessionExpired))

@@ -5,6 +5,9 @@ import androidx.lifecycle.viewModelScope
 import cafe.adriel.voyager.core.screen.Screen
 import core.i18n.LocaleController
 import features.auth.domain.AuthRepository
+import features.auth.domain.model.RefreshTokenRequest
+import features.auth.domain.usecase.LoginUseCase
+import features.auth.domain.usecase.RefreshTokenUseCase
 import features.auth.presentation.AuthScreen
 import features.common.domain.auth.TokenManager
 import features.main.presentation.MainScreen
@@ -24,7 +27,7 @@ private var json: Json = Json { ignoreUnknownKeys = true }
 class AppViewModel(
     private val tokenManager: TokenManager,
     private val biometricAuthenticator: BiometricAuthenticator,
-    private val authRepository: AuthRepository // нужен метод ping или аналог
+    private val refreshTokenUseCase: RefreshTokenUseCase,
 ) : ViewModel() {
 
     private val _startScreen = MutableStateFlow<Screen?>(null)
@@ -57,7 +60,7 @@ class AppViewModel(
                 val result = biometricAuthenticator.authenticate("Вход с использованием биометрии")
                 if (result is BiometricResult.Success) {
                     try {
-                        val response = authRepository.refreshToken(refreshToken)
+                        val response = refreshTokenUseCase(RefreshTokenRequest(refresh_token = refreshToken))
                         val responseResult = response.result
 
                         if (responseResult != null) {
@@ -108,7 +111,7 @@ class AppViewModel(
 
     private suspend fun checkTokenOnServer(refreshToken: String): Boolean {
         return try {
-            authRepository.refreshToken(refreshToken = refreshToken).error == null
+            refreshTokenUseCase(RefreshTokenRequest(refresh_token = refreshToken)).error == null
         } catch (e: Exception) {
             false
         }

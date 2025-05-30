@@ -4,7 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import core.error.ApiCallHandler
 import core.presentation.BaseSideEffect
-import features.auth.domain.AuthRepository
+import features.auth.domain.model.LoginRequest
+import features.auth.domain.model.RefreshTokenRequest
+import features.auth.domain.usecase.LoginUseCase
+import features.auth.domain.usecase.RefreshTokenUseCase
 import features.common.domain.auth.TokenManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -14,7 +17,8 @@ import platform.BiometricAuthenticator
 import platform.BiometricResult
 
 class AuthViewModel(
-    private val authRepository: AuthRepository,
+    private val loginUseCase: LoginUseCase,
+    private val refreshTokenUseCase: RefreshTokenUseCase,
     private val tokenManager: TokenManager,
     private val biometricAuthenticator: BiometricAuthenticator,
     private val apiCallHandler: ApiCallHandler,
@@ -46,8 +50,8 @@ class AuthViewModel(
     fun login(username: String, password: String) {
         viewModelScope.launch {
             val result = apiCallHandler.handleApiCall(
-                call = { authRepository.login(username, password) },
-                retry = { authRepository.login(username, password) },
+                call = { loginUseCase(LoginRequest(username = username, password = password, otp = "")) },
+                retry = { loginUseCase(LoginRequest(username = username, password = password, otp = "")) },
                 effectMapper = { baseEffect ->
                     when (baseEffect) {
                         is BaseSideEffect.ShowError -> AuthSideEffect.ShowError(baseEffect.message)
@@ -77,7 +81,7 @@ class AuthViewModel(
                 val refreshToken = tokenManager.getRefreshToken()
                 if (refreshToken != null) {
                     try {
-                        val response = authRepository.refreshToken(refreshToken)
+                        val response = refreshTokenUseCase(RefreshTokenRequest(refresh_token = refreshToken))
                         val auth = response.result
                         if (auth != null) {
                             tokenManager.saveTokens(auth.accessToken, auth.refreshToken)
