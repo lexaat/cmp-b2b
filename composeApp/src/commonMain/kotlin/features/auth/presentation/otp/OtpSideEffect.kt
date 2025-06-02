@@ -4,6 +4,7 @@ import core.presentation.BaseSideEffect
 
 sealed interface OtpSideEffect : BaseSideEffect {
     object NavigateToMain : OtpSideEffect
+    object NavigateToPasswordChange : OtpSideEffect
 
     object SessionExpired : OtpSideEffect, BaseSideEffect
     object NavigateBack   : OtpSideEffect, BaseSideEffect

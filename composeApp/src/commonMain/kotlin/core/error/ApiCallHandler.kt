@@ -6,6 +6,7 @@ import data.model.ApiResponse
 import features.auth.domain.model.RefreshTokenRequest
 import features.auth.domain.usecase.RefreshTokenUseCase
 import features.auth.presentation.login.AuthSideEffect
+import features.auth.presentation.otp.OtpSideEffect
 import features.common.domain.auth.TokenManager
 
 /** Универсальный результат: результат или sideEffect (одноразовое событие) */
@@ -21,11 +22,11 @@ class ApiCallHandler(
 ) {
 
     /** Главная функция, используемая во всех фичах */
-    suspend fun <T> handleApiCall(
+    suspend fun <T, SIDE_EFFECT : BaseSideEffect> handleApiCall(
         call: suspend () -> ApiResponse<T>,
         retry: suspend () -> ApiResponse<T>,
-        effectMapper: (BaseSideEffect) -> AuthSideEffect // для маппинга глобальных эффектов на фичевые, если надо
-    ): ResultWithEffect<T, AuthSideEffect> {
+        effectMapper: (BaseSideEffect) -> SIDE_EFFECT // для маппинга глобальных эффектов на фичевые, если надо
+    ): ResultWithEffect<T, SIDE_EFFECT> {
         val response = call()
         response.error?.let { error ->
             return when (error.code) {
@@ -56,7 +57,10 @@ class ApiCallHandler(
                     }
                 }
                 61712 -> {
-                    ResultWithEffect(sideEffect = AuthSideEffect.NavigateToOtp)
+                    ResultWithEffect(sideEffect = effectMapper(AuthSideEffect.NavigateToOtp))
+                }
+                60150 -> {
+                    ResultWithEffect(sideEffect = effectMapper(OtpSideEffect.NavigateToPasswordChange))
                 }
                 61608 -> {
                     logoutManager.clearSession()

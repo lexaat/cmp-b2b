@@ -55,15 +55,15 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun verifyOtp(username: String, password: String, otp: String): ApiResponse<AuthResult> {
-        val credentials = "$username:$password"
+    override suspend fun verifyOtp(request: LoginRequest): ApiResponse<AuthResult> {
+        val credentials = "${request.username}:${request.password}"
         val encoded = credentials.encodeToByteArray().encodeBase64()
 
         return try {
             val response = httpClient.post("${config.baseUrl}/login") {
                 contentType(ContentType.Application.Json)
                 header(HttpHeaders.Authorization, "Basic $encoded")
-                setBody(LoginRequest(otp = otp))
+                setBody(request)
             }
 
             val responseBody = response.bodyAsText()
@@ -85,13 +85,13 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun changePassword(username: String, password: String, newPassword: String, otp: String): ApiResponse<AuthResult> {
-        val credentials = "$username:$password"
+    override suspend fun changePassword(request: ChangePasswordRequest): ApiResponse<AuthResult> {
+        val credentials = "${request.username}:${request.password}"
         val encoded = credentials.encodeToByteArray().encodeBase64()
         return httpClient.post("${config.baseUrl}/ChangePassword") {
             contentType(ContentType.Application.Json)
             header("Authorization", "Basic $encoded")
-            setBody(ChangePasswordRequest(newPassword, otp))
+            setBody(request)
         }.body()
     }
 

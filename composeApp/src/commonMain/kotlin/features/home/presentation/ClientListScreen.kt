@@ -11,6 +11,7 @@ import dev.icerock.moko.resources.compose.stringResource
 import domain.model.Client
 import domain.model.Account
 import uz.hb.b2b.SharedRes
+import core.utils.*
 
 @Composable
 fun ClientListScreen(clients: List<Client>) {
@@ -55,6 +56,6 @@ fun AccountItem(account: Account) {
     Column(modifier = Modifier.padding(start = 12.dp, top = 4.dp)) {
         Text("№ ${account.account}", style = MaterialTheme.typography.bodySmall)
         Text("${stringResource(
-            SharedRes.strings.balance)}: ${account.valuta}", style = MaterialTheme.typography.bodySmall)
+            SharedRes.strings.balance)}: ${formatSumFromTiyin(account.sOut)}", style = MaterialTheme.typography.bodySmall)
     }
 }

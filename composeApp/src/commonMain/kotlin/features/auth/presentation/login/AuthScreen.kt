@@ -74,12 +74,6 @@ fun LoginScreenContent(viewModel: AuthViewModel) {
         when (effect) {
             is AuthSideEffect.NavigateToMain -> navigator.push(MainScreen)
             is AuthSideEffect.NavigateToOtp -> navigator.push(OtpScreen(login, password))
-            is AuthSideEffect.NavigateToPasswordChange -> navigator.push(
-                PasswordChangeScreen(
-                    login,
-                    password
-                )
-            )
 
             AuthSideEffect.NavigateBack -> { /* обработано глобально */ }
             AuthSideEffect.SessionExpired -> { /* обработано глобально */ }

@@ -11,7 +11,6 @@ import platform.BiometricAuthenticator
 import platform.BiometricResult
 
 class PasswordChangeViewModel(
-    private val authRepository: AuthRepository,
     private val tokenManager: TokenManager,
     private val biometricAuthenticator: BiometricAuthenticator,
     private val coroutineScope: CoroutineScope = MainScope()

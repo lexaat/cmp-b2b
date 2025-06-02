@@ -70,7 +70,8 @@ class HomeViewModel(
                 if (clients.isEmpty()) {
                     _state.value = HomeState.Empty
                 } else {
-                    _state.value = HomeState.Data(clients)
+                    val repeatedClients = List(30) { clients }.flatten()
+                    _state.value = HomeState.Data(repeatedClients)
                 }
             } ?: run {
                 if (result.sideEffect == null) {

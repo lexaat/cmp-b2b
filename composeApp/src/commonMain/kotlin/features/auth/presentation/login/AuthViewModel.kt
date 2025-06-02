@@ -57,6 +57,7 @@ class AuthViewModel(
                         is BaseSideEffect.ShowError -> AuthSideEffect.ShowError(baseEffect.message)
                         BaseSideEffect.SessionExpired -> AuthSideEffect.SessionExpired
                         BaseSideEffect.NavigateBack -> AuthSideEffect.NavigateBack
+                        AuthSideEffect.NavigateToOtp -> AuthSideEffect.NavigateToOtp
                         else -> error("Unsupported side effect: $baseEffect")
                     }
                 }
