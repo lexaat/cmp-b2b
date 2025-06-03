@@ -18,7 +18,7 @@ import org.koin.compose.koinInject
 import ui.components.ScreenWrapper
 import uz.hb.b2b.SharedRes
 
-data class PasswordOtpScreen(val login: String, val oldPassword: String, val newPassword: String) : Screen {
+data class PasswordOtpScreen(val login: String, val oldPassword: String) : Screen {
     @Composable
     override fun Content() {
         val viewModel = koinInject<PasswordOtpViewModel>()

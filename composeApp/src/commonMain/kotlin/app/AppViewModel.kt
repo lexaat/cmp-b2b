@@ -60,7 +60,7 @@ class AppViewModel(
                 val result = biometricAuthenticator.authenticate("Вход с использованием биометрии")
                 if (result is BiometricResult.Success) {
                     try {
-                        val response = refreshTokenUseCase(RefreshTokenRequest(refresh_token = refreshToken))
+                        val response = refreshTokenUseCase(RefreshTokenRequest(refreshToken = refreshToken))
                         val responseResult = response.result
 
                         if (responseResult != null) {
@@ -111,7 +111,7 @@ class AppViewModel(
 
     private suspend fun checkTokenOnServer(refreshToken: String): Boolean {
         return try {
-            refreshTokenUseCase(RefreshTokenRequest(refresh_token = refreshToken)).error == null
+            refreshTokenUseCase(RefreshTokenRequest(refreshToken = refreshToken)).error == null
         } catch (e: Exception) {
             false
         }

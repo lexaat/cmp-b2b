@@ -2,7 +2,6 @@ package features.auth.presentation.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import core.error.ApiCallHandler
 import core.presentation.BaseSideEffect
 import features.auth.domain.model.LoginRequest
 import features.auth.domain.model.RefreshTokenRequest
@@ -11,7 +10,10 @@ import features.auth.domain.usecase.RefreshTokenUseCase
 import features.common.domain.auth.TokenManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import platform.BiometricAuthenticator
 import platform.BiometricResult
@@ -21,7 +23,6 @@ class AuthViewModel(
     private val refreshTokenUseCase: RefreshTokenUseCase,
     private val tokenManager: TokenManager,
     private val biometricAuthenticator: BiometricAuthenticator,
-    private val apiCallHandler: ApiCallHandler,
     private val coroutineScope: CoroutineScope = MainScope()
 ) : ViewModel() {
 
@@ -49,22 +50,21 @@ class AuthViewModel(
 
     fun login(username: String, password: String) {
         viewModelScope.launch {
-            val result = apiCallHandler.handleApiCall(
-                call = { loginUseCase(LoginRequest(username = username, password = password, otp = "")) },
-                retry = { loginUseCase(LoginRequest(username = username, password = password, otp = "")) },
-                effectMapper = { baseEffect ->
-                    when (baseEffect) {
-                        is BaseSideEffect.ShowError -> AuthSideEffect.ShowError(baseEffect.message)
-                        BaseSideEffect.SessionExpired -> AuthSideEffect.SessionExpired
-                        BaseSideEffect.NavigateBack -> AuthSideEffect.NavigateBack
-                        AuthSideEffect.NavigateToOtp -> AuthSideEffect.NavigateToOtp
-                        else -> error("Unsupported side effect: $baseEffect")
-                    }
+            val result =
+                loginUseCase(LoginRequest(username = username, password = password, otp = ""))
+
+            result.sideEffect?.let { sideEffect ->
+                val mapped = when (sideEffect) {
+                    is BaseSideEffect.ShowError -> AuthSideEffect.ShowError(sideEffect.message)
+                    BaseSideEffect.SessionExpired -> AuthSideEffect.SessionExpired
+                    BaseSideEffect.NavigateBack -> AuthSideEffect.NavigateBack
+                    AuthSideEffect.NavigateToOtp -> AuthSideEffect.NavigateToOtp
+                    else -> error("Unsupported side effect: $sideEffect")
                 }
-            )
-            result.sideEffect?.let { _sideEffect.emit(it) }
+                _sideEffect.emit(mapped)
+            }
+
             result.result?.let { auth ->
-                // обработка успешного входа
                 if (auth.accessToken.isNotBlank()) {
                     tokenManager.saveTokens(auth.accessToken, auth.refreshToken)
                     _sideEffect.emit(AuthSideEffect.NavigateToMain)
@@ -82,7 +82,7 @@ class AuthViewModel(
                 val refreshToken = tokenManager.getRefreshToken()
                 if (refreshToken != null) {
                     try {
-                        val response = refreshTokenUseCase(RefreshTokenRequest(refresh_token = refreshToken))
+                        val response = refreshTokenUseCase(RefreshTokenRequest(refreshToken = refreshToken))
                         val auth = response.result
                         if (auth != null) {
                             tokenManager.saveTokens(auth.accessToken, auth.refreshToken)

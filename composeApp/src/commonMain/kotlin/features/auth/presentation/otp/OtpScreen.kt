@@ -11,7 +11,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.icerock.moko.resources.compose.stringResource
-import features.auth.presentation.password.change.PasswordChangeScreen
+import features.auth.presentation.password.change.ChangePasswordScreen
 import features.common.ui.collectInLaunchedEffect
 import features.main.presentation.MainScreen
 import org.koin.compose.koinInject
@@ -34,7 +34,7 @@ data class OtpScreen(val login: String, val password: String) : Screen {
                 OtpSideEffect.NavigateBack -> { /* обработано глобально */ }
                 OtpSideEffect.SessionExpired -> { /* обработано глобально */ }
                 OtpSideEffect.NavigateToPasswordChange -> navigator.push(
-                    PasswordChangeScreen(
+                    ChangePasswordScreen(
                         login,
                         password
                     )

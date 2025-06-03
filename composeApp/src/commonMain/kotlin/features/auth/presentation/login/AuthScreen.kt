@@ -32,7 +32,6 @@ import features.auth.presentation.login.AuthSideEffect
 import features.auth.presentation.login.AuthState
 import features.auth.presentation.login.AuthViewModel
 import features.auth.presentation.otp.OtpScreen
-import features.auth.presentation.password.change.PasswordChangeScreen
 import features.common.ui.collectInLaunchedEffect
 import features.main.presentation.MainScreen
 import org.koin.compose.koinInject

@@ -18,7 +18,7 @@ val homeModule = module {
             clock = get()
         )
     }
-    single { GetClientsUseCase(get()) }
-    viewModel { HomeViewModel(get(), get()) }
+    single { GetClientsUseCase(get(), get()) }
+    viewModel { HomeViewModel(get()) }
 
 }

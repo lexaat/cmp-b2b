@@ -5,7 +5,6 @@ import app.ThemeViewModel
 import cafe.adriel.voyager.navigator.Navigator
 import config.AppConfig
 import config.Config
-import core.error.ApiCallHandler
 import core.error.GlobalErrorHandler
 import data.local.adapter.accountEntityAdapter
 import data.local.adapter.clientEntityAdapter
@@ -21,6 +20,7 @@ import kotlinx.datetime.Clock
 import networking.HttpClientFactory
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
+import core.usecase.RefreshWrapper
 
 val appModule = module {
 
@@ -50,11 +50,11 @@ val appModule = module {
         )
     }
 
+    single { RefreshWrapper(get(), get(), get()) }
+
     factory { (navigator: Navigator) ->
         GlobalErrorHandler(navigator, get())
     }
-
-    single { ApiCallHandler(get(), get(), get()) }
 
     single { AppViewModel(get(), get(), get()) }
 }

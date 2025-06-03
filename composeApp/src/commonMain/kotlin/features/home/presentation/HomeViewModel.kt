@@ -2,20 +2,14 @@ package features.home.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import core.error.ApiCallHandler
 import core.presentation.BaseSideEffect
 import features.auth.presentation.login.AuthSideEffect
-import domain.model.Client
 import features.home.domain.usecase.GetClientsUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 
 class HomeViewModel(
     private val getClientsUseCase: GetClientsUseCase,
-    private val apiCallHandler: ApiCallHandler,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<HomeState>(HomeState.Loading)
@@ -23,9 +17,6 @@ class HomeViewModel(
 
     private val _sideEffect = MutableSharedFlow<BaseSideEffect>()
     val sideEffect: SharedFlow<BaseSideEffect> = _sideEffect
-
-    var clients by mutableStateOf<List<Client>>(emptyList())
-        private set
 
     init {
         loadClients()
@@ -36,7 +27,6 @@ class HomeViewModel(
         when (intent) {
             is HomeIntent.LoadClients,
             is HomeIntent.Retry -> loadClients()
-
             is HomeIntent.SelectClient -> viewModelScope.launch {
                 _sideEffect.emit(HomeSideEffect.NavigateToClientDetail(intent.id))
             }
@@ -50,21 +40,18 @@ class HomeViewModel(
         }
 
         viewModelScope.launch {
+            val result = getClientsUseCase()
 
-            val result = apiCallHandler.handleApiCall(
-                call = { getClientsUseCase() },
-                retry = { getClientsUseCase() },
-                effectMapper = { baseEffect ->
-                    when (baseEffect) {
-                        is BaseSideEffect.ShowError -> AuthSideEffect.ShowError(baseEffect.message)
-                        BaseSideEffect.SessionExpired -> AuthSideEffect.SessionExpired
-                        BaseSideEffect.NavigateBack -> AuthSideEffect.NavigateBack
-                        else -> error("Unsupported side effect: $baseEffect")
-                    }
+            result.sideEffect?.let { sideEffect ->
+                val mapped = when (sideEffect) {
+                    is BaseSideEffect.ShowError -> AuthSideEffect.ShowError(sideEffect.message)
+                    BaseSideEffect.SessionExpired -> AuthSideEffect.SessionExpired
+                    BaseSideEffect.NavigateBack -> AuthSideEffect.NavigateBack
+                    AuthSideEffect.NavigateToOtp -> AuthSideEffect.NavigateToOtp
+                    else -> error("Unsupported side effect: $sideEffect")
                 }
-            )
-
-            result.sideEffect?.let { _sideEffect.emit(it) }
+                _sideEffect.emit(mapped)
+            }
 
             result.result?.let { clients ->
                 if (clients.isEmpty()) {
