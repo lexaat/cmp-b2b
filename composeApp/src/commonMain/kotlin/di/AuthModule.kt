@@ -6,6 +6,7 @@ import features.auth.domain.usecase.ChangePasswordUseCase
 import features.auth.presentation.login.AuthViewModel
 import features.auth.presentation.otp.OtpViewModel
 import features.auth.presentation.password.change.ChangePasswordViewModel
+import features.auth.presentation.password.otp.PasswordOtpViewModel
 import org.koin.dsl.module
 
 val authModule = module {
@@ -17,4 +18,5 @@ val authModule = module {
     single { AuthViewModel(get(), get(), get(), get()) }
     single { OtpViewModel(get(), get()) }
     single { ChangePasswordViewModel(get()) }
+    single { PasswordOtpViewModel(get()) }
 }

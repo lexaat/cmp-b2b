@@ -1,6 +1,7 @@
 package features.auth.data
 
 import config.AppConfig
+import core.networking.setLoggedBody
 import data.model.ApiResponse
 import features.auth.domain.AuthRepository
 import features.auth.domain.model.AuthResult
@@ -85,13 +86,13 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun changePassword(request: ChangePasswordRequest): ApiResponse<AuthResult> {
+    override suspend fun changePassword(request: ChangePasswordRequest): ApiResponse<String> {
         val credentials = "${request.username}:${request.password}"
         val encoded = credentials.encodeToByteArray().encodeBase64()
         return httpClient.post("${config.baseUrl}/ChangePassword") {
             contentType(ContentType.Application.Json)
             header("Authorization", "Basic $encoded")
-            setBody(request)
+            setLoggedBody(request)
         }.body()
     }
 

@@ -9,6 +9,6 @@ import features.auth.domain.model.RefreshTokenRequest
 interface AuthRepository {
     suspend fun login(request: LoginRequest): ApiResponse<AuthResult>
     suspend fun verifyOtp(request: LoginRequest): ApiResponse<AuthResult>
-    suspend fun changePassword(request: ChangePasswordRequest): ApiResponse<AuthResult>
+    suspend fun changePassword(request: ChangePasswordRequest): ApiResponse<String>
     suspend fun refreshToken(request: RefreshTokenRequest): ApiResponse<AuthResult>
 }

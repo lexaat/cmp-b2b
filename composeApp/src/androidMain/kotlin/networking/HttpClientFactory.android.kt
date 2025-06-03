@@ -23,6 +23,7 @@ actual class HttpClientFactory actual constructor(
                     ignoreUnknownKeys = true
                     prettyPrint = true
                 })
+
             }
 
             install(DefaultRequest) {

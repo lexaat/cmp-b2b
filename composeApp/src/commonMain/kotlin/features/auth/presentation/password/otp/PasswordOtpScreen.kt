@@ -31,7 +31,7 @@ data class PasswordOtpScreen(val login: String, val oldPassword: String) : Scree
                     SharedRes.strings.sms_code)
                 ) })
                 Button(onClick = {
-                    viewModel.dispatch(PasswordOtpIntent.SubmitNewPassword(username = "", password = ""))
+                    //viewModel.dispatch(PasswordOtpIntent.SubmitNewPassword(username = "", password = ""))
                 }, modifier = Modifier.padding(top = 8.dp)) {
                     Text(stringResource(
                         SharedRes.strings.change_password))

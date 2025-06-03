@@ -13,7 +13,7 @@ class ChangePasswordUseCase(
     private val repository: AuthRepository,
     private val refreshWrapper: RefreshWrapper
 ) {
-    suspend operator fun invoke(request: ChangePasswordRequest): ResultWithEffect<AuthResult, BaseSideEffect> {
+    suspend operator fun invoke(request: ChangePasswordRequest): ResultWithEffect<String, BaseSideEffect> {
         return try {
             val response = repository.changePassword(request)
 

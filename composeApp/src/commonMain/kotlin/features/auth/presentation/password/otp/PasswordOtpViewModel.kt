@@ -12,9 +12,6 @@ import platform.BiometricResult
 
 class PasswordOtpViewModel(
     private val authRepository: AuthRepository,
-    private val tokenManager: TokenManager,
-    private val biometricAuthenticator: BiometricAuthenticator,
-    private val coroutineScope: CoroutineScope = MainScope()
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<PasswordOtpState>(PasswordOtpState.EnterCredentials)
@@ -26,20 +23,4 @@ class PasswordOtpViewModel(
     private val _sideEffect = MutableSharedFlow<PasswordOtpSideEffect>()
     val sideEffect: SharedFlow<PasswordOtpSideEffect> = _sideEffect
 
-    val canUseBiometrics = MutableStateFlow(false)
-
-    init {
-        coroutineScope.launch {
-            val token = tokenManager.getRefreshToken()
-            val biometricsAvailable = biometricAuthenticator.isBiometricAvailable()
-            canUseBiometrics.value = token != null && biometricsAvailable
-        }
-    }
-
-    fun dispatch(intent: PasswordOtpIntent) {
-        when (intent) {
-            PasswordOtpIntent.ClearState -> TODO()
-            is PasswordOtpIntent.SubmitNewPassword -> TODO()
-        }
-    }
 }

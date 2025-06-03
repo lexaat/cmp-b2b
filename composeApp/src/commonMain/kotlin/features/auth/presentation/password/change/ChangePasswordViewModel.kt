@@ -28,7 +28,12 @@ class ChangePasswordViewModel(
 
     fun reduce(intent: ChangePasswordIntent) {
         when (intent) {
-            is ChangePasswordIntent.SubmitNewPassword -> changePassword(intent.username, intent.password, intent.newPassword)
+            is ChangePasswordIntent.SubmitNewPassword -> changePassword(
+                intent.username,
+                intent.password,
+                intent.newPassword
+            )
+
             ChangePasswordIntent.ClearState -> TODO()
         }
     }
@@ -36,7 +41,13 @@ class ChangePasswordViewModel(
     fun changePassword(username: String, password: String, newPassword: String) {
         viewModelScope.launch {
             val result = changePasswordUseCase(
-                ChangePasswordRequest(username = username, password = password, newPassword = newPassword, otp = ""))
+                ChangePasswordRequest(
+                    username = username,
+                    password = password,
+                    newPassword = newPassword,
+                    otp = ""
+                )
+            )
 
             result.sideEffect?.let { sideEffect ->
                 val mapped = when (sideEffect) {
@@ -47,6 +58,10 @@ class ChangePasswordViewModel(
                     else -> error("Unsupported side effect: $sideEffect")
                 }
                 _sideEffect.emit(mapped)
+            }
+
+            result.result?.let {
+                _sideEffect.emit(ChangePasswordSideEffect.NavigateToOtp)
             }
         }
     }
