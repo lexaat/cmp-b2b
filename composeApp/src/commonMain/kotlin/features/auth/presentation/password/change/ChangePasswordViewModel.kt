@@ -5,8 +5,6 @@ import androidx.lifecycle.viewModelScope
 import core.presentation.BaseSideEffect
 import features.auth.domain.model.ChangePasswordRequest
 import features.auth.domain.usecase.ChangePasswordUseCase
-import features.auth.presentation.login.AuthSideEffect
-import features.auth.presentation.otp.OtpSideEffect
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow

@@ -34,7 +34,8 @@ actual class HttpClientFactory actual constructor(
                 requestPipeline.intercept(HttpRequestPipeline.State) {
                     val url = context.url.encodedPath.lowercase()
                     if (!url.contains("/login") &&
-                        !url.contains("/refreshtoken")) {
+                        !url.contains("/refreshtoken")
+                        && !url.contains("/changepassword")) {
                         val token = tokenManager.getAccessToken()
                         if (!token.isNullOrBlank()) {
                             context.headers.append(HttpHeaders.Authorization, "Bearer $token")

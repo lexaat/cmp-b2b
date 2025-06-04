@@ -5,7 +5,11 @@ sealed class PasswordOtpState {
     object EnterCredentials : PasswordOtpState()
 }
 
-sealed class PasswordOtpIntent {
-    data class SubmitNewPassword(val username: String, val password: String) : PasswordOtpIntent()
-    object ClearState : PasswordOtpIntent()
+sealed class ChangePasswordOtpIntent {
+    data class SubmitNewPassword(
+        val username: String,
+        val password: String,
+        val newPassword: String,
+        val otp: String) : ChangePasswordOtpIntent()
+    object ClearState : ChangePasswordOtpIntent()
 }

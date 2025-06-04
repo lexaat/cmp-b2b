@@ -48,7 +48,7 @@ data class ChangePasswordScreen(val login: String, val password: String) : Scree
 
             // 2. Фичевые эффекты
             when (effect) {
-                is ChangePasswordSideEffect.NavigateToOtp -> navigator.push(PasswordOtpScreen(login, password))
+                is ChangePasswordSideEffect.NavigateToOtp -> navigator.push(PasswordOtpScreen(login = login, oldPassword = password, newPassword = newPass))
                 ChangePasswordSideEffect.NavigateBack -> { /* обработано глобально */ }
                 ChangePasswordSideEffect.SessionExpired -> { /* обработано глобально */ }
                 is ChangePasswordSideEffect.ShowError -> {
