@@ -19,6 +19,27 @@ fun LoginFormContentPreview() {
         password = password,
         onLoginChange = { login = it },
         onPasswordChange = { password = it },
+        isLoading = true,
+        canUseBiometrics = true,
+        onSubmit = {},
+        onBiometricLogin = {},
+        loginLabel = "Логин",
+        passwordLabel = "Пароль",
+        loginButtonText = "Войти"
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LoginFormContentPreview2() {
+    var login by remember { mutableStateOf("demo") }
+    var password by remember { mutableStateOf("123456") }
+
+    LoginFormContent(
+        login = login,
+        password = password,
+        onLoginChange = { login = it },
+        onPasswordChange = { password = it },
         isLoading = false,
         canUseBiometrics = true,
         onSubmit = {},

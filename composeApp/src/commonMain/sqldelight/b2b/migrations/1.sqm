@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS DataSyncMeta (
+    table_name TEXT NOT NULL PRIMARY KEY,
+    last_updated INTEGER NOT NULL
+);

@@ -43,6 +43,7 @@ class AuthViewModel(
     }
 
     fun reduce(intent: AuthIntent) {
+        _state.value = AuthState.Loading
         when (intent) {
             is AuthIntent.SubmitCredentials -> login(intent.username, intent.password)
         }
@@ -72,6 +73,8 @@ class AuthViewModel(
                     _sideEffect.emit(AuthSideEffect.ShowError("Пустой токен"))
                 }
             }
+
+            _state.value = AuthState.EnterCredentials
         }
     }
 
