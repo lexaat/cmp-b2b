@@ -1,6 +1,8 @@
 package features.auth.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
@@ -90,7 +92,10 @@ fun LoginScreenContent(viewModel: AuthViewModel) {
                 password = p
                 viewModel.reduce(AuthIntent.SubmitCredentials(l, p))
             },
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(paddingValues)
+                .background(color = Color.Red)
         )
     }
 }
@@ -109,22 +114,60 @@ fun LoginForm(
 
     val locale by LocaleController.locale.collectAsState()
 
-    Column(modifier.padding(16.dp)) {
-        key(locale) {
+    key(locale) {
+        LoginFormContent(
+            login = login,
+            password = password,
+            onLoginChange = { login = it },
+            onPasswordChange = { password = it },
+            isLoading = isLoading,
+            canUseBiometrics = canUseBiometrics,
+            onSubmit = { onSubmit(login, password) },
+            onBiometricLogin = { viewModel.loginWithBiometrics() },
+            modifier = modifier,
+            loginLabel = SharedRes.strings.login.desc().localized(),
+            passwordLabel = SharedRes.strings.password.desc().localized(),
+            loginButtonText = SharedRes.strings.login.desc().localized()
+        )
+    }
+}
+
+@Composable
+fun LoginFormContent(
+    login: String,
+    password: String,
+    onLoginChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    isLoading: Boolean,
+    canUseBiometrics: Boolean,
+    onSubmit: () -> Unit,
+    onBiometricLogin: () -> Unit,
+    modifier: Modifier = Modifier,
+    loginLabel: String,
+    passwordLabel: String,
+    loginButtonText: String
+) {
+    Column(
+        modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
         OutlinedTextField(
             value = login,
-            onValueChange = { login = it },
-            label = { Text(SharedRes.strings.login.desc().localized()) }
+            onValueChange = onLoginChange,
+            label = { Text(loginLabel) },
+            modifier = Modifier.fillMaxWidth()
         )
         OutlinedTextField(
             value = password,
-            onValueChange = { password = it },
-            label = { Text(SharedRes.strings.password.desc().localized()) }
+            onValueChange = onPasswordChange,
+            label = { Text(passwordLabel) },
+            modifier = Modifier.fillMaxWidth()
         )
         Button(
-            onClick = { onSubmit(login, password) },
+            onClick = onSubmit,
             enabled = !isLoading,
-            modifier = Modifier.padding(top = 8.dp)
+            modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
         ) {
             if (isLoading) {
                 CircularProgressIndicator(
@@ -133,20 +176,19 @@ fun LoginForm(
                     strokeWidth = 2.dp
                 )
             } else {
-                Text(SharedRes.strings.login.desc().localized())
+                Text(loginButtonText)
             }
-        }}
+        }
 
         if (canUseBiometrics) {
             Button(
-                onClick = { viewModel.loginWithBiometrics() },
+                onClick = onBiometricLogin,
                 modifier = Modifier.padding(top = 8.dp)
             ) {
-                Text("Войти по биометрии") // можно использовать локализованную строку
+                Text("Войти по биометрии")
             }
         }
 
         LanguageSelector()
     }
 }
-

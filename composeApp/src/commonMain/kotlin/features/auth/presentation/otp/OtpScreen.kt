@@ -2,6 +2,7 @@
 
 package features.auth.presentation.otp
 
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -42,21 +43,43 @@ data class OtpScreen(val login: String, val password: String) : Screen {
             }
         }
 
-        Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { paddingValues ->
-            ScreenWrapper {
-                Column(Modifier.padding(16.dp)) {
-                    OutlinedTextField(value = otp, onValueChange = { otp = it }, label = { Text(
-                        stringResource(
-                        SharedRes.strings.sms_code)
-                    ) })
-                    Button(onClick = {
-                        viewModel.reduce(OtpIntent.SubmitOtp(login, password, otp))
-                    }, modifier = Modifier.padding(top = 8.dp)) {
-                        Text(stringResource(
-                            SharedRes.strings.confirm))
-                    }
+        OtpScreenContent(
+            otp = otp,
+            onOtpChange = { otp = it },
+            onSubmitClick = {
+                viewModel.reduce(OtpIntent.SubmitOtp(login, password, otp))
+            },
+            snackbarHostState = snackbarHostState,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+fun OtpScreenContent(
+    otp: String,
+    onOtpChange: (String) -> Unit,
+    onSubmitClick: () -> Unit,
+    snackbarHostState: SnackbarHostState,
+    modifier: Modifier = Modifier
+) {
+    Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { paddingValues ->
+        ScreenWrapper(modifier = modifier.padding(paddingValues)) {
+            Column(Modifier.padding(16.dp)) {
+                OutlinedTextField(
+                    value = otp,
+                    onValueChange = onOtpChange,
+                    label = { Text(stringResource(SharedRes.strings.sms_code)) }
+                )
+                Button(
+                    onClick = onSubmitClick,
+                    modifier = Modifier.padding(top = 8.dp)
+                ) {
+                    Text(stringResource(SharedRes.strings.confirm))
                 }
             }
         }
     }
 }
+
+

@@ -13,6 +13,8 @@ plugins {
 kotlin {
     applyDefaultHierarchyTemplate()
 
+    //jvm("desktop")
+
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_1_8)
@@ -70,6 +72,9 @@ kotlin {
             implementation(libs.kotlinx.io.core)
             implementation(libs.compose.ui)
             implementation(libs.bundles.ktor)
+
+            implementation(libs.accompanist.systemuicontroller)
+
 
             api(libs.koin.core)
             implementation(libs.koin.compose)
@@ -140,6 +145,12 @@ multiplatformResources {
     iosBaseLocalizationRegion.set("en") // Опционально, по умолчанию "en"
     iosMinimalDeploymentTarget.set("11.0") // Опционально, по умолчанию "9.0"
 }
+
+//compose.desktop {
+//    application {
+//        mainClass = "MainKt"
+//    }
+//}
 
 android {
     namespace = "uz.hb.b2b"

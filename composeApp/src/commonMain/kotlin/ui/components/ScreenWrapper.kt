@@ -9,11 +9,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 
 @Composable
-fun ScreenWrapper(content: @Composable () -> Unit) {
+fun ScreenWrapper(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit) {
     val focusManager = LocalFocusManager.current
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .clickable(
                 indication = null,
