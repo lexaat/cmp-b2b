@@ -2,7 +2,6 @@
 
 package features.auth.presentation.otp
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -12,10 +11,12 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.icerock.moko.resources.compose.stringResource
+import features.auth.presentation.login.AuthState
 import features.auth.presentation.password.change.ChangePasswordScreen
 import features.common.ui.collectInLaunchedEffect
 import features.main.presentation.MainScreen
 import org.koin.compose.koinInject
+import ui.components.ButtonWithLoader
 import ui.components.ScreenWrapper
 import uz.hb.b2b.SharedRes
 
@@ -27,6 +28,9 @@ data class OtpScreen(val login: String, val password: String) : Screen {
         var otp by remember { mutableStateOf("") }
 
         val snackbarHostState = remember { SnackbarHostState() }
+
+        val state by viewModel.state.collectAsState()
+        val isLoading = state is OtpState.Loading
 
         viewModel.sideEffect.collectInLaunchedEffect { effect ->
             when (effect) {
@@ -50,6 +54,7 @@ data class OtpScreen(val login: String, val password: String) : Screen {
                 viewModel.reduce(OtpIntent.SubmitOtp(login, password, otp))
             },
             snackbarHostState = snackbarHostState,
+            isLoading = isLoading,
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -61,8 +66,10 @@ fun OtpScreenContent(
     onOtpChange: (String) -> Unit,
     onSubmitClick: () -> Unit,
     snackbarHostState: SnackbarHostState,
+    isLoading: Boolean,
     modifier: Modifier = Modifier
 ) {
+
     Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { paddingValues ->
         ScreenWrapper(modifier = modifier.padding(paddingValues)) {
             Column(Modifier.padding(16.dp)) {
@@ -71,12 +78,21 @@ fun OtpScreenContent(
                     onValueChange = onOtpChange,
                     label = { Text(stringResource(SharedRes.strings.sms_code)) }
                 )
-                Button(
+//                Button(
+//                    onClick = onSubmitClick,
+//                    modifier = Modifier.padding(top = 8.dp)
+//                ) {
+//                    Text(stringResource(SharedRes.strings.confirm))
+//                }
+
+                ButtonWithLoader(
                     onClick = onSubmitClick,
-                    modifier = Modifier.padding(top = 8.dp)
-                ) {
-                    Text(stringResource(SharedRes.strings.confirm))
-                }
+                    buttonText = stringResource(SharedRes.strings.confirm),
+                    backgroundColor = MaterialTheme.colorScheme.background,
+                    contentColor = MaterialTheme.colorScheme.onSurface,
+                    showBorder = true,
+                    showLoader = isLoading
+                )
             }
         }
     }

@@ -1,17 +1,10 @@
 package features.auth.presentation
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -26,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -43,6 +35,7 @@ import features.auth.presentation.otp.OtpScreen
 import features.common.ui.collectInLaunchedEffect
 import features.main.presentation.MainScreen
 import org.koin.compose.koinInject
+import ui.components.ButtonWithLoader
 import ui.components.LanguageSelector
 import ui.components.ScreenWrapper
 import uz.hb.b2b.SharedRes
@@ -170,23 +163,31 @@ fun LoginFormContent(
             label = { Text(passwordLabel) },
             modifier = Modifier.fillMaxWidth()
         )
-        OutlinedButton(
+//        OutlinedButton(
+//            onClick = onSubmit,
+//            enabled = !isLoading,
+//            contentPadding = PaddingValues(vertical = 12.dp),
+//            modifier = if (isLoading) {Modifier.size(60.dp).padding(top = 8.dp)} else {Modifier.fillMaxWidth().height(60.dp).padding(top = 8.dp)}
+//        ) {
+//            AnimatedContent(targetState = isLoading) { loading ->
+//                if (loading) {
+//                    CircularProgressIndicator(
+//                        modifier = Modifier
+//                            .fillMaxHeight()
+//                            .aspectRatio(1f)
+//                    )
+//                } else {
+//                    Text(loginButtonText)
+//                }}
+//        }
+        ButtonWithLoader(
             onClick = onSubmit,
-            enabled = !isLoading,
-            contentPadding = PaddingValues(vertical = 12.dp),
-            modifier = if (isLoading) {Modifier.size(60.dp).padding(top = 8.dp)} else {Modifier.fillMaxWidth().height(60.dp).padding(top = 8.dp)}
-        ) {
-            AnimatedContent(targetState = isLoading) { loading ->
-                if (loading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .aspectRatio(1f)
-                    )
-                } else {
-                    Text(loginButtonText)
-                }}
-        }
+            buttonText = loginButtonText,
+            backgroundColor = MaterialTheme.colorScheme.background,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+            showBorder = true,
+            showLoader = isLoading
+        )
 
         if (canUseBiometrics) {
             OutlinedButton(

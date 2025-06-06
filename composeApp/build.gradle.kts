@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
-    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.jetbrainsPluginCompose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.multiplatform.resources)
     id("app.cash.sqldelight") version "2.1.0"
@@ -47,6 +47,8 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.material3)
 
+            implementation(libs.androidx.ui.tooling.preview)
+
             implementation(libs.ktor.client.okhttp)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
@@ -74,7 +76,6 @@ kotlin {
             implementation(libs.bundles.ktor)
 
             implementation(libs.accompanist.systemuicontroller)
-
 
             api(libs.koin.core)
             implementation(libs.koin.compose)

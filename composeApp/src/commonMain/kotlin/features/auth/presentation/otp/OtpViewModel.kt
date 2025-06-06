@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import core.presentation.BaseSideEffect
 import features.auth.domain.model.LoginRequest
 import features.auth.domain.usecase.LoginUseCase
+import features.auth.presentation.login.AuthState
 import features.common.domain.auth.TokenManager
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,6 +28,7 @@ class OtpViewModel(
     val sideEffect: SharedFlow<OtpSideEffect> = _sideEffect
 
     fun reduce(intent: OtpIntent) {
+        _state.value = OtpState.Loading
         when (intent) {
             is OtpIntent.SubmitOtp -> verifyOtp(username = intent.username, password = intent.password, otp = intent.otp)
         }
@@ -61,6 +63,8 @@ class OtpViewModel(
                     _sideEffect.emit(OtpSideEffect.ShowError("Пустой токен"))
                 }
             }
+
+            _state.value = OtpState.EnterOtp
         }
     }
 }
