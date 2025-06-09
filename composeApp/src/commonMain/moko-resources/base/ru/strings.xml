@@ -26,5 +26,6 @@
     <string name="repeat">Повторить</string>
     <string name="current_theme">Текущая тема</string>
     <string name="change_theme">Сменить тему</string>
-
+    <string name="authorization">Авторизация</string>
+    <string name="confirmation">Подтверждение</string>
 </resources>

@@ -26,5 +26,6 @@
     <string name="repeat">Retry</string>
     <string name="current_theme">Current theme</string>
     <string name="change_theme">Change theme</string>
-
+    <string name="authorization">Authorization</string>
+    <string name="confirmation">Confirmation</string>
 </resources>

@@ -26,5 +26,6 @@
     <string name="repeat">Qayta urinib ko‘rish</string>
     <string name="current_theme">Joriy mavzu</string>
     <string name="change_theme">Mavzuni almashtirish</string>
-
+    <string name="authorization">Avtorizatsiya</string>
+    <string name="confirmation">Tasdiqlash</string>
 </resources>

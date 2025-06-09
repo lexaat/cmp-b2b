@@ -1,8 +1,20 @@
 package features.auth.presentation
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -10,6 +22,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -35,6 +48,7 @@ import features.auth.presentation.otp.OtpScreen
 import features.common.ui.collectInLaunchedEffect
 import features.main.presentation.MainScreen
 import org.koin.compose.koinInject
+import ui.components.AppTopBar
 import ui.components.ButtonWithLoader
 import ui.components.LanguageSelector
 import ui.components.ScreenWrapper
@@ -50,6 +64,7 @@ object AuthScreen : Screen {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreenContent(viewModel: AuthViewModel) {
     val navigator = LocalNavigator.currentOrThrow
@@ -60,6 +75,8 @@ fun LoginScreenContent(viewModel: AuthViewModel) {
 
     var login by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    var menuExpanded by remember { mutableStateOf(false) }
 
     // Инъекция с параметрами!
     val globalErrorHandler = koinInject<GlobalErrorHandler>(
@@ -83,7 +100,22 @@ fun LoginScreenContent(viewModel: AuthViewModel) {
         }
     }
 
-    Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { paddingValues ->
+    val menuItems = listOf(
+        Triple("Настройки", Icons.Default.Settings) { /* navigator.push(SettingsScreen()) */ },
+        Triple("О приложении", Icons.Default.Info) { /* showAboutDialog() */ },
+        Triple("Выход", Icons.AutoMirrored.Filled.ExitToApp) { /* logout() */ }
+    )
+
+    Scaffold(
+        topBar = {
+                AppTopBar(
+                    title = SharedRes.strings.authorization.desc().localized(),
+                    onBackClick = null,
+                    centered = true, // 👈 включаем iOS-стиль
+                    menuItems = menuItems
+                )
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }) { paddingValues ->
         LoginForm(
             isLoading = isLoading,
             onSubmit = { l, p ->
@@ -155,35 +187,17 @@ fun LoginFormContent(
             value = login,
             onValueChange = onLoginChange,
             label = { Text(loginLabel) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.widthIn(max = 600.dp).fillMaxWidth()
         )
         OutlinedTextField(
             value = password,
             onValueChange = onPasswordChange,
             label = { Text(passwordLabel) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.widthIn(max = 600.dp).fillMaxWidth()
         )
-//        OutlinedButton(
-//            onClick = onSubmit,
-//            enabled = !isLoading,
-//            contentPadding = PaddingValues(vertical = 12.dp),
-//            modifier = if (isLoading) {Modifier.size(60.dp).padding(top = 8.dp)} else {Modifier.fillMaxWidth().height(60.dp).padding(top = 8.dp)}
-//        ) {
-//            AnimatedContent(targetState = isLoading) { loading ->
-//                if (loading) {
-//                    CircularProgressIndicator(
-//                        modifier = Modifier
-//                            .fillMaxHeight()
-//                            .aspectRatio(1f)
-//                    )
-//                } else {
-//                    Text(loginButtonText)
-//                }}
-//        }
         ButtonWithLoader(
             onClick = onSubmit,
             buttonText = loginButtonText,
-            backgroundColor = MaterialTheme.colorScheme.background,
             contentColor = MaterialTheme.colorScheme.onSurface,
             showBorder = true,
             showLoader = isLoading

@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ButtonWithLoader(
     buttonText: String,
-    backgroundColor: Color,
+    backgroundColor: Color = Color.Transparent,
     contentColor: Color = White,
     showLoader: Boolean = false,
     showBorder: Boolean,
@@ -35,12 +35,13 @@ fun ButtonWithLoader(
             modifier = Modifier
                 .widthIn(max = 600.dp)
                 .fillMaxWidth()
-                .padding(start = 20.dp, end = 20.dp, top = 20.dp)
+                .padding(horizontal = 8.dp, vertical = 20.dp)
                 .height(48.dp)
                 .clickable { onClick() }
                 .border(
                     if (showBorder) 1.dp else 0.dp,
-                    MaterialTheme.colorScheme.onSurface.copy(0.08f),
+                    //MaterialTheme.colorScheme.onSurface.copy(0.08f),
+                    MaterialTheme.colorScheme.primary,
                     RoundedCornerShape(50.dp)
                 )
                 .background(backgroundColor, RoundedCornerShape(50.dp)),
@@ -53,12 +54,12 @@ fun ButtonWithLoader(
             modifier = Modifier
                 .widthIn(max = 600.dp)
                 .fillMaxWidth()
-                .padding(start = 20.dp, end = 20.dp, top = 20.dp)
+                .padding(horizontal = 8.dp, vertical = 20.dp)
                 .height(48.dp)
                 .clickable { onClick() } // motionClickEvent is my custom click modifier, use clickable modifier over here
                 .border(
                     if (showBorder) 1.dp else 0.dp,
-                    MaterialTheme.colorScheme.onSurface.copy(0.08f),
+                    MaterialTheme.colorScheme.primary,
                     RoundedCornerShape(50.dp)
                 )
                 .background(backgroundColor, RoundedCornerShape(50.dp)),
