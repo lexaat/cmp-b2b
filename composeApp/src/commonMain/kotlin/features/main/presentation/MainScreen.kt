@@ -32,6 +32,7 @@ import features.home.presentation.HomeScreen
 import features.profile.presentation.ProfileScreen
 import uz.hb.b2b.SharedRes
 import androidx.compose.ui.Alignment
+import ui.components.AppleStyleBottomBar
 
 object MainScreen : Screen {
 
@@ -69,39 +70,16 @@ fun MainScreenContent(
     onItemSelected: (Int) -> Unit
 ) {
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
-            val density = LocalDensity.current
-            val bottomInset = WindowInsets.navigationBars.getBottom(density)
-            val bottomInsetDp = with(density) { bottomInset.toDp() }
-
-            Surface(
-                tonalElevation = 3.dp,
-                color = Color.Green,
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(80.dp + bottomInsetDp)
-                        .background(Color.Red)
-                ) {
-                    NavigationBar(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .align(Alignment.TopCenter),
-                        containerColor = Color.Transparent,
-                        tonalElevation = 0.dp
-                    ) {
-                        items.forEachIndexed { index, item ->
-                            NavigationBarItem(
-                                icon = { Icon(item.icon, contentDescription = null) },
-                                label = { Text(item.label) },
-                                selected = selectedIndex == index,
-                                onClick = { onItemSelected(index) }
-                            )
-                        }
-                    }
-                }
-            }
+            AppleStyleBottomBar(
+                selectedIndex = selectedIndex,
+                items = listOf(
+                    MainScreen.BottomNavItem(HomeScreen, "Главная", Icons.Default.Home),
+                    MainScreen.BottomNavItem(ProfileScreen, "Профиль", Icons.Default.Person)
+                ),
+                onSelect = onItemSelected
+            )
         }
     ) { padding ->
         Box(
