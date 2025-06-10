@@ -5,17 +5,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Wallpapers
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import features.main.presentation.MainScreen
 import features.main.presentation.MainScreenContent
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.tooling.preview.Wallpapers
 
 @Preview(showBackground = true, device = "spec:width=1080px,height=2340px,dpi=440",
     showSystemUi = true, wallpaper = Wallpapers.RED_DOMINATED_EXAMPLE,
@@ -51,7 +55,11 @@ fun MainScreenContentPreview() {
         MainScreenContent(
             items = items,
             selectedIndex = selectedIndex,
-            onItemSelected = { selectedIndex = it }
+            onItemSelected = { selectedIndex = it },
+            navigationBarColor = Color.Green,
+            navigationBarAlpha = 0.6f,
+            topAppBarHeight = 180.dp,
+            onScrollStateReturned = TODO()
         )
     }
 }

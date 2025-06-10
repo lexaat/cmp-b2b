@@ -1,8 +1,11 @@
 package uz.hb.b2b
 
+import android.graphics.Color
 import app.App
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.bundle.Bundle
@@ -16,7 +19,14 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
 
         // Важно: это позволяет рисовать под системные insets (без их скрытия!)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.light(
+                Color.TRANSPARENT, Color.TRANSPARENT
+            ),
+            navigationBarStyle = SystemBarStyle.light(
+                Color.TRANSPARENT, Color.TRANSPARENT
+            )
+        )
 
         // ВНИМАНИЕ: подгружаем модуль с биометрией
         loadKoinModules(bioModule(this))

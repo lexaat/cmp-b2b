@@ -14,7 +14,7 @@ fun OtpScreenContentPreview() {
         otp = "123456",
         onOtpChange = {},
         onSubmitClick = {},
-        //onBackClick = {},
+        onBackClick = {},
         isLoading = false,
         snackbarHostState = snackbarHostState
     )
