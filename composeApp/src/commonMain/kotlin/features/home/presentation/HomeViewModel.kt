@@ -1,5 +1,10 @@
 package features.home.presentation
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import core.presentation.BaseSideEffect
@@ -18,6 +23,19 @@ class HomeViewModel(
     private val _sideEffect = MutableSharedFlow<BaseSideEffect>()
     val sideEffect: SharedFlow<BaseSideEffect> = _sideEffect
 
+    var topAppBarHeight by mutableStateOf(0.dp)
+        private set
+
+    fun updateTopAppBarHeight(height: Dp) {
+        topAppBarHeight = height
+    }
+
+    var navigationBarAlpha by mutableStateOf(1f)
+        private set
+
+    fun updateNavigationBarAlpha(alpha: Float) {
+        navigationBarAlpha = alpha
+    }
     init {
         loadClients()
         reduce(HomeIntent.LoadClients)
@@ -57,7 +75,7 @@ class HomeViewModel(
                 if (clients.isEmpty()) {
                     _state.value = HomeState.Empty
                 } else {
-                    val repeatedClients = List(30) { clients }.flatten()
+                    val repeatedClients = List(3) { clients }.flatten()
                     _state.value = HomeState.Data(repeatedClients)
                 }
             } ?: run {

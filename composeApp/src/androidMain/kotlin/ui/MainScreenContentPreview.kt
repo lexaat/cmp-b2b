@@ -58,8 +58,7 @@ fun MainScreenContentPreview() {
             onItemSelected = { selectedIndex = it },
             navigationBarColor = Color.Green,
             navigationBarAlpha = 0.6f,
-            topAppBarHeight = 180.dp,
-            onScrollStateReturned = TODO()
+            topAppBarHeight = 180.dp
         )
     }
 }

@@ -48,14 +48,7 @@ fun App() {
                 currentBackgroundColorArgb = backgroundColor.toIntArgb()
                 UpdateSystemBars(backgroundColor, isDark)
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(backgroundColor)
-                        .windowInsetsPadding(WindowInsets.safeDrawing)
-                ) {
-                    AppRoot()
-                }
+                AppRoot()
             }
         }
     }

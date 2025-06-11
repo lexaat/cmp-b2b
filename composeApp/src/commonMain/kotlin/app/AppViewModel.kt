@@ -45,38 +45,22 @@ class AppViewModel(
                 return@launch
             }
 
-            if (accessToken != null && !isTokenExpired(accessToken)) {
+            val isAccessTokenExpired = accessToken == null || isTokenExpired(accessToken)
+            if (!isAccessTokenExpired) {
                 _startScreen.value = MainScreen
-
-                launch {
-                    val stillValid = checkTokenOnServer(refreshToken)
-                    if (!stillValid) {
-                        tokenManager.clearAccessToken()
-                        _startScreen.value = AuthScreen
-                    }
-                }
             } else {
-                // ✅ Попытка входа по биометрии
-                val result = biometricAuthenticator.authenticate("Вход с использованием биометрии")
-                if (result is BiometricResult.Success) {
-                    try {
-                        val response = refreshTokenUseCase(RefreshTokenRequest(refreshToken = refreshToken))
-                        val responseResult = response.result
-
-                        if (responseResult != null) {
-                            tokenManager.saveTokens(responseResult.accessToken, responseResult.refreshToken)
-                            _startScreen.value = MainScreen
-                        } else {
-                            // возможно, ошибка в ответе от сервера
-                            tokenManager.clearAccessToken()
-                            _startScreen.value = AuthScreen
-                        }
-                    } catch (e: Exception) {
+                try {
+                    val response = refreshTokenUseCase(RefreshTokenRequest(refreshToken = refreshToken))
+                    val result = response.result
+                    if (result != null) {
+                        tokenManager.saveTokens(result.accessToken, result.refreshToken)
+                        _startScreen.value = MainScreen
+                    } else {
                         tokenManager.clearAccessToken()
                         _startScreen.value = AuthScreen
                     }
-                } else {
-                    // отказ или ошибка → оставляем на экране логина
+                } catch (e: Exception) {
+                    tokenManager.clearAccessToken()
                     _startScreen.value = AuthScreen
                 }
             }
