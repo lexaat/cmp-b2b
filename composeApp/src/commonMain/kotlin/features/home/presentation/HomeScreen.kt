@@ -1,5 +1,6 @@
 package features.home.presentation
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,6 +19,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -49,7 +51,6 @@ object HomeScreen : Screen {
     @Composable
     override fun Content() {
         val viewModel = koinInject<HomeViewModel>()
-        val topAppBarHeight = viewModel.topAppBarHeight
 
         val state by viewModel.state.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
@@ -58,11 +59,19 @@ object HomeScreen : Screen {
         var cardsBottomCoordinateInDp by remember { mutableStateOf(0.dp) }
 
         val listState = rememberLazyListState()
+        val baseHeight = 260.dp
+        val minHeight = 80.dp
+        val maxOffsetPx = with(LocalDensity.current) { (baseHeight - minHeight).roundToPx() }
+
+        val factor = if (listState.firstVisibleItemIndex > 0) 1f
+        else (listState.firstVisibleItemScrollOffset / maxOffsetPx.toFloat()).coerceIn(0f, 1f)
+
+        val heightDp = baseHeight - (baseHeight - minHeight) * factor
 
         val density = LocalDensity.current
         val bottomInset = WindowInsets.navigationBars.getBottom(density)
         val bottomInsetDp = with(density) { bottomInset.toDp() }
-        val barHeight = 56.dp + bottomInsetDp
+        val barHeight = 100.dp + bottomInsetDp
         val barHeightPx = with(density) { barHeight.toPx() }
 
         val lastItemIsAboveBar by remember {
@@ -72,22 +81,17 @@ object HomeScreen : Screen {
                 val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()
                 if (lastVisibleItem?.index == totalItems - 1) {
                     val itemBottom = lastVisibleItem.offset + lastVisibleItem.size
-                    println("itemBottom = $itemBottom")
-                    println("viewportEndOffset = ${layoutInfo.viewportEndOffset}")
-                    println("isAboveBar = ${itemBottom <= layoutInfo.viewportEndOffset}")
-
-                    itemBottom <= layoutInfo.viewportEndOffset
+                    itemBottom <= layoutInfo.viewportEndOffset - barHeightPx
                 } else false
             }
         }
 
-        // Анимируем alpha от 0 до 1
-        val navigationBarAlpha by animateFloatAsState(if (lastItemIsAboveBar) 0f else 1f)
+        val barAlpha by animateFloatAsState(if (lastItemIsAboveBar) 0f else 1f)
 
         // Важно! Записываем alpha в ViewModel
-        LaunchedEffect(navigationBarAlpha) {
-            viewModel.updateNavigationBarAlpha(navigationBarAlpha)
-            println("navigationBarAlpha = $navigationBarAlpha")
+        LaunchedEffect(barAlpha) {
+            viewModel.updateNavigationBarAlpha(barAlpha)
+            println("HomeScreen — barAlpha: $barAlpha")
         }
 
         LaunchedEffect(Unit) {
@@ -110,11 +114,11 @@ object HomeScreen : Screen {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(color = Color(0xFFf3efed))
+                    .background(color = MaterialTheme.colorScheme.surface)
             ) {
                 GradientBackground(
                     cardsBottomCoordinate = cardsBottomCoordinateInDp,
-                    minHeight = topAppBarHeight
+                    minHeight = heightDp
                 )
                 when (state) {
                     is HomeState.Loading -> {
@@ -126,12 +130,16 @@ object HomeScreen : Screen {
                         val clients = (viewModel.state.value as? HomeState.Data)?.clients ?: emptyList()
                         Column {
                             LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-                            ClientListScreen(clients = clients, listState = listState)
+                            ClientListScreen(
+                                clients = clients,
+                                listState = listState,
+                                bottomBarHeight = barHeight)
                         }
                     }
 
                     is HomeState.Data -> {
-                        ClientListScreen(clients = (state as HomeState.Data).clients, listState = listState)
+                        ClientListScreen(clients = (state as HomeState.Data).clients, listState = listState,
+                            bottomBarHeight = barHeight)
                     }
 
                     is HomeState.Empty -> {

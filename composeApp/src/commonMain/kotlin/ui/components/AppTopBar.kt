@@ -3,10 +3,13 @@ package ui.components
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
@@ -60,6 +63,7 @@ fun AppTopBar(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding())
                     .height(64.dp),
                 contentAlignment = Alignment.Center
             ) {
@@ -122,6 +126,8 @@ fun AppTopBar(
         }
     } else {
         TopAppBar(
+            modifier = Modifier
+                .padding(top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()),
             title = { Text(title) },
             navigationIcon = if (onBackClick != null) {
                 {

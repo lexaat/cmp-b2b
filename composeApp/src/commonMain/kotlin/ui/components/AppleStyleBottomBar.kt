@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
@@ -39,13 +40,10 @@ fun AppleStyleBottomBar(
     onSelect: (Int) -> Unit,
     backgroundColor: Color,
     alpha: Float,
-    modifier: Modifier = Modifier,
-    topAppBarHeight: Dp
+    modifier: Modifier = Modifier
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
-    val density = LocalDensity.current
-    val bottomInset = WindowInsets.navigationBars.getBottom(density)
-    val bottomInsetDp = with(density) { bottomInset.toDp() }
+
+    println("AppleStyleBottomBar — alpha: $alpha")
 
     // Получаем высоту безопасной области (нижний inset)
     val bottomPadding = with(LocalDensity.current) {
@@ -57,15 +55,22 @@ fun AppleStyleBottomBar(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(56.dp + bottomPadding) // Учитываем безопасную область
-            .background(backgroundColor.copy(alpha = alpha))
-            .padding(bottom = bottomPadding) // Добавляем отступ для контента внутри панели
+            .height(56.dp + bottomPadding)
     ) {
-        HorizontalDivider(thickness = 0.5.dp, color = Color.LightGray.copy(alpha = alpha))
+        // --- Блюр-подложка ---
+        Box(
+            Modifier
+                .matchParentSize() // занимает всё пространство
+                .blur(24.dp)       // блюр
+                .background(backgroundColor.copy(alpha = 0.96f * alpha)) // стекло/матовость
+        )
+        HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = alpha))
         Row(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(bottom = bottomPadding)
                 .padding(horizontal = 16.dp),
+
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -83,7 +88,7 @@ fun AppleStyleBottomBar(
                     colors = NavigationBarItemDefaults.colors(
                         selectedIconColor = MaterialTheme.colorScheme.primary,
                         unselectedIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                        indicatorColor = Color.Transparent // ⛔️ убираем овал
+                        indicatorColor = Color.Transparent //
                     )
                 )
             }

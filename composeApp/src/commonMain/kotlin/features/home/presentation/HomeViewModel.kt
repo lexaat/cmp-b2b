@@ -23,13 +23,6 @@ class HomeViewModel(
     private val _sideEffect = MutableSharedFlow<BaseSideEffect>()
     val sideEffect: SharedFlow<BaseSideEffect> = _sideEffect
 
-    var topAppBarHeight by mutableStateOf(0.dp)
-        private set
-
-    fun updateTopAppBarHeight(height: Dp) {
-        topAppBarHeight = height
-    }
-
     var navigationBarAlpha by mutableStateOf(1f)
         private set
 

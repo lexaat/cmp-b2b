@@ -7,6 +7,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
 import domain.model.Client
@@ -15,11 +17,19 @@ import uz.hb.b2b.SharedRes
 import core.utils.*
 
 @Composable
-fun ClientListScreen(clients: List<Client>, listState: LazyListState) {
+fun ClientListScreen(
+    clients: List<Client>,
+    listState: LazyListState,
+    bottomBarHeight: Dp
+) {
+
     LazyColumn(
         state = listState,
-        modifier = Modifier.fillMaxSize().padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        modifier = Modifier.fillMaxSize()
+            .windowInsetsPadding(WindowInsets.statusBars) // сверху
+            .padding(top = 30.dp, start = 16.dp, end = 16.dp), // Только верх/бока,
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(bottom = bottomBarHeight) // <<< вот тут!
     ) {
         items(clients) { client ->
             ClientItem(client)

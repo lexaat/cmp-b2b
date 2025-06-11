@@ -39,7 +39,7 @@ fun ButtonWithLoader(
                 .height(48.dp)
                 .clickable { onClick() }
                 .border(
-                    if (showBorder) 1.dp else 0.dp,
+                    if (showBorder) 2.dp else 0.dp,
                     //MaterialTheme.colorScheme.onSurface.copy(0.08f),
                     MaterialTheme.colorScheme.primary,
                     RoundedCornerShape(50.dp)
@@ -58,7 +58,7 @@ fun ButtonWithLoader(
                 .height(48.dp)
                 .clickable { onClick() } // motionClickEvent is my custom click modifier, use clickable modifier over here
                 .border(
-                    if (showBorder) 1.dp else 0.dp,
+                    if (showBorder) 2.dp else 0.dp,
                     MaterialTheme.colorScheme.primary,
                     RoundedCornerShape(50.dp)
                 )

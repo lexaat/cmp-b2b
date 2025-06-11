@@ -1,20 +1,16 @@
 package features.auth.presentation
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -22,7 +18,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -64,7 +59,6 @@ object AuthScreen : Screen {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreenContent(viewModel: AuthViewModel) {
     val navigator = LocalNavigator.currentOrThrow
@@ -75,8 +69,6 @@ fun LoginScreenContent(viewModel: AuthViewModel) {
 
     var login by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
-    var menuExpanded by remember { mutableStateOf(false) }
 
     // Инъекция с параметрами!
     val globalErrorHandler = koinInject<GlobalErrorHandler>(
@@ -107,6 +99,7 @@ fun LoginScreenContent(viewModel: AuthViewModel) {
     )
 
     Scaffold(
+        contentWindowInsets = WindowInsets.systemBars,
         topBar = {
                 AppTopBar(
                     title = SharedRes.strings.authorization.desc().localized(),
