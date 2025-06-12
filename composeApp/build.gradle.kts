@@ -96,8 +96,8 @@ kotlin {
 
             implementation(libs.lifecycle.viewmodel)
 
-            //implementation(libs.multiplatform.settings.no.arg)
-
+            implementation(libs.haze)
+            implementation(libs.haze.materials)
 
             implementation(libs.moko.resource)
             implementation(libs.moko.resource.compose)
