@@ -8,13 +8,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.material3.NavigationBarItemColors
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -23,11 +20,9 @@ fun AppleNavigationBarItem(
     selected: Boolean = false,
     onClick: () -> Unit,
     icon: @Composable () -> Unit,
-    label: @Composable (() -> Unit)? = null,
-    colors: NavigationBarItemColors = NavigationBarItemDefaults.colors(selectedIconColor = Red),
+    label: @Composable() (() -> Unit)? = null,
 ){
     val interactionSource = remember { MutableInteractionSource() }
-    //val tabNavigator = LocalTabNavigator.current
 
     Box(modifier = modifier
         .height(48.dp)

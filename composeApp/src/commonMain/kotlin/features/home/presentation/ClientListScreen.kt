@@ -1,20 +1,35 @@
 package features.home.presentation
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import core.utils.formatSumFromTiyin
+import dev.chrisbanes.haze.hazeSource
 import dev.icerock.moko.resources.compose.stringResource
-import domain.model.Client
 import domain.model.Account
+import domain.model.Client
+import ui.theme.LocalHazeState
 import uz.hb.b2b.SharedRes
-import core.utils.*
 
 @Composable
 fun ClientListScreen(
@@ -27,7 +42,8 @@ fun ClientListScreen(
         state = listState,
         modifier = Modifier.fillMaxSize()
             .windowInsetsPadding(WindowInsets.statusBars) // сверху
-            .padding(top = 30.dp, start = 16.dp, end = 16.dp), // Только верх/бока,
+            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+            .hazeSource(state = LocalHazeState.current),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(bottom = bottomBarHeight) // <<< вот тут!
     ) {
@@ -66,7 +82,7 @@ fun ClientItem(client: Client) {
 @Composable
 fun AccountItem(account: Account) {
     Column(modifier = Modifier.padding(start = 12.dp, top = 4.dp)) {
-        Text("№ ${account.account}", style = MaterialTheme.typography.bodySmall)
+        Text("№ ${account.account}", style = MaterialTheme.typography.bodySmall, color = Color.Red)
         Text("${stringResource(
             SharedRes.strings.balance)}: ${formatSumFromTiyin(account.sOut)}", style = MaterialTheme.typography.bodySmall)
     }

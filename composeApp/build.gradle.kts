@@ -74,6 +74,8 @@ kotlin {
             implementation(libs.kotlinx.io.core)
             implementation(libs.compose.ui)
             implementation(libs.bundles.ktor)
+            implementation(libs.material.icons.extended)
+
 
             implementation(libs.accompanist.systemuicontroller)
 

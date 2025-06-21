@@ -56,7 +56,6 @@ fun MainScreenContentPreview() {
             items = items,
             selectedIndex = selectedIndex,
             onItemSelected = { selectedIndex = it },
-            navigationBarColor = Color.Green,
             navigationBarAlpha = 0.6f,
         )
     }

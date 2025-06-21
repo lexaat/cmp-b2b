@@ -10,10 +10,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,12 +25,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.materials.CupertinoMaterials
+import androidx.compose.ui.unit.sp
+import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
+import dev.chrisbanes.haze.materials.HazeMaterials
 import features.main.presentation.MainScreen
 import ui.components.navigation.AppleNavigationBarItem
-
+import ui.theme.LocalHazeState
 
 @OptIn(ExperimentalHazeMaterialsApi::class)
 @Composable
@@ -34,13 +39,11 @@ fun AppleStyleBottomBar(
     selectedIndex: Int,
     items: List<MainScreen.BottomNavItem>,
     onSelect: (Int) -> Unit,
-    backgroundColor: Color,
     alpha: Float,
-    modifier: Modifier = Modifier,
-    hazeState: HazeState // <-- добавить!
+    modifier: Modifier = Modifier
 ) {
 
-    println("AppleStyleBottomBar — alpha: $alpha")
+    //println("AppleStyleBottomBar — alpha: $alpha")
 
     // Получаем высоту безопасной области (нижний inset)
     val bottomPadding = with(LocalDensity.current) {
@@ -49,26 +52,25 @@ fun AppleStyleBottomBar(
             .toDp()
     }
 
+    val effectiveModifier = if (alpha > 0.3f) {
+        Modifier.hazeEffect(
+            state = LocalHazeState.current,
+            style = HazeMaterials.ultraThin()
+        )
+    } else {
+        Modifier
+    }
+
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(56.dp + bottomPadding)
+            .then(effectiveModifier)
     ) {
-        // 1. Эффект блюра
-        BlurBox(
-            modifier = Modifier.matchParentSize(),
-            hazeState = hazeState,
-            style = CupertinoMaterials.thin()
+        HorizontalDivider(
+            thickness = 0.5.dp,
+            color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = alpha)
         )
-        // 2. Полупрозрачная "заливка" поверх блюра (Glass effect!)
-        Box(
-            Modifier
-                .matchParentSize()
-                .background(
-                    backgroundColor.copy(alpha = alpha * 0.95f)
-                )
-        )
-        HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = alpha))
         Row(
             modifier = Modifier
                 .fillMaxSize()
@@ -79,22 +81,42 @@ fun AppleStyleBottomBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             items.forEachIndexed { index, item ->
-                AppleNavigationBarItem(
-                    selected = index == selectedIndex,
-                    onClick = { onSelect(index) },
-                    icon = {
-                        Icon(
-                            imageVector = item.icon,
-                            contentDescription = null
-                        )
-                    },
-                    label = { Text(item.label) },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = MaterialTheme.colorScheme.primary,
-                        unselectedIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                        indicatorColor = Color.Transparent //
+                if (item.label.equals("+")) {
+                    // Центральная кнопка "+"
+                    AppleNavigationBarItem(
+                        selected = index == selectedIndex,
+                        onClick = { onSelect(index) },
+                        icon = {
+                            Box(
+                                modifier = Modifier
+                                    .size(44.dp)
+                                    .background(
+                                        color = MaterialTheme.colorScheme.primary,
+                                        shape = CircleShape
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Add,
+                                    contentDescription = "Создать",
+                                    tint = Color.White
+                                )
+                            }
+                        }
                     )
-                )
+                } else {
+                    AppleNavigationBarItem(
+                        selected = index == selectedIndex,
+                        onClick = { onSelect(index) },
+                        icon = {
+                            Icon(
+                                imageVector = item.icon,
+                                contentDescription = null
+                            )
+                        },
+                        label = { Text(item.label, fontSize = 11.sp) }
+                    )
+                }
             }
         }
     }
