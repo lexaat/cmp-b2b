@@ -14,8 +14,6 @@ plugins {
 kotlin {
     applyDefaultHierarchyTemplate()
 
-    //jvm("desktop")
-
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_1_8)
