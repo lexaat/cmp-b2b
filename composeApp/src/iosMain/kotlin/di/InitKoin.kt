@@ -13,7 +13,8 @@ fun initKoinIOS() {
             homeModule,
             profileModule,
             errorModule,
-            bioModule()
+            bioModule(),
+            platformPushModule(),
         )
     }
 }

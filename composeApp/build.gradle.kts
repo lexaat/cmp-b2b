@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.multiplatform.resources)
     id("app.cash.sqldelight") version "2.1.0"
+    id("com.google.gms.google-services")
 }
 
 kotlin {
@@ -46,6 +47,8 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.material3)
+            implementation(libs.androidx.core)
+
 
             implementation(libs.androidx.ui.tooling.preview)
 
@@ -65,6 +68,8 @@ kotlin {
 
             implementation(libs.sqldelight.android.driver)
 
+            implementation(libs.firebase.messaging.ktx)
+            implementation(libs.firebase.common.ktx)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -222,6 +227,7 @@ android {
 }
 dependencies {
     implementation(libs.androidx.material3.android)
+    implementation(libs.firebase.common.ktx)
 }
 
 
