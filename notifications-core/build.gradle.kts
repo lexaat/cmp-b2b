@@ -1,10 +1,13 @@
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
+    alias(libs.plugins.jetbrainsPluginCompose)
     id("org.jetbrains.kotlin.native.cocoapods")
 }
 
 kotlin {
+    applyDefaultHierarchyTemplate()
 
     // Target declarations - add or remove as needed below. These define
     // which platforms this KMP module supports.
@@ -13,15 +16,6 @@ kotlin {
         namespace = "uz.hb.b2b.notifications_core"
         compileSdk = 35
         minSdk = 24
-
-        withHostTestBuilder {
-        }
-
-        withDeviceTestBuilder {
-            sourceSetTreeName = "test"
-        }.configure {
-            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        }
     }
 
     val xcfName = "notifications-coreKit"
@@ -51,38 +45,31 @@ kotlin {
         homepage = "https://example.com"
         ios.deploymentTarget = "15.0"
         podfile = project.file("../iosApp/Podfile")
+        name = "NotificationsCore"
 
         framework {
             baseName = "NotificationsCore"
             isStatic = false
+            export(project(":notifications-core"))
         }
     }
 
     sourceSets {
         commonMain {
             dependencies {
-                implementation(libs.kotlin.stdlib)
-                // Add KMP dependencies here
-            }
-        }
-
-        commonTest {
-            dependencies {
-                implementation(libs.kotlin.test)
+                api(libs.kotlin.stdlib)
+                api(libs.compose.runtime)
+                api(libs.koin.core)
             }
         }
 
         androidMain {
             dependencies {
                 implementation(libs.firebase.messaging.ktx)
-            }
-        }
 
-        getByName("androidDeviceTest") {
-            dependencies {
-                implementation(libs.androidx.runner)
-                implementation(libs.core)
-                implementation(libs.androidx.junit)
+                implementation(libs.koin.android)
+                implementation(libs.koin.androidx.compose)
+                implementation(libs.koin.core)
             }
         }
 
@@ -91,6 +78,6 @@ kotlin {
             }
         }
     }
-
 }
+
 

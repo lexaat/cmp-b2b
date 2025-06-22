@@ -1,5 +1,6 @@
 package di
 
 import org.koin.core.module.Module
+import uz.hb.b2b.notifications_core.push.platformPushModule
 
-expect fun platformPushModule(): Module
+val platformModule: Module = platformPushModule

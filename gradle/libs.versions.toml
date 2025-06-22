@@ -12,6 +12,7 @@ core = "1.16.0"
 firebaseBom = "33.15.0"
 firebaseCommonKtx = "21.0.0"
 firebaseMessaging = "24.1.1"
+firebaseMessagingVersion = "1.9.0"
 gson = "2.11.0"
 haze = "1.6.4"
 koinAndroid = "4.0.4"
@@ -33,11 +34,11 @@ datastorePreferences = "1.1.7"
 uiToolingPreview = "1.8.3"
 voyager = "1.1.0-beta03"
 moko-resources = "0.24.5"
-kotlinStdlib = "2.1.20"
+kotlinStdlib = "2.1.21"
 kotlinTest = "2.1.20"
-runner = "1.5.2"
-coreVersion = "1.5.0"
-junit = "1.1.5"
+runner = "1.6.2"
+coreVersion = "1.6.1"
+junit = "1.2.1"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
@@ -55,10 +56,13 @@ compose-material3 = { module = "org.jetbrains.compose.material3:material3", vers
 
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 
+firebase-app = { module = "dev.gitlive:firebase-app", version.ref = "firebaseMessagingVersion" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-common = { module = "dev.gitlive:firebase-common", version.ref = "firebaseMessagingVersion" }
 firebase-common-ktx = { module = "com.google.firebase:firebase-common-ktx", version.ref = "firebaseCommonKtx" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebaseMessaging" }
 firebase-messaging-ktx = { module = "com.google.firebase:firebase-messaging-ktx", version.ref = "firebaseMessaging" }
+gitlive-firebase-messaging = { module = "dev.gitlive:firebase-messaging", version.ref = "firebaseMessagingVersion" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 haze = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
 haze-materials = { module = "dev.chrisbanes.haze:haze-materials", version.ref = "haze" }

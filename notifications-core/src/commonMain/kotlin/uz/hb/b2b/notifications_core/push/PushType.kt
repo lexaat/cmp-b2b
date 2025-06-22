@@ -1,4 +1,4 @@
-package uz.hb.b2b.notifications_core
+package uz.hb.b2b.notifications_core.push
 
 enum class PushType(val raw: String) {
     PAYMENT("payment"),

@@ -16,7 +16,7 @@ fun initKoinAndroid(context: Context) {
             homeModule,
             profileModule,
             errorModule,
-            platformPushModule(),
+            platformModule,
         )
     }
 }

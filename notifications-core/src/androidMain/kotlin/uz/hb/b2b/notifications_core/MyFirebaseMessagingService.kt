@@ -1,4 +1,4 @@
-package platform
+package uz.hb.b2b.notifications_core
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
