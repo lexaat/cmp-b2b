@@ -1,22 +1,21 @@
 package uz.hb.b2b
 
 import android.graphics.Color
-import app.App
-import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.bundle.Bundle
-import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
-import org.koin.core.context.loadKoinModules
+import app.App
 import di.bioModule
+import org.koin.core.context.loadKoinModules
 
 class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 
         // Важно: это позволяет рисовать под системные insets (без их скрытия!)
         enableEdgeToEdge(

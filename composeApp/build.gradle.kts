@@ -8,12 +8,11 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.multiplatform.resources)
     id("app.cash.sqldelight") version "2.1.0"
+    id("com.google.gms.google-services")
 }
 
 kotlin {
     applyDefaultHierarchyTemplate()
-
-    //jvm("desktop")
 
     androidTarget {
         compilerOptions {
@@ -46,6 +45,8 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.material3)
+            implementation(libs.androidx.core)
+
 
             implementation(libs.androidx.ui.tooling.preview)
 
@@ -65,6 +66,8 @@ kotlin {
 
             implementation(libs.sqldelight.android.driver)
 
+            implementation(libs.firebase.messaging.ktx)
+            implementation(libs.firebase.common.ktx)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -75,7 +78,6 @@ kotlin {
             implementation(libs.compose.ui)
             implementation(libs.bundles.ktor)
             implementation(libs.material.icons.extended)
-
 
             implementation(libs.accompanist.systemuicontroller)
 
@@ -109,6 +111,8 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.sqldelight.runtime)
             implementation(libs.sqldelight.coroutines)
+
+            implementation(project(":notifications-core"))
         }
         nativeMain.dependencies {
 
@@ -222,6 +226,7 @@ android {
 }
 dependencies {
     implementation(libs.androidx.material3.android)
+    implementation(libs.firebase.common.ktx)
 }
 
 
