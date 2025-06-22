@@ -79,7 +79,6 @@ kotlin {
             implementation(libs.bundles.ktor)
             implementation(libs.material.icons.extended)
 
-
             implementation(libs.accompanist.systemuicontroller)
 
             api(libs.koin.core)
@@ -112,6 +111,8 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.sqldelight.runtime)
             implementation(libs.sqldelight.coroutines)
+
+            implementation(project(":notifications-core"))
         }
         nativeMain.dependencies {
 

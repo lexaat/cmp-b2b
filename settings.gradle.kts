@@ -47,3 +47,4 @@ gradle.settingsEvaluated {
 }
 
 include(":composeApp")
+include(":notifications-core")

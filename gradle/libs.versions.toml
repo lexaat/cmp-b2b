@@ -33,6 +33,11 @@ datastorePreferences = "1.1.7"
 uiToolingPreview = "1.8.3"
 voyager = "1.1.0-beta03"
 moko-resources = "0.24.5"
+kotlinStdlib = "2.1.20"
+kotlinTest = "2.1.20"
+runner = "1.5.2"
+coreVersion = "1.5.0"
+junit = "1.1.5"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
@@ -94,6 +99,11 @@ voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voy
 
 moko-resource = { group = "dev.icerock.moko", name = "resources", version.ref = "moko-resources" }
 moko-resource-compose = { group = "dev.icerock.moko", name = "resources-compose", version.ref = "moko-resources" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
+kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlinTest" }
+androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
+core = { group = "androidx.test", name = "core", version.ref = "coreVersion" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -103,6 +113,7 @@ jetbrainsPluginCompose = { id = "org.jetbrains.kotlin.plugin.compose", version.r
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 multiplatform-resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko-resources" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 
 [bundles]
 ktor = [
