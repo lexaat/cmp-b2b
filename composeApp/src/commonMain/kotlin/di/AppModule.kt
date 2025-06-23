@@ -21,6 +21,7 @@ import networking.HttpClientFactory
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import core.usecase.RefreshWrapper
+import push.pushModule
 
 val appModule = module {
 
