@@ -46,5 +46,6 @@ gradle.settingsEvaluated {
     }
 }
 
-include(":composeApp")
+include(":shared")
 include(":push-core")
+include(":androidApp")

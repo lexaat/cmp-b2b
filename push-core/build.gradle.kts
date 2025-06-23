@@ -35,11 +35,13 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(libs.firebase.messaging.ktx)
+                implementation(libs.koin.android)
             }
         }
 
         iosMain {
             dependencies {
+                implementation(libs.koin.core)
             }
         }
     }
