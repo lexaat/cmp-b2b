@@ -68,4 +68,9 @@ dependencies {
 
     // Koin (если нужен)
     implementation(libs.koin.android)
+
+    implementation(libs.firebase.messaging.ktx)
+    implementation(libs.androidx.core.ktx)
 }
+
+apply(plugin = "com.google.gms.google-services")

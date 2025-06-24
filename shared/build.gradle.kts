@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.jetbrainsPluginCompose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.multiplatform.resources)
-    kotlin("native.cocoapods")
+    id("org.jetbrains.kotlin.native.cocoapods")
     id("app.cash.sqldelight") version "2.1.0"
 }
 
@@ -18,10 +18,11 @@ kotlin {
         summary = "Shared KMP library"
         homepage = "https://example.com"
         podfile = project.file("../iosApp/Podfile")
+        ios.deploymentTarget = "15.0"
         version = "1.0"
         framework {
             baseName = "shared"
-            isStatic = true
+            isStatic = false
         }
     }
 
@@ -44,7 +45,7 @@ kotlin {
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "ComposeApp"
+            baseName = "shared"
             isStatic = true
             linkerOpts("-lsqlite3")
         }
@@ -58,13 +59,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.material3)
 
-            implementation(libs.androidx.ui.tooling.preview)
-
             implementation(libs.ktor.client.okhttp)
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.serialization.kotlinx.json)
-
 
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
@@ -88,7 +83,6 @@ kotlin {
             implementation(libs.bundles.ktor)
             implementation(libs.material.icons.extended)
 
-
             implementation(libs.accompanist.systemuicontroller)
 
             api(libs.koin.core)
@@ -96,9 +90,6 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.compose.viewmodel.navigation)
 
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.gson)
 

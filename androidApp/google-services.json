@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "106183017030",
+    "project_id": "hb-b2b-mobile",
+    "storage_bucket": "hb-b2b-mobile.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:106183017030:android:9e25ab12ccf808230e0047",
+        "android_client_info": {
+          "package_name": "uz.hb.b2b"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3KTxZICHIlVq-Vioc0Rr7Xt4GKTLI-z8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

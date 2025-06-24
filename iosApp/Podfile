@@ -1,0 +1,19 @@
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
+
+source 'https://cdn.cocoapods.org'
+
+platform :ios, '15.0'
+use_frameworks!
+use_modular_headers!
+
+target 'iosApp' do
+  pod 'FirebaseMessaging'
+  pod 'FirebaseCore'
+  pod 'FirebaseInstallations'
+  pod 'GoogleUtilities'
+  pod 'FirebaseCoreInternal'
+
+  # Подключение KMM-модуля
+  pod 'shared', :path => '../shared'
+end

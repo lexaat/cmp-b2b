@@ -14,6 +14,10 @@ pluginManagement {
         gradlePluginPortal()
     }
 
+    plugins {
+        id("com.google.gms.google-services") version "4.4.1"
+    }
+
     resolutionStrategy {
         eachPlugin {
             if (requested.id.id == "app.cash.sqldelight") {
