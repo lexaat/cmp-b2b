@@ -36,7 +36,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import core.presentation.BaseSideEffect
 import dev.icerock.moko.resources.compose.stringResource
-import features.auth.presentation.AuthScreen
+import features.auth.presentation.LoginScreen
 import org.koin.compose.koinInject
 import ui.components.GradientBackground
 import uz.hb.shared.SharedRes
@@ -93,7 +93,7 @@ object HomeScreen : Screen {
                 when (effect) {
                     is BaseSideEffect.SessionExpired -> {
                         navigator.popUntilRoot()
-                        navigator.push(AuthScreen)
+                        navigator.push(LoginScreen)
                     }
                     is BaseSideEffect.ShowError -> {
                         snackbarHostState.showSnackbar(effect.message)

@@ -28,4 +28,8 @@
     <string name="change_theme">Сменить тему</string>
     <string name="authorization">Авторизация</string>
     <string name="confirmation">Подтверждение</string>
+
+    <string name="error_login_empty">Логин не может быть пустым</string>
+    <string name="error_password_empty">Пароль не может быть пустым</string>
+    <string name="error_password_too_short">Пароль слишком короткий (минимум 6 символов)</string>
 </resources>

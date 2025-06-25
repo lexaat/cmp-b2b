@@ -38,6 +38,12 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         return true
     }
 
+    func application(_ application: UIApplication,
+                     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Messaging.messaging().apnsToken = deviceToken
+        print("📨 APNs token зарегистрирован: \(deviceToken.map { String(format: "%02.2hhx", $0) }.joined())")
+    }
+    
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         if let token = fcmToken {
             print("📱 Получен FCM token: \(token)")
@@ -47,11 +53,24 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
             print("❌ FCM токен не получен")
         }
     }
+    
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping () -> Void
+    ) {
+        let userInfo = response.notification.request.content.userInfo
+        print("📬 Пользователь тапнул по пушу: \(userInfo)")
+        
+        // Здесь можно передать данные в SwiftUI или Kotlin
+        completionHandler()
+    }
 
     // Обработка пушей в активном режиме
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        completionHandler([.alert, .sound])
+        print("📩 PUSH пришёл: \(notification.request.content.userInfo)")
+        completionHandler([.badge, .sound, .banner])
     }
 }

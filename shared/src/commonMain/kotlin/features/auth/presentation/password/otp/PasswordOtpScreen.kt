@@ -20,7 +20,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import core.error.GlobalErrorHandler
 import dev.icerock.moko.resources.compose.stringResource
-import features.auth.presentation.AuthScreen
+import features.auth.presentation.LoginScreen
 import features.common.ui.collectInLaunchedEffect
 import org.koin.compose.koinInject
 import ui.components.ScreenWrapper
@@ -48,7 +48,7 @@ data class PasswordOtpScreen(val login: String, val oldPassword: String, val new
             when (effect) {
                 is PasswordOtpSideEffect.NavigateToLogin -> {
                     navigator.popUntilRoot()
-                    navigator.push(AuthScreen)
+                    navigator.push(LoginScreen)
                 }
                 PasswordOtpSideEffect.NavigateBack -> { /* обработано глобально */ }
                 PasswordOtpSideEffect.SessionExpired -> { /* обработано глобально */ }

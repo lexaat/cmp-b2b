@@ -28,4 +28,8 @@
     <string name="change_theme">Change theme</string>
     <string name="authorization">Authorization</string>
     <string name="confirmation">Confirmation</string>
+
+    <string name="error_login_empty">Login cannot be empty</string>
+    <string name="error_password_empty">Password cannot be empty</string>
+    <string name="error_password_too_short">Password is too short (minimum 6 characters)</string>
 </resources>

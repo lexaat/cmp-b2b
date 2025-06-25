@@ -4,11 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cafe.adriel.voyager.core.screen.Screen
 import core.i18n.LocaleController
-import features.auth.domain.AuthRepository
 import features.auth.domain.model.RefreshTokenRequest
-import features.auth.domain.usecase.LoginUseCase
 import features.auth.domain.usecase.RefreshTokenUseCase
-import features.auth.presentation.AuthScreen
+import features.auth.presentation.LoginScreen
 import features.common.domain.auth.TokenManager
 import features.main.presentation.MainScreen
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +18,6 @@ import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlinx.datetime.Clock
 import platform.BiometricAuthenticator
-import platform.BiometricResult
 
 private var json: Json = Json { ignoreUnknownKeys = true }
 
@@ -41,7 +38,7 @@ class AppViewModel(
             val refreshToken = tokenManager.getRefreshToken()
 
             if (refreshToken.isNullOrBlank()) {
-                _startScreen.value = AuthScreen
+                _startScreen.value = LoginScreen
                 return@launch
             }
 
@@ -57,11 +54,11 @@ class AppViewModel(
                         _startScreen.value = MainScreen
                     } else {
                         tokenManager.clearAccessToken()
-                        _startScreen.value = AuthScreen
+                        _startScreen.value = LoginScreen
                     }
                 } catch (e: Exception) {
                     tokenManager.clearAccessToken()
-                    _startScreen.value = AuthScreen
+                    _startScreen.value = LoginScreen
                 }
             }
         }

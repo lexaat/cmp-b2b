@@ -28,4 +28,8 @@
     <string name="change_theme">Mavzuni almashtirish</string>
     <string name="authorization">Avtorizatsiya</string>
     <string name="confirmation">Tasdiqlash</string>
+
+    <string name="error_login_empty">Login bo‘sh bo‘lishi mumkin emas</string>
+    <string name="error_password_empty">Parol bo‘sh bo‘lishi mumkin emas</string>
+    <string name="error_password_too_short">Parol juda qisqa (kamida 6 ta belgidan iborat bo‘lishi kerak)</string>
 </resources>

@@ -2,7 +2,7 @@ package core.error
 
 import cafe.adriel.voyager.navigator.Navigator
 import core.presentation.BaseSideEffect
-import features.auth.presentation.AuthScreen
+import features.auth.presentation.LoginScreen
 import features.common.domain.auth.TokenManager
 
 class GlobalErrorHandler(
@@ -13,7 +13,7 @@ class GlobalErrorHandler(
         when (effect) {
             BaseSideEffect.SessionExpired -> {
                 tokenManager.clearAccessToken()
-                navigator.replaceAll(AuthScreen)
+                navigator.replaceAll(LoginScreen)
             }
             is BaseSideEffect.ShowError -> {
             }

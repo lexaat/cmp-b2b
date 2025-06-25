@@ -3,12 +3,10 @@ package features.home.presentation
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import core.presentation.BaseSideEffect
-import features.auth.presentation.login.AuthSideEffect
+import features.auth.presentation.login.LoginSideEffect
 import features.home.domain.usecase.GetClientsUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -55,10 +53,10 @@ class HomeViewModel(
 
             result.sideEffect?.let { sideEffect ->
                 val mapped = when (sideEffect) {
-                    is BaseSideEffect.ShowError -> AuthSideEffect.ShowError(sideEffect.message)
-                    BaseSideEffect.SessionExpired -> AuthSideEffect.SessionExpired
-                    BaseSideEffect.NavigateBack -> AuthSideEffect.NavigateBack
-                    AuthSideEffect.NavigateToOtp -> AuthSideEffect.NavigateToOtp
+                    is BaseSideEffect.ShowError -> LoginSideEffect.ShowError(sideEffect.message)
+                    BaseSideEffect.SessionExpired -> LoginSideEffect.SessionExpired
+                    BaseSideEffect.NavigateBack -> LoginSideEffect.NavigateBack
+                    LoginSideEffect.NavigateToOtp -> LoginSideEffect.NavigateToOtp
                     else -> error("Unsupported side effect: $sideEffect")
                 }
                 _sideEffect.emit(mapped)

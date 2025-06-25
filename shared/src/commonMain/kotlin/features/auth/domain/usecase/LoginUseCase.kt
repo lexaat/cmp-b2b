@@ -4,7 +4,7 @@ import core.presentation.BaseSideEffect
 import features.auth.domain.AuthRepository
 import features.auth.domain.model.AuthResult
 import features.auth.domain.model.LoginRequest
-import features.auth.presentation.login.AuthSideEffect
+import features.auth.presentation.login.LoginSideEffect
 import kotlinx.io.IOException
 import core.usecase.RefreshWrapper
 import core.usecase.ResultWithEffect
@@ -21,7 +21,7 @@ class LoginUseCase(
             response.error?.let { error ->
                 when (error.code) {
                     61607 -> refreshWrapper.runWithRefresh { repository.login(request) }
-                    61712 -> ResultWithEffect(sideEffect = AuthSideEffect.NavigateToOtp)
+                    61712 -> ResultWithEffect(sideEffect = LoginSideEffect.NavigateToOtp)
                     60150 -> ResultWithEffect(sideEffect = OtpSideEffect.NavigateToPasswordChange)
                     else -> ResultWithEffect(sideEffect = BaseSideEffect.ShowError(error.message))
                 }

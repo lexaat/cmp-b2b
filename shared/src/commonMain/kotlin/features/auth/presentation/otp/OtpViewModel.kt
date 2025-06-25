@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import core.presentation.BaseSideEffect
 import features.auth.domain.model.LoginRequest
 import features.auth.domain.usecase.LoginUseCase
-import features.auth.presentation.login.AuthState
 import features.common.domain.auth.TokenManager
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -2,13 +2,11 @@
 
 package features.auth.presentation.otp
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -16,7 +14,6 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.stringResource
 import dev.icerock.moko.resources.desc.desc
-import features.auth.presentation.login.AuthState
 import features.auth.presentation.password.change.ChangePasswordScreen
 import features.common.ui.collectInLaunchedEffect
 import features.main.presentation.MainScreen
