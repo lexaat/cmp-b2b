@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.jetbrainsPluginCompose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.multiplatform.resources)
-    id("org.jetbrains.kotlin.native.cocoapods")
+    kotlin("native.cocoapods")
     id("app.cash.sqldelight") version "2.1.0"
 }
 
@@ -20,6 +20,9 @@ kotlin {
         podfile = project.file("../iosApp/Podfile")
         ios.deploymentTarget = "15.0"
         version = "1.0"
+        specRepos {
+            url("https://cdn.cocoapods.org") // или cdn.cocoapods.org, если это поддерживается
+        }
         framework {
             baseName = "shared"
             isStatic = false
@@ -150,7 +153,7 @@ multiplatformResources {
     resourcesClassName.set("SharedRes") // Опционально, по умолчанию MR
     resourcesVisibility.set(dev.icerock.gradle.MRVisibility.Internal) // Опционально, по умолчанию Public
     iosBaseLocalizationRegion.set("en") // Опционально, по умолчанию "en"
-    iosMinimalDeploymentTarget.set("11.0") // Опционально, по умолчанию "9.0"
+    iosMinimalDeploymentTarget.set("15.0") // Опционально, по умолчанию "9.0"
 }
 
 android {
@@ -161,13 +164,6 @@ android {
     sourceSets["main"].res.srcDirs("src/androidMain/res")
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
-//    defaultConfig {
-//        applicationId = "uz.hb.b2b"
-//        minSdk = libs.versions.android.minSdk.get().toInt()
-//        targetSdk = libs.versions.android.targetSdk.get().toInt()
-//        versionCode = 1
-//        versionName = "1.0"
-//    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -211,12 +207,6 @@ android {
             buildConfigField("String", "ENVIRONMENT", "\"prod\"")
         }
     }
-
-//    bundle {
-//        language {
-//            enableSplit = false
-//        }
-//    }
 }
 
 
