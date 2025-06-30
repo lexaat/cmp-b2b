@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.jetbrainsPluginCompose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.multiplatform.resources)
-    kotlin("native.cocoapods")
+    alias(libs.plugins.kotlinCocoapods)
     id("app.cash.sqldelight") version "2.1.0"
 }
 
@@ -20,9 +20,6 @@ kotlin {
         podfile = project.file("../iosApp/Podfile")
         ios.deploymentTarget = "15.0"
         version = "1.0"
-        specRepos {
-            url("https://cdn.cocoapods.org") // или cdn.cocoapods.org, если это поддерживается
-        }
         framework {
             baseName = "shared"
             isStatic = false
