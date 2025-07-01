@@ -3,6 +3,7 @@ package uz.hb.b2b
 import android.Manifest
 import android.graphics.Color
 import android.os.Build
+import android.os.Bundle
 import app.App
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -10,7 +11,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.bundle.Bundle
 import androidx.fragment.app.FragmentActivity
 import org.koin.core.context.loadKoinModules
 import di.bioModule

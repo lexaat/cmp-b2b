@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.jetbrainsPluginCompose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.multiplatform.resources)
-    alias(libs.plugins.kotlinCocoapods)
+    id("org.jetbrains.kotlin.native.cocoapods")
     id("app.cash.sqldelight") version "2.1.0"
 }
 
@@ -80,7 +80,10 @@ kotlin {
             implementation(libs.compose.material3)
             implementation(libs.kotlinx.io.core)
             implementation(libs.compose.ui)
-            implementation(libs.bundles.ktor)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.material.icons.extended)
 
             implementation(libs.accompanist.systemuicontroller)
@@ -122,7 +125,7 @@ kotlin {
                 implementation(project(":push-core"))
                 implementation(libs.ktor.client.darwin)
                 implementation(libs.kotlinx.coroutines.core)
-                implementation(libs.sqldelight.native)
+                implementation(libs.sqldelight.native.driver)
             }
 
             // Добавим линковку с system libsqlite3
@@ -170,11 +173,8 @@ android {
         getByName("release") {
             isMinifyEnabled = false
         }
-        debug {
-            buildConfigField("String", "ENVIRONMENT", "\"dev\"")
-        }
-        release {
-            buildConfigField("String", "ENVIRONMENT", "\"prod\"")
+        getByName("debug") {
+            isMinifyEnabled = false
         }
     }
     compileOptions {

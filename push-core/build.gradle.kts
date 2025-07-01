@@ -7,7 +7,7 @@ kotlin {
     applyDefaultHierarchyTemplate()
     androidLibrary {
         namespace = "uz.hb.push_core"
-        compileSdk = 35
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = 24
 
     }

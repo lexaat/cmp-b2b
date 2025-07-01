@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "uz.hb.b2b"
-    compileSdk = 35
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "uz.hb.b2b"
-        minSdk = 24
-        targetSdk = 34
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
     }
@@ -20,9 +20,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_21 // или 17
     }
 
-    kotlinOptions {
-        jvmTarget = "21" // или "17"
-    }
     flavorDimensions += "env"
     productFlavors {
         create("dev") {
@@ -38,6 +35,14 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
+        }
+    }
+
+    buildTypes {
+        getByName("debug") { // Or your specific devDebug if it's custom
+            isMinifyEnabled = false
+            isShrinkResources = false
+            // proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro' // Comment this out
         }
     }
 
