@@ -103,7 +103,8 @@ fun OtpScreenContent(
                     backgroundColor = MaterialTheme.colorScheme.background,
                     contentColor = MaterialTheme.colorScheme.onSurface,
                     showBorder = true,
-                    showLoader = isLoading
+                    showLoader = isLoading,
+                    enabled = true
                 )
             }
         }

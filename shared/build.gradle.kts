@@ -31,9 +31,6 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_1_8)
         }
     }
-    jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-    }
 
     sourceSets.all {
         languageSettings.optIn("kotlin.RequiresOptIn")
@@ -53,85 +50,89 @@ kotlin {
     
     sourceSets {
 
-        androidMain.dependencies {
-            implementation(project(":push-core"))
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.androidx.material3)
+        val androidMain by getting {
+            dependencies {
+                    implementation(project(":push-core"))
+                    implementation(compose.preview)
+                    implementation(libs.androidx.activity.compose)
+                    implementation(libs.androidx.material3)
 
-            implementation(libs.ktor.client.okhttp)
+                    implementation(libs.ktor.client.okhttp)
 
-            implementation(libs.koin.android)
-            implementation(libs.koin.androidx.compose)
-            implementation(libs.koin.core)
+                    implementation(libs.koin.android)
+                    implementation(libs.koin.androidx.compose)
+                    implementation(libs.koin.core)
 
-            implementation(libs.androidx.security.crypto)
-            implementation(libs.androidx.datastore.preferences)
-            implementation(libs.androidx.biometric)
+                    implementation(libs.androidx.security.crypto)
+                    implementation(libs.androidx.datastore.preferences)
+                    implementation(libs.androidx.biometric)
 
-            implementation(libs.sqldelight.android.driver)
-
+                    implementation(libs.sqldelight.android.driver)
+                }
         }
-        commonMain.dependencies {
-            api(project(":push-core"))
-            implementation(libs.compose.runtime)
-            implementation(libs.kotlinx.datetime)
-            implementation(libs.compose.foundation)
-            implementation(libs.compose.material3)
-            implementation(libs.kotlinx.io.core)
-            implementation(libs.compose.ui)
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.client.logging)
-            implementation(libs.ktor.serialization.kotlinx.json)
-            implementation(libs.material.icons.extended)
+        val commonMain by getting {
+            dependencies {
+                api(project(":push-core"))
+                implementation(libs.compose.runtime)
+                implementation(libs.kotlinx.datetime)
+                implementation(libs.compose.foundation)
+                implementation(libs.compose.material3)
+                implementation(libs.kotlinx.io.core)
+                implementation(libs.compose.ui)
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.ktor.client.logging)
+                implementation(libs.ktor.serialization.kotlinx.json)
+                implementation(libs.material.icons.extended)
 
-            implementation(libs.accompanist.systemuicontroller)
+                implementation(libs.accompanist.systemuicontroller)
 
-            api(libs.koin.core)
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
-            implementation(libs.koin.compose.viewmodel.navigation)
+                api(libs.koin.core)
+                implementation(libs.koin.compose)
+                implementation(libs.koin.compose.viewmodel)
+                implementation(libs.koin.compose.viewmodel.navigation)
 
-            implementation(libs.kotlinx.serialization.json)
-            implementation(libs.gson)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.gson)
 
-            implementation(libs.voyager.navigator)
-            implementation(libs.voyager.bottom.sheet.navigator)
-            implementation(libs.voyager.tab.navigator)
-            implementation(libs.voyager.transitions)
-            implementation(libs.voyager.koin)
+                implementation(libs.voyager.navigator)
+                implementation(libs.voyager.bottom.sheet.navigator)
+                implementation(libs.voyager.tab.navigator)
+                implementation(libs.voyager.transitions)
+                implementation(libs.voyager.koin)
 
-            implementation(libs.lifecycle.viewmodel)
+                implementation(libs.lifecycle.viewmodel)
 
-            implementation(libs.haze)
-            implementation(libs.haze.materials)
+                implementation(libs.haze)
+                implementation(libs.haze.materials)
 
-            implementation(libs.moko.resource)
-            implementation(libs.moko.resource.compose)
+                implementation(libs.moko.resource)
+                implementation(libs.moko.resource.compose)
 
-            implementation(libs.accompanist.systemuicontroller)
+                implementation(libs.accompanist.systemuicontroller)
 
-            implementation(libs.kotlinx.datetime)
-            implementation(libs.sqldelight.runtime)
-            implementation(libs.sqldelight.coroutines)
+                implementation(libs.kotlinx.datetime)
+                implementation(libs.sqldelight.runtime)
+                implementation(libs.sqldelight.coroutines)
+            }
         }
-        nativeMain.dependencies {
 
-        }
-
+        val iosX64Main by getting
+        val iosArm64Main by getting
+        val iosSimulatorArm64Main by getting
         val iosMain by getting {
+            dependsOn(commonMain)
+            iosX64Main.dependsOn(this)
+            iosArm64Main.dependsOn(this)
+            iosSimulatorArm64Main.dependsOn(this)
             dependencies {
                 implementation(project(":push-core"))
                 implementation(libs.ktor.client.darwin)
                 implementation(libs.kotlinx.coroutines.core)
-                implementation(libs.sqldelight.native.driver)
+                implementation(libs.sqldelight.native)
             }
-
-            // Добавим линковку с system libsqlite3
             kotlin.srcDir("src/iosMain/kotlin")
             languageSettings.optIn("kotlin.RequiresOptIn")
-
         }
     }
 }
@@ -158,7 +159,7 @@ multiplatformResources {
 
 android {
     namespace = "uz.hb.shared"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk = 36
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDirs("src/androidMain/res")

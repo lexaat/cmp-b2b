@@ -16,7 +16,8 @@ fun ButtonWithLoaderPreview() {
             contentColor = MaterialTheme.colorScheme.onSurface,
             showLoader = false,
             showBorder = true,
-            onClick = {}
+            onClick = {},
+            enabled = true
         )
     }
 }
@@ -31,7 +32,8 @@ fun ButtonWithLoaderLoadingPreview() {
             contentColor = MaterialTheme.colorScheme.onSurface,
             showLoader = true,
             showBorder = true,
-            onClick = {}
+            onClick = {},
+            enabled = true
         )
     }
 }

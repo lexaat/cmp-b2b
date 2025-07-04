@@ -29,7 +29,9 @@ fun LoginFormContentPreview() {
         modifier = TODO(),
         loginError = TODO(),
         passwordError = TODO(),
-        generalError = TODO()
+        generalError = TODO(),
+        isPasswordVisible = false,
+        onTogglePasswordVisibility = TODO()
     )
 }
 
@@ -52,6 +54,8 @@ fun LoginFormContentPreview2() {
         password = TODO(),
         isLoading = TODO(),
         canUseBiometrics = TODO(),
-        onBiometricLogin = TODO()
+        onBiometricLogin = TODO(),
+        isPasswordVisible = TODO(),
+        onTogglePasswordVisibility = TODO()
     )
 }

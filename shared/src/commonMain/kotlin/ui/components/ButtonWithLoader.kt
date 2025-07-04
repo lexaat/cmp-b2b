@@ -28,8 +28,13 @@ fun ButtonWithLoader(
     contentColor: Color = White,
     showLoader: Boolean = false,
     showBorder: Boolean,
+    enabled: Boolean,
     onClick: () -> Unit,
 ) {
+    val bg = if (enabled) backgroundColor else backgroundColor.copy(alpha = 0.4f)
+    val textColor = if (enabled) contentColor else contentColor.copy(alpha = 0.5f)
+    val borderColor = if (enabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)
+
     if (showLoader) {
         Row(
             modifier = Modifier
@@ -37,17 +42,16 @@ fun ButtonWithLoader(
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp, vertical = 20.dp)
                 .height(48.dp)
-                .clickable { onClick() }
                 .border(
                     if (showBorder) 2.dp else 0.dp,
-                    //MaterialTheme.colorScheme.onSurface.copy(0.08f),
-                    MaterialTheme.colorScheme.primary,
+                    borderColor,
                     RoundedCornerShape(50.dp)
                 )
-                .background(backgroundColor, RoundedCornerShape(50.dp)),
-            horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically
+                .background(bg, RoundedCornerShape(50.dp)),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp))
+            CircularProgressIndicator(color = borderColor, modifier = Modifier.size(28.dp))
         }
     } else {
         Row(
@@ -56,19 +60,20 @@ fun ButtonWithLoader(
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp, vertical = 20.dp)
                 .height(48.dp)
-                .clickable { onClick() } // motionClickEvent is my custom click modifier, use clickable modifier over here
+                .clickable(enabled = enabled) { onClick() }
                 .border(
                     if (showBorder) 2.dp else 0.dp,
-                    MaterialTheme.colorScheme.primary,
+                    borderColor,
                     RoundedCornerShape(50.dp)
                 )
-                .background(backgroundColor, RoundedCornerShape(50.dp)),
-            horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically
+                .background(bg, RoundedCornerShape(50.dp)),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = buttonText,
                 style = MaterialTheme.typography.labelLarge,
-                color = contentColor,
+                color = textColor,
                 modifier = Modifier.padding(horizontal = 12.dp)
             )
         }

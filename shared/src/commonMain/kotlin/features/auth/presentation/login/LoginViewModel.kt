@@ -73,6 +73,10 @@ class LoginViewModel(
             LoginIntent.LoginButtonClicked -> {
                 performLogin()
             }
+
+            LoginIntent.TogglePasswordVisibility -> {
+                _uiState.update { it.copy(isPasswordVisible = !it.isPasswordVisible) }
+            }
         }
     }
 
