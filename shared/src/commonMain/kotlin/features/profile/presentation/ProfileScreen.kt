@@ -29,7 +29,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import core.i18n.LocaleController
 import dev.icerock.moko.resources.compose.stringResource
-import features.auth.presentation.LoginScreen
+import features.auth.presentation.login.LoginScreen
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.compose.getKoin
 import org.koin.compose.koinInject

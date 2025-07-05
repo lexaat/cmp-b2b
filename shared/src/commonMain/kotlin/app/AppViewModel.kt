@@ -6,7 +6,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import core.i18n.LocaleController
 import features.auth.domain.model.RefreshTokenRequest
 import features.auth.domain.usecase.RefreshTokenUseCase
-import features.auth.presentation.LoginScreen
+import features.auth.presentation.login.LoginScreen
 import features.common.domain.auth.TokenManager
 import features.main.presentation.MainScreen
 import kotlinx.coroutines.flow.MutableStateFlow

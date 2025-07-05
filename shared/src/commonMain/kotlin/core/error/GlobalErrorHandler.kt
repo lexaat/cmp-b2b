@@ -2,7 +2,7 @@ package core.error
 
 import cafe.adriel.voyager.navigator.Navigator
 import core.presentation.BaseSideEffect
-import features.auth.presentation.LoginScreen
+import features.auth.presentation.login.LoginScreen
 import features.common.domain.auth.TokenManager
 
 class GlobalErrorHandler(

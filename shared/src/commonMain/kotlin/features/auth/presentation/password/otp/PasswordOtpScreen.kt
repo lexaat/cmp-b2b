@@ -20,7 +20,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import core.error.GlobalErrorHandler
 import dev.icerock.moko.resources.compose.stringResource
-import features.auth.presentation.LoginScreen
+import features.auth.presentation.login.LoginScreen
 import features.common.ui.collectInLaunchedEffect
 import org.koin.compose.koinInject
 import ui.components.ScreenWrapper

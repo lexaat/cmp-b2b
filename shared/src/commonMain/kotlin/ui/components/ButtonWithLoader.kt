@@ -34,6 +34,7 @@ fun ButtonWithLoader(
     val bg = if (enabled) backgroundColor else backgroundColor.copy(alpha = 0.4f)
     val textColor = if (enabled) contentColor else contentColor.copy(alpha = 0.5f)
     val borderColor = if (enabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)
+    val radius = 12.dp
 
     if (showLoader) {
         Row(
@@ -45,9 +46,9 @@ fun ButtonWithLoader(
                 .border(
                     if (showBorder) 2.dp else 0.dp,
                     borderColor,
-                    RoundedCornerShape(50.dp)
+                    RoundedCornerShape(radius)
                 )
-                .background(bg, RoundedCornerShape(50.dp)),
+                .background(bg, RoundedCornerShape(radius)),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -64,9 +65,9 @@ fun ButtonWithLoader(
                 .border(
                     if (showBorder) 2.dp else 0.dp,
                     borderColor,
-                    RoundedCornerShape(50.dp)
+                    RoundedCornerShape(radius)
                 )
-                .background(bg, RoundedCornerShape(50.dp)),
+                .background(bg, RoundedCornerShape(radius)),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {

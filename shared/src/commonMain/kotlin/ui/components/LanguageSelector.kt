@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import core.i18n.LocaleController
 
 @Composable
-fun LanguageSelector() {
+fun LanguageSelector(modifier: Modifier = Modifier,) {
     val currentLocale by LocaleController.locale.collectAsState()
     var expanded by remember { mutableStateOf(false) }
 
@@ -28,7 +28,7 @@ fun LanguageSelector() {
         else -> "🌍 System"
     }
 
-    Box(modifier = Modifier.padding(16.dp)) {
+    Box(modifier = modifier) {
         TextButton(onClick = { expanded = true }) {
             Text("🌐 $currentLabel")
         }
