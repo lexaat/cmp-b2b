@@ -4,7 +4,9 @@
     <string name="home">Home</string>
     <string name="profile">Profile</string>
     <string name="logout_app">Log out of the app</string>
-    <string name="logout">Logout</string>
+    <string name="logout">Log out</string>
+    <string name="enter">Log in</string>
+    <string name="legal_entities_app">Application for legal entities</string>
     <string name="logout_confirm">Are you sure you want to logout?</string>
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
@@ -32,4 +34,10 @@
     <string name="error_login_empty">Login cannot be empty</string>
     <string name="error_password_empty">Password cannot be empty</string>
     <string name="error_password_too_short">Password is too short (minimum 6 characters)</string>
+
+    <string name="terms_text_part_1">By clicking 'Login', you accept the </string>
+    <string name="terms_text_part_2">User Agreement</string>
+    <string name="terms_text_part_3"> and the </string>
+    <string name="terms_text_part_4">Privacy Policy</string>
+    <string name="terms_text_part_5">.</string>
 </resources>

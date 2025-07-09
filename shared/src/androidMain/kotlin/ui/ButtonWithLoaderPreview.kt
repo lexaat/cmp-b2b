@@ -1,12 +1,15 @@
 package ui
 
+import android.content.res.Configuration
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import ui.components.ButtonWithLoader
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_TYPE_NORMAL,
+    backgroundColor = 0xFFFFFFFF
+)
 @Composable
 fun ButtonWithLoaderPreview() {
     MaterialTheme {
@@ -22,7 +25,7 @@ fun ButtonWithLoaderPreview() {
     }
 }
 
-@Preview(showBackground = true, name = "Loader")
+@Preview(showBackground = true, name = "Loader", backgroundColor = 0xFFFFFFFF)
 @Composable
 fun ButtonWithLoaderLoadingPreview() {
     MaterialTheme {
@@ -30,10 +33,10 @@ fun ButtonWithLoaderLoadingPreview() {
             buttonText = "Войти",
             backgroundColor = MaterialTheme.colorScheme.background,
             contentColor = MaterialTheme.colorScheme.onSurface,
-            showLoader = true,
+            showLoader = false,
             showBorder = true,
             onClick = {},
-            enabled = true
+            enabled = false
         )
     }
 }

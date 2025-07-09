@@ -1,7 +1,6 @@
 package features.auth.presentation.login
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -30,8 +29,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -40,12 +37,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -62,10 +56,11 @@ import features.common.ui.collectInLaunchedEffect
 import features.main.presentation.MainScreen
 import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
-import ui.components.AppTopBar
 import ui.components.ButtonWithLoader
 import ui.components.LanguageSelector
+import ui.components.LinkPart
 import ui.components.ScreenWrapper
+import ui.components.TextWithLinks
 import uz.hb.shared.SharedRes
 
 object LoginScreen : Screen {
@@ -146,7 +141,6 @@ fun LoginForm(
 ) {
     val viewModel = koinInject<LoginViewModel>()
     val canUseBiometrics by viewModel.canUseBiometrics.collectAsState()
-
     val locale by LocaleController.locale.collectAsState()
 
     key(locale) {
@@ -162,7 +156,8 @@ fun LoginForm(
             modifier = modifier,
             loginLabel = SharedRes.strings.login.desc().localized(),
             passwordLabel = SharedRes.strings.password.desc().localized(),
-            loginButtonText = SharedRes.strings.login.desc().localized(),
+            loginButtonText = SharedRes.strings.enter.desc().localized(),
+            legalEntitiesAppText = SharedRes.strings.legal_entities_app.desc().localized(),
             loginError = state.loginError,
             passwordError = state.passwordError,
             generalError = state.generalError,
@@ -186,6 +181,7 @@ fun LoginFormContent(
     loginLabel: String,
     passwordLabel: String,
     loginButtonText: String,
+    legalEntitiesAppText: String,
     loginError: StringResource?,
     passwordError: StringResource?,
     generalError: StringResource?,
@@ -200,11 +196,10 @@ fun LoginFormContent(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = painterResource(SharedRes.images.logo_hayot_bank),
-            contentDescription = "Hayot Bank",
-            modifier = Modifier.size(width = 200.dp, height = 100.dp), // Задаем размер
-            contentScale = ContentScale.Fit // Вписываем изображение с сохранением пропорций
+
+        LanguageSelector(
+            modifier = Modifier
+                .align(Alignment.End)
         )
         // Элемент, который займет всю оставшуюся высоту
         Box(
@@ -212,10 +207,37 @@ fun LoginFormContent(
                 .fillMaxWidth() // Заполнить ширину
                 .weight(1f)
         ) {
-            LanguageSelector(
+            Column(
+                modifier
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth() // Заполнить ширину
+                        .weight(2f)
+                )
+            Image(
+                painter = painterResource(SharedRes.images.logo_hayot_bank),
+                contentDescription = "Hayot Bank",
                 modifier = Modifier
-                    .align(Alignment.TopEnd)
+                    .size(width = 240.dp, height = 80.dp)
+                , // Задаем размер
+                contentScale = ContentScale.Fit // Вписываем изображение с сохранением пропорций
+
             )
+                Text(
+                    text = legalEntitiesAppText,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.outline,
+                    modifier = Modifier.padding(horizontal = 12.dp)
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth() // Заполнить ширину
+                        .weight(1f)
+                )
+            }
         }
         OutlinedTextField(
             value = login,
@@ -287,9 +309,17 @@ fun LoginFormContent(
             modifier = Modifier
                 .fillMaxWidth() // Заполнить ширину
                 .weight(1f)
-        ){
+        )
 
-        }
+        TextWithLinks(
+            parts = listOf(
+                LinkPart(SharedRes.strings.terms_text_part_1.desc().localized()),
+                LinkPart(SharedRes.strings.terms_text_part_2.desc().localized(), tag = "URL", annotation = "https://example.com/1"),
+                LinkPart(SharedRes.strings.terms_text_part_3.desc().localized()),
+                LinkPart(SharedRes.strings.terms_text_part_4.desc().localized(), tag = "URL", annotation = "https://example.com/2"),
+                LinkPart(SharedRes.strings.terms_text_part_5.desc().localized())
+            ),
+        )
 
         val isButtonEnabled = login.length >= 4 && password.length >= 4
         ButtonWithLoader(
@@ -301,15 +331,17 @@ fun LoginFormContent(
             enabled = isButtonEnabled,
         )
 
-        if (canUseBiometrics) {
-            OutlinedButton(
-                onClick = onBiometricLogin,
 
-                modifier = Modifier.padding(top = 8.dp)
-            ) {
-                Text("Войти по биометрии")
-            }
-        }
+
+//        if (canUseBiometrics) {
+//            OutlinedButton(
+//                onClick = onBiometricLogin,
+//
+//                modifier = Modifier.padding(top = 8.dp)
+//            ) {
+//                Text("Войти по биометрии")
+//            }
+//        }
 
 
     }

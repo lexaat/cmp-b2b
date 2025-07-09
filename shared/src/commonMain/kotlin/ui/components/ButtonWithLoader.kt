@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -31,9 +32,9 @@ fun ButtonWithLoader(
     enabled: Boolean,
     onClick: () -> Unit,
 ) {
-    val bg = if (enabled) backgroundColor else backgroundColor.copy(alpha = 0.4f)
+    val bg = if (enabled) backgroundColor else backgroundColor.copy(alpha = 0.2f)
     val textColor = if (enabled) contentColor else contentColor.copy(alpha = 0.5f)
-    val borderColor = if (enabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)
+    val borderColor = if (enabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
     val radius = 12.dp
 
     if (showLoader) {
@@ -72,8 +73,9 @@ fun ButtonWithLoader(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = buttonText,
-                style = MaterialTheme.typography.labelLarge,
+                text = buttonText.uppercase(),
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Bold),
                 color = textColor,
                 modifier = Modifier.padding(horizontal = 12.dp)
             )

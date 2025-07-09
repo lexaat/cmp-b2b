@@ -5,6 +5,8 @@
     <string name="profile">Profil</string>
     <string name="logout_app">Ilovadan chiqish</string>
     <string name="logout">Chiqish</string>
+    <string name="enter">Kirish</string>
+    <string name="legal_entities_app">Yuridik shaxslar uchun ilova</string>
     <string name="logout_confirm">Rostdan ham chiqmoqchimisiz?</string>
     <string name="yes">Ha</string>
     <string name="cancel">Bekor qilish</string>
@@ -15,7 +17,7 @@
     <string name="inn">STIR</string>
     <string name="id">ID</string>
     <string name="retry">Qayta urinish</string>
-    <string name="login">Kirish</string>
+    <string name="login">Login</string>
     <string name="sms_code">SMS kodi</string>
     <string name="confirm">Tasdiqlash</string>
     <string name="new_password">Yangi parol</string>
@@ -32,4 +34,10 @@
     <string name="error_login_empty">Login bo‘sh bo‘lishi mumkin emas</string>
     <string name="error_password_empty">Parol bo‘sh bo‘lishi mumkin emas</string>
     <string name="error_password_too_short">Parol juda qisqa (kamida 6 ta belgidan iborat bo‘lishi kerak)</string>
+
+    <string name="terms_text_part_1">'Kirish' tugmasini bosgan holda siz </string>
+    <string name="terms_text_part_2">foydalanuvchi shartnomasiga</string>
+    <string name="terms_text_part_3"> va </string>
+    <string name="terms_text_part_4">maxfiylik siyosatiga</string>
+    <string name="terms_text_part_5"> rozilik bildirasiz.</string>
 </resources>

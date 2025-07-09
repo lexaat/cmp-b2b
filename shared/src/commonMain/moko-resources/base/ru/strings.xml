@@ -5,6 +5,8 @@
     <string name="profile">Профиль</string>
     <string name="logout_app">Выйти из приложения</string>
     <string name="logout">Выход</string>
+    <string name="enter">Войти</string>
+    <string name="legal_entities_app">Приложение для юридических лиц</string>
     <string name="logout_confirm">Вы уверены, что хотите выйти?</string>
     <string name="yes">Да</string>
     <string name="cancel">Отмена</string>
@@ -15,7 +17,7 @@
     <string name="inn">ИНН</string>
     <string name="id">ID</string>
     <string name="retry">Повторить</string>
-    <string name="login">Войти</string>
+    <string name="login">Логин</string>
     <string name="sms_code">Код из СМС</string>
     <string name="confirm">Подтвердить</string>
     <string name="new_password">Новый пароль</string>
@@ -32,4 +34,10 @@
     <string name="error_login_empty">Логин не может быть пустым</string>
     <string name="error_password_empty">Пароль не может быть пустым</string>
     <string name="error_password_too_short">Пароль слишком короткий (минимум 6 символов)</string>
+
+    <string name="terms_text_part_1">Нажимая 'Войти', вы принимаете условия </string>
+    <string name="terms_text_part_2">пользовательского соглашения</string>
+    <string name="terms_text_part_3"> и </string>
+    <string name="terms_text_part_4">политики конфиденциальности</string>
+    <string name="terms_text_part_5">.</string>
 </resources>

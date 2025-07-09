@@ -1,63 +1,129 @@
 package ui.components
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import core.i18n.LocaleController
+import dev.icerock.moko.resources.ImageResource
+import kotlinx.coroutines.launch
+import dev.icerock.moko.resources.compose.painterResource
+import uz.hb.shared.SharedRes
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LanguageSelector(modifier: Modifier = Modifier,) {
+fun LanguageSelector(modifier: Modifier = Modifier) {
     val currentLocale by LocaleController.locale.collectAsState()
-    var expanded by remember { mutableStateOf(false) }
+    var showSheet by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val scope = rememberCoroutineScope()
 
-    val currentLabel = when (currentLocale) {
-        "ru" -> "Русский"
-        "uz" -> "Oʻzbek"
-        "en" -> "English"
-        else -> "🌍 System"
+    val langCode = currentLocale.uppercase()
+    val flag: Painter = when (currentLocale) {
+        "ru" -> painterResource(SharedRes.images.ru) // ваш файл ru.svg
+        "uz" -> painterResource(SharedRes.images.uz)
+        "en" -> painterResource(SharedRes.images.gb)
+        else -> painterResource(SharedRes.images.gb)
     }
 
     Box(modifier = modifier) {
-        TextButton(onClick = { expanded = true }) {
-            Text("🌐 $currentLabel")
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .clickable { showSheet = true }
+                .padding(horizontal = 12.dp, vertical = 6.dp)
+        ) {
+//            Image(
+//                painter = flag,
+//                contentDescription = null,
+//                modifier = Modifier
+//                    .size(28.dp)
+//                    .border(1.dp, MaterialTheme.colorScheme.outline, shape = MaterialTheme.shapes.small)
+//                    .padding(4.dp)
+//            )
+            Spacer(Modifier.width(8.dp))
+            Text(langCode)
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowDown,
+                contentDescription = null
+            )
+        }
+    }
+
+    if (showSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showSheet = false },
+            sheetState = sheetState
+        ) {
+            Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                LanguageItem("Русский", SharedRes.images.ru, "ru", currentLocale) {
+                    LocaleController.setLocale("ru")
+                    scope.launch { sheetState.hide(); showSheet = false }
+                }
+                LanguageItem("O'zbek", SharedRes.images.uz, "uz", currentLocale) {
+                    LocaleController.setLocale("uz")
+                    scope.launch { sheetState.hide(); showSheet = false }
+                }
+                LanguageItem("English", SharedRes.images.gb, "en", currentLocale) {
+                    LocaleController.setLocale("en")
+                    scope.launch { sheetState.hide(); showSheet = false }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun LanguageItem(language: String, image: ImageResource, localeCode: String, currentLocale: String, onClick: () -> Unit) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(vertical = 12.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(32.dp) // Чуть больше, чтобы вместить обводку
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.outline,
+                    shape = CircleShape
+                )
+                .padding(2.dp)
+        ) {
+            Image(
+                painter = painterResource(image),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize().clip(CircleShape)
+            )
         }
 
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            DropdownMenuItem(
-                text = { Text("Русский") },
-                onClick = {
-                    LocaleController.setLocale("ru")
-                    expanded = false
-                }
-            )
-            DropdownMenuItem(
-                text = { Text("Oʻzbek") },
-                onClick = {
-                    LocaleController.setLocale("uz")
-                    expanded = false
-                }
-            )
-            DropdownMenuItem(
-                text = { Text("English") },
-                onClick = {
-                    LocaleController.setLocale("en")
-                    expanded = false
-                }
+        Spacer(modifier = Modifier.width(12.dp))
+
+        Text(
+            text = language,
+            modifier = Modifier.weight(1f)
+        )
+
+        if (currentLocale == localeCode) {
+            Icon(
+                imageVector = Icons.Default.Check,
+                contentDescription = "Selected",
+                tint = MaterialTheme.colorScheme.primary
             )
         }
     }
 }
+
