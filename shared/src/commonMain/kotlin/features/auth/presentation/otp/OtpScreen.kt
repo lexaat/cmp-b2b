@@ -41,7 +41,7 @@ import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
 import dev.icerock.moko.resources.desc.desc
-import features.auth.presentation.password.change.ChangePasswordScreen
+import features.auth.presentation.password.change.PasswordChangeRequestScreen
 import features.common.ui.collectInLaunchedEffect
 import features.main.presentation.MainScreen
 import org.koin.compose.koinInject
@@ -73,7 +73,7 @@ data class OtpScreen(
                 is OtpSideEffect.ShowError -> snackbarHostState.showSnackbar(effect.message)
                 is OtpSideEffect.NavigateToMain -> navigator.push(MainScreen)
                 is OtpSideEffect.NavigateToPasswordChange ->
-                    navigator.push(ChangePasswordScreen(login, password))
+                    navigator.push(PasswordChangeRequestScreen(login, password))
 
                 else -> {}
             }

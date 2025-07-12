@@ -5,8 +5,8 @@ import features.auth.domain.usecase.RefreshTokenUseCase
 import features.auth.domain.usecase.ChangePasswordUseCase
 import features.auth.presentation.login.LoginViewModel
 import features.auth.presentation.otp.OtpViewModel
-import features.auth.presentation.password.change.ChangePasswordViewModel
-import features.auth.presentation.password.otp.PasswordOtpViewModel
+import features.auth.presentation.password.change.PasswordChangeRequestViewModel
+import features.auth.presentation.password.confirm.PasswordOtpViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -25,6 +25,12 @@ val authModule = module {
             password = password
         )
     }
-    single { ChangePasswordViewModel(get()) }
+    viewModel { (login: String, password: String) ->
+        PasswordChangeRequestViewModel(
+            login = login,
+            password = password,
+            changePasswordUseCase = get()
+        )
+    }
     single { PasswordOtpViewModel(get()) }
 }

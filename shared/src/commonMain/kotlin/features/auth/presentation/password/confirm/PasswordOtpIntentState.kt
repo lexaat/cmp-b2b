@@ -1,4 +1,4 @@
-package features.auth.presentation.password.otp
+package features.auth.presentation.password.confirm
 
 sealed class PasswordOtpState {
     object WaitingForPasswordOtp : PasswordOtpState()

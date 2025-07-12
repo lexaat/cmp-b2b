@@ -1,21 +1,12 @@
-package features.auth.presentation.password.otp
+package features.auth.presentation.password.confirm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import core.presentation.BaseSideEffect
-import features.auth.domain.AuthRepository
 import features.auth.domain.model.ChangePasswordRequest
 import features.auth.domain.usecase.ChangePasswordUseCase
-import features.auth.presentation.password.change.ChangePasswordIntent
-import features.auth.presentation.password.change.ChangePasswordSideEffect
-import features.auth.presentation.password.change.ChangePasswordState
-import features.common.domain.auth.TokenManager
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.MainScope
-import platform.BiometricAuthenticator
-import platform.BiometricResult
 
 class PasswordOtpViewModel(
     private val changePasswordUseCase: ChangePasswordUseCase,
