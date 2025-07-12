@@ -21,7 +21,10 @@ class LoginUseCase(
             response.error?.let { error ->
                 when (error.code) {
                     61607 -> refreshWrapper.runWithRefresh { repository.login(request) }
-                    61712 -> ResultWithEffect(sideEffect = LoginSideEffect.NavigateToOtp)
+                    61712 -> {
+                        val phone = extractPhoneNumber(error.message)
+                        ResultWithEffect(sideEffect = LoginSideEffect.NavigateToOtp(phone))
+                    }
                     60150 -> ResultWithEffect(sideEffect = OtpSideEffect.NavigateToPasswordChange)
                     else -> ResultWithEffect(sideEffect = BaseSideEffect.ShowError(error.message))
                 }
@@ -31,5 +34,10 @@ class LoginUseCase(
         } catch (e: Exception) {
             ResultWithEffect(sideEffect = BaseSideEffect.ShowError("Неизвестная ошибка: ${e.message}"))
         }
+    }
+
+    private fun extractPhoneNumber(message: String): String {
+        val regex = Regex("""на номер ([\d* ]+)\.""")
+        return regex.find(message)?.groupValues?.getOrNull(1) ?: ""
     }
 }

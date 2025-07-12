@@ -11,7 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Preview(
     showBackground = true,
-    device = "id:Nexus 5",
+    device = "spec:width=411dp,height=891dp",
     uiMode = Configuration.UI_MODE_NIGHT_NO, showSystemUi = true, backgroundColor = 0xFFFFFFFF
 )
 @Composable

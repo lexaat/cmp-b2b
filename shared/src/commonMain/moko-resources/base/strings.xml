@@ -30,10 +30,12 @@
     <string name="change_theme">Change theme</string>
     <string name="authorization">Authorization</string>
     <string name="confirmation">Confirmation</string>
+    <string name="otp_sent_to_phone">We sent the code to %s.\nEnter it</string>
 
     <string name="error_login_empty">Login cannot be empty</string>
     <string name="error_password_empty">Password cannot be empty</string>
     <string name="error_password_too_short">Password is too short (minimum 6 characters)</string>
+    <string name="error_otp_empty">OTP cannot be empty</string>
 
     <string name="terms_text_part_1">By clicking 'Login', you accept the </string>
     <string name="terms_text_part_2">User Agreement</string>

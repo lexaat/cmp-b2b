@@ -40,7 +40,7 @@ fun ButtonWithLoader(
     if (showLoader) {
         Row(
             modifier = Modifier
-                .widthIn(max = 600.dp)
+                .widthIn(max = 400.dp)
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp, vertical = 20.dp)
                 .height(48.dp)
@@ -58,7 +58,7 @@ fun ButtonWithLoader(
     } else {
         Row(
             modifier = Modifier
-                .widthIn(max = 600.dp)
+                .widthIn(max = 400.dp)
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp, vertical = 20.dp)
                 .height(48.dp)

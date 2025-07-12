@@ -30,10 +30,12 @@
     <string name="change_theme">Mavzuni almashtirish</string>
     <string name="authorization">Avtorizatsiya</string>
     <string name="confirmation">Tasdiqlash</string>
+    <string name="otp_sent_to_phone">Kod %s raqamiga yuborildi.\nKiriting</string>
 
     <string name="error_login_empty">Login bo‘sh bo‘lishi mumkin emas</string>
     <string name="error_password_empty">Parol bo‘sh bo‘lishi mumkin emas</string>
     <string name="error_password_too_short">Parol juda qisqa (kamida 6 ta belgidan iborat bo‘lishi kerak)</string>
+    <string name="error_otp_empty">OTP bo'sh bo'lishi mumkin emas</string>
 
     <string name="terms_text_part_1">'Kirish' tugmasini bosgan holda siz </string>
     <string name="terms_text_part_2">foydalanuvchi shartnomasiga</string>

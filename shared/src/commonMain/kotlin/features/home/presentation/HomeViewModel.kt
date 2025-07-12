@@ -56,7 +56,7 @@ class HomeViewModel(
                     is BaseSideEffect.ShowError -> LoginSideEffect.ShowError(sideEffect.message)
                     BaseSideEffect.SessionExpired -> LoginSideEffect.SessionExpired
                     BaseSideEffect.NavigateBack -> LoginSideEffect.NavigateBack
-                    LoginSideEffect.NavigateToOtp -> LoginSideEffect.NavigateToOtp
+                    is LoginSideEffect.NavigateToOtp -> sideEffect
                     else -> error("Unsupported side effect: $sideEffect")
                 }
                 _sideEffect.emit(mapped)

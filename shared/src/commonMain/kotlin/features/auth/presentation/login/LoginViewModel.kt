@@ -81,7 +81,6 @@ class LoginViewModel(
     }
 
     private fun performLogin() {
-        // Временная заглушка для демонстрации
         val currentLogin = _uiState.value.loginInput
         val currentPassword = _uiState.value.passwordInput
 
@@ -107,7 +106,7 @@ class LoginViewModel(
                     is BaseSideEffect.ShowError -> LoginSideEffect.ShowError(sideEffect.message)
                     BaseSideEffect.SessionExpired -> LoginSideEffect.SessionExpired
                     BaseSideEffect.NavigateBack -> LoginSideEffect.NavigateBack
-                    LoginSideEffect.NavigateToOtp -> LoginSideEffect.NavigateToOtp
+                    is LoginSideEffect.NavigateToOtp -> sideEffect
                     else -> error("Unsupported side effect: $sideEffect")
                 }
                 _sideEffect.emit(mapped)

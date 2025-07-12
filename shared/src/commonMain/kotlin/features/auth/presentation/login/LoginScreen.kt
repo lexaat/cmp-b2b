@@ -56,6 +56,7 @@ import features.common.ui.collectInLaunchedEffect
 import features.main.presentation.MainScreen
 import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
+import ui.components.AppTopBar
 import ui.components.ButtonWithLoader
 import ui.components.LanguageSelector
 import ui.components.LinkPart
@@ -92,7 +93,13 @@ fun LoginScreenContent(viewModel: LoginViewModel) {
         // 2. Фичевые эффекты
         when (effect) {
             is LoginSideEffect.NavigateToMain -> navigator.push(MainScreen)
-            is LoginSideEffect.NavigateToOtp -> navigator.push(OtpScreen(uiState.loginInput, uiState.passwordInput))
+            is LoginSideEffect.NavigateToOtp -> {
+                navigator.push(OtpScreen(
+                    login = uiState.loginInput,
+                    password = uiState.passwordInput,
+                    maskedPhoneNumber = effect.phone
+                ))
+            }
 
             LoginSideEffect.NavigateBack -> { /* обработано глобально */ }
             LoginSideEffect.SessionExpired -> { /* обработано глобально */ }
@@ -109,15 +116,15 @@ fun LoginScreenContent(viewModel: LoginViewModel) {
     )
 
     Scaffold(
+        topBar = {
+            AppTopBar(
+                title = "",
+                onBackClick = null,
+                centered = true,
+                menuItems = emptyList(),
+            )
+        },
         contentWindowInsets = WindowInsets.systemBars,
-//        topBar = {
-//                AppTopBar(
-//                    title = SharedRes.strings.authorization.desc().localized(),
-//                    onBackClick = null,
-//                    centered = true, // 👈 включаем iOS-стиль
-//                    menuItems = menuItems
-//                )
-//        },
         snackbarHost = { SnackbarHost(snackbarHostState) }) { paddingValues ->
         LoginForm(
             state = uiState,
@@ -205,7 +212,7 @@ fun LoginFormContent(
         Box(
             modifier = Modifier
                 .fillMaxWidth() // Заполнить ширину
-                .weight(1f)
+                .weight(2f)
         ) {
             Column(
                 modifier
@@ -215,7 +222,7 @@ fun LoginFormContent(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth() // Заполнить ширину
-                        .weight(2f)
+                        .weight(1f)
                 )
             Image(
                 painter = painterResource(SharedRes.images.logo_hayot_bank),
@@ -228,7 +235,7 @@ fun LoginFormContent(
             )
                 Text(
                     text = legalEntitiesAppText,
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.outline,
                     modifier = Modifier.padding(horizontal = 12.dp)
                 )
@@ -253,7 +260,7 @@ fun LoginFormContent(
 //                }
 //            },
             modifier = Modifier
-                .widthIn(max = 600.dp)
+                .widthIn(max = 400.dp)
                 .fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
         )
@@ -288,7 +295,7 @@ fun LoginFormContent(
                 }
             },
             modifier = Modifier
-                .widthIn(max = 600.dp)
+                .widthIn(max = 400.dp)
                 .fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(

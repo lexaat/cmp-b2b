@@ -30,10 +30,12 @@
     <string name="change_theme">Сменить тему</string>
     <string name="authorization">Авторизация</string>
     <string name="confirmation">Подтверждение</string>
+    <string name="otp_sent_to_phone">Мы отправили код на номер %s.\nВведите его</string>
 
     <string name="error_login_empty">Логин не может быть пустым</string>
     <string name="error_password_empty">Пароль не может быть пустым</string>
     <string name="error_password_too_short">Пароль слишком короткий (минимум 6 символов)</string>
+    <string name="error_otp_empty">OTP не может быть пустым</string>
 
     <string name="terms_text_part_1">Нажимая 'Войти', вы принимаете условия </string>
     <string name="terms_text_part_2">пользовательского соглашения</string>
