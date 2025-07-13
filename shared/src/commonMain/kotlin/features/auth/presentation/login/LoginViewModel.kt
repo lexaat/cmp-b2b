@@ -3,8 +3,7 @@ package features.auth.presentation.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import core.presentation.BaseSideEffect
-import dev.icerock.moko.resources.compose.localized
-import dev.icerock.moko.resources.desc.desc
+import data.storage.SecureStorage
 import features.auth.domain.model.LoginRequest
 import features.auth.domain.model.RefreshTokenRequest
 import features.auth.domain.usecase.LoginUseCase
@@ -28,7 +27,8 @@ class LoginViewModel(
     private val refreshTokenUseCase: RefreshTokenUseCase,
     private val tokenManager: TokenManager,
     private val biometricAuthenticator: BiometricAuthenticator,
-    private val coroutineScope: CoroutineScope = MainScope()
+    private val coroutineScope: CoroutineScope = MainScope(),
+    private val secureStorage: SecureStorage,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginState()) // Используем data class
@@ -50,8 +50,13 @@ class LoginViewModel(
     fun processIntent(intent: LoginIntent) {
         when (intent) {
 
-            LoginIntent.ScreenEntered -> {
-                _uiState.value = LoginState() // Просто создаем новый дефолтный стейт
+            is LoginIntent.ScreenEntered -> {
+                viewModelScope.launch {
+                    val savedLogin = secureStorage.get("username").orEmpty()
+                    if (savedLogin.isNotBlank()) {
+                        _uiState.update { it.copy(loginInput = savedLogin) }
+                    }
+                }
             }
 
             is LoginIntent.LoginInputChanged -> {

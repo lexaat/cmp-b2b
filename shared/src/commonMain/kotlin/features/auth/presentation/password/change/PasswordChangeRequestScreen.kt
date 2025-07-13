@@ -23,7 +23,7 @@ import dev.icerock.moko.resources.compose.localized
 import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
 import dev.icerock.moko.resources.desc.desc
-import features.auth.presentation.password.confirm.PasswordOtpScreen
+import features.auth.presentation.password.confirm.PasswordChangeOtpScreen
 import features.common.ui.collectInLaunchedEffect
 import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
@@ -57,7 +57,9 @@ class PasswordChangeRequestScreen(
             globalErrorHandler.handle(effect)
             when (effect) {
                 is PasswordChangeRequestSideEffect.NavigateToOtp ->
-                    navigator.push(PasswordOtpScreen(login, state.newPassword, effect.maskedPhone))
+                    navigator.push(PasswordChangeOtpScreen(login,
+                        oldPassword = currentPassword ?: "",
+                        newPassword = state.newPassword))
 
                 is PasswordChangeRequestSideEffect.ShowError ->
                     snackbarHostState.showSnackbar(effect.message)

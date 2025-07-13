@@ -30,6 +30,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -75,6 +76,10 @@ object LoginScreen : Screen {
         val globalErrorHandler = koinInject<GlobalErrorHandler>(
             parameters = { parametersOf(navigator) }
         )
+
+        LaunchedEffect(Unit) {
+            viewModel.processIntent(LoginIntent.ScreenEntered)
+        }
 
         viewModel.sideEffect.collectInLaunchedEffect { effect ->
             globalErrorHandler.handle(effect)
@@ -231,11 +236,11 @@ fun LoginFormContent(
                     onValueChange = onLoginChanged,
                     label = { Text(loginLabel) },
                     singleLine = true,
-                    trailingIcon = {
-                        IconButton(onClick = onHelpDialogDismissed) {
-                            Icon(Icons.Default.Info, contentDescription = "Подсказка")
-                        }
-                    },
+//                    trailingIcon = {
+//                        IconButton(onClick = onHelpDialogDismissed) {
+//                            Icon(Icons.Default.Info, contentDescription = "Подсказка")
+//                        }
+//                    },
                     modifier = Modifier
                         .widthIn(max = 400.dp)
                         .fillMaxWidth(),

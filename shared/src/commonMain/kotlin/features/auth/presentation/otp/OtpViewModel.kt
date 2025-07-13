@@ -3,6 +3,7 @@ package features.auth.presentation.otp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import core.presentation.BaseSideEffect
+import data.storage.SecureStorage
 import features.auth.domain.model.LoginRequest
 import features.auth.domain.usecase.LoginUseCase
 import features.auth.presentation.login.LoginIntent
@@ -21,6 +22,7 @@ import uz.hb.shared.SharedRes
 class OtpViewModel(
     private val loginUseCase: LoginUseCase,
     private val tokenManager: TokenManager,
+    private val secureStorage: SecureStorage,
     val login: String,
     val password: String
 ) : ViewModel() {
@@ -85,6 +87,7 @@ class OtpViewModel(
                 result.result?.let { auth ->
                     if (auth.accessToken.isNotBlank()) {
                         tokenManager.saveTokens(auth.accessToken, auth.refreshToken)
+                        secureStorage.put("username", login)
                         _sideEffect.emit(OtpSideEffect.NavigateToMain)
                     } else {
                         _sideEffect.emit(OtpSideEffect.ShowError("Пустой токен"))

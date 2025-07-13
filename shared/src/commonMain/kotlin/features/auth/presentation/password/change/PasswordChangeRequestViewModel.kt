@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import core.presentation.BaseSideEffect
 import features.auth.domain.model.ChangePasswordRequest
 import features.auth.domain.usecase.ChangePasswordUseCase
+import features.auth.presentation.login.LoginSideEffect
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -89,12 +90,16 @@ class PasswordChangeRequestViewModel(
                     _sideEffect.emit(mapped)
                 }
 
-                if (
-                    result.sideEffect is BaseSideEffect.ShowError &&
-                    (result.sideEffect.message.contains("61712") || result.sideEffect.message.contains("по СМС"))
-                ) {
-                    val maskedPhone = result.sideEffect.message.substringAfterLast("на номер ").trim()
-                    _sideEffect.emit(PasswordChangeRequestSideEffect.NavigateToOtp(maskedPhone))
+                val api = result.result
+                if (api?.error == null) {
+                    println("👁 newPassword=$state.newPassword, oldPassword=$currentPassword")
+                    _sideEffect.emit(
+                        PasswordChangeRequestSideEffect.NavigateToOtp(
+                            login = login,
+                            newPassword = state.newPassword,
+                            oldPassword = currentPassword
+                        )
+                    )
                 }
 
             } catch (e: Exception) {
