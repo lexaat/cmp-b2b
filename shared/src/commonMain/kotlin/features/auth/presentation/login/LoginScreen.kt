@@ -87,7 +87,9 @@ object LoginScreen : Screen {
                         maskedPhoneNumber = effect.phone
                     )
                 )
-
+                is LoginSideEffect.ShowError -> {
+                    snackbarHostState.showSnackbar(effect.message)
+                }
                 else -> {}
             }
         }

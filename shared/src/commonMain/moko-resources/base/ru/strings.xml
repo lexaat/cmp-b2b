@@ -31,6 +31,8 @@
     <string name="authorization">Авторизация</string>
     <string name="confirmation">Подтверждение</string>
     <string name="otp_sent_to_phone">Мы отправили код на номер %s.\nВведите его</string>
+    <string name="current_password">Текущий пароль</string>
+    <string name="repeat_password">Повторите пароль</string>
 
     <string name="error_login_empty">Логин не может быть пустым</string>
     <string name="error_password_empty">Пароль не может быть пустым</string>
@@ -42,4 +44,8 @@
     <string name="terms_text_part_3"> и </string>
     <string name="terms_text_part_4">политики конфиденциальности</string>
     <string name="terms_text_part_5">.</string>
+
+    <string name="password_expired">Истек срок действия пароля в интернет-банке.\nУстановите новый.</string>
+    <string name="password_change">Смена пароля</string>
+
 </resources>

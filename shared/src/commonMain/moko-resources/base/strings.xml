@@ -31,6 +31,8 @@
     <string name="authorization">Authorization</string>
     <string name="confirmation">Confirmation</string>
     <string name="otp_sent_to_phone">We sent the code to %s.\nEnter it</string>
+    <string name="current_password">Current password</string>
+    <string name="repeat_password">Repeat password</string>
 
     <string name="error_login_empty">Login cannot be empty</string>
     <string name="error_password_empty">Password cannot be empty</string>
@@ -42,4 +44,8 @@
     <string name="terms_text_part_3"> and the </string>
     <string name="terms_text_part_4">Privacy Policy</string>
     <string name="terms_text_part_5">.</string>
+
+    <string name="password_expired">Your internet banking password has expired.\nPlease set a new one.</string>
+    <string name="password_change">Password change</string>
+
 </resources>

@@ -28,9 +28,28 @@ class PasswordChangeRequestViewModel(
 
     fun processIntent(intent: PasswordChangeRequestIntent) {
         when (intent) {
-            is PasswordChangeRequestIntent.PasswordChanged -> {
-                _uiState.update { it.copy(newPassword = intent.value, passwordError = null) }
+            is PasswordChangeRequestIntent.CurrentPasswordChanged -> {
+                _uiState.update { it.copy(currentPassword = intent.value) }
             }
+
+            is PasswordChangeRequestIntent.NewPasswordChanged -> {
+                _uiState.update { it.copy(newPassword = intent.value) }
+            }
+
+            is PasswordChangeRequestIntent.ConfirmPasswordChanged -> {
+                _uiState.update { it.copy(confirmPassword = intent.value) }
+            }
+
+            is PasswordChangeRequestIntent.ToggleShowCurrentPassword -> {
+                _uiState.update { it.copy(showCurrentPassword = !it.showCurrentPassword) }
+            }
+            is PasswordChangeRequestIntent.ToggleShowNewPassword -> {
+                _uiState.update { it.copy(showNewPassword = !it.showNewPassword) }
+            }
+            is PasswordChangeRequestIntent.ToggleShowConfirmPassword -> {
+                _uiState.update { it.copy(showConfirmPassword = !it.showConfirmPassword) }
+            }
+
             PasswordChangeRequestIntent.SubmitClicked -> {
                 handleSubmit()
             }
@@ -38,11 +57,14 @@ class PasswordChangeRequestViewModel(
     }
 
     private fun handleSubmit() {
-        val newPassword = _uiState.value.newPassword
-
-        if (newPassword.length < 6) {
+        val state = _uiState.value
+        if (state.newPassword.length < 6) {
             _uiState.update { it.copy(passwordError = SharedRes.strings.error_password_too_short) }
             return
+        }
+
+        val currentPassword = state.currentPassword.ifBlank {
+            password // из конструктора
         }
 
         _uiState.update { it.copy(isLoading = true) }
@@ -52,12 +74,11 @@ class PasswordChangeRequestViewModel(
                 val result = changePasswordUseCase(
                     ChangePasswordRequest(
                         username = login,
-                        password = password,
-                        newPassword = newPassword,
+                        password = currentPassword,
+                        newPassword = state.newPassword,
                         otp = ""
                     )
                 )
-
 
                 result.sideEffect?.let { effect ->
                     val mapped = when (effect) {

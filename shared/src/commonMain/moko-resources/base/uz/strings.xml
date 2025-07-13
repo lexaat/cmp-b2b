@@ -31,6 +31,8 @@
     <string name="authorization">Avtorizatsiya</string>
     <string name="confirmation">Tasdiqlash</string>
     <string name="otp_sent_to_phone">Kod %s raqamiga yuborildi.\nKiriting</string>
+    <string name="current_password">Joriy parol</string>
+    <string name="repeat_password">Parolni qayta kiriting</string>
 
     <string name="error_login_empty">Login bo‘sh bo‘lishi mumkin emas</string>
     <string name="error_password_empty">Parol bo‘sh bo‘lishi mumkin emas</string>
@@ -42,4 +44,9 @@
     <string name="terms_text_part_3"> va </string>
     <string name="terms_text_part_4">maxfiylik siyosatiga</string>
     <string name="terms_text_part_5"> rozilik bildirasiz.</string>
+
+    <string name="password_expired">Internet-banking parolingiz muddati tugagan.\nYangi parol o‘rnating.</string>
+    <string name="password_change">Parolni o‘zgartirish</string>
+
+
 </resources>
